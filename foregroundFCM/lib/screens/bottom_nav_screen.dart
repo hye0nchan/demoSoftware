@@ -11,8 +11,8 @@ class BottomNavScreen extends StatefulWidget {
 class _BottomNavScreenState extends State<BottomNavScreen> {
   final List _screens = [
     HomeScreen(),
+    ControlScreen(),
     StatsScreen(),
-    DateScreen(),
     Info(),
   ];
   int _currentIndex = 0;

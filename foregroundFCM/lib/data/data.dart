@@ -273,6 +273,9 @@ var totalHum2Count = 0;
 var totalCo22Count = 0;
 var totalLux2Count = 0;
 
+String beforeActually = "온도";
+String beforeActually2 = "온도";
+
 List<double> temSparkLine = [0];
 List<double> humSparkLine = [0];
 List<double> co2SparkLine = [0];

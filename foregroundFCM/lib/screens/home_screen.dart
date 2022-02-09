@@ -181,7 +181,6 @@ class _HomeScreenState extends State<HomeScreen> {
       lux2TotalValue = double.parse(
           (lux2TotalSparkLine / totalLux2Count).toStringAsFixed(2));
     });
-
   }
 
   void refreshAll() {
@@ -312,7 +311,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getToken();
     hideGauge();
-
+    actualDropdown = beforeActually;
+    actualDropdown2 = beforeActually2;
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings =
@@ -1404,7 +1404,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontWeight: FontWeight.w600,
                                 color: Colors.blueAccent)),
                         Text(
-                            '${double.parse(luxSparkLine.last.toStringAsFixed(0))}LUX',
+                            '${double.parse(luxSparkLine.last.toStringAsFixed(0))}lm',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w700,
@@ -1493,7 +1493,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   Visibility(
                                     visible: averageInMap[3],
-                                    child: Text('${luxTotalValue}LUX',
+                                    child: Text('${luxTotalValue}lm',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w700,
@@ -1508,6 +1508,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               value: actualDropdown,
                               onChanged: (String value) => setState(() {
                                     actualDropdown = value;
+                                    beforeActually = value;
                                     switch (value) {
                                       case "온도":
                                         functionBox.changeInAverageLists(0);
@@ -1668,7 +1669,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontWeight: FontWeight.w600,
                                 color: Colors.green)),
                         Text(
-                            '${double.parse(lux2SparkLine.last.toStringAsFixed(2))}LUX',
+                            '${double.parse(lux2SparkLine.last.toStringAsFixed(2))}lm',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w700,
@@ -1757,7 +1758,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   Visibility(
                                     visible: averageOutMap[3],
-                                    child: Text('${lux2TotalValue}LUX',
+                                    child: Text('${lux2TotalValue}lm',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w700,
@@ -1771,6 +1772,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               isDense: true,
                               value: actualDropdown2,
                               onChanged: (String value) => setState(() {
+                                    beforeActually2 = value;
                                     actualDropdown2 = value;
                                     switch (value) {
                                       case "온도":
