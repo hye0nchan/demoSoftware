@@ -210,46 +210,7 @@ class _ControlScreenState extends State<ControlScreen> {
                   )),
             ),
           ),
-          _buildTile(
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('현재 조도',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.blueAccent)),
-                      ],
-                    ),
-                  ]),
-            ),
-          ),
-          _buildTile(
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('현재 CO2',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.blueAccent)),
-                      ],
-                    ),
-                  ]),
-            ),
-          ),
+
           StaggeredGridTile.count(
             crossAxisCellCount: 2,
             mainAxisCellCount: 1,
