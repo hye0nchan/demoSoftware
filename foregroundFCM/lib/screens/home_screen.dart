@@ -1346,16 +1346,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('현재 온도',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.blueAccent)),
-                        Text(
-                            '${double.parse(temSparkLine.last.toStringAsFixed(2))}°C',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 34.0))
+                        if (temSparkLine.isNotEmpty)
+                          Text('현재 온도',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blueAccent)),
+                        if (temSparkLine.isNotEmpty)
+                          Text(
+                              '${double.parse(temSparkLine.last.toStringAsFixed(2))}°C',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 34.0))
                       ],
                     ),
                   ]),
@@ -1368,22 +1370,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('현재 습도',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.blueAccent)),
-                        Text(
-                            '${double.parse(humSparkLine.last.toStringAsFixed(2))}%',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 34.0))
-                      ],
-                    ),
+                    if (humSparkLine.isNotEmpty)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('현재 습도',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blueAccent)),
+                          Text(
+                              '${double.parse(humSparkLine.last.toStringAsFixed(2))}%',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 34.0))
+                        ],
+                      ),
                   ]),
             ),
           ),
@@ -1394,6 +1397,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    if (luxSparkLine.isNotEmpty)
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1420,6 +1424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    if (co2SparkLine.isNotEmpty)
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1607,6 +1612,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    if (tem2SparkLine.isNotEmpty)
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,

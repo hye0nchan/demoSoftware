@@ -15,24 +15,14 @@ class ControlScreen extends StatefulWidget {
   _ControlScreenState createState() => _ControlScreenState();
 }
 
-Future<Post> restApiGet() async {
-  final response = await http.get(Uri.https('jsonplaceholder.typicode.com', '/posts/1'));
-
-  if(response.statusCode == 200){
-    return Post.fromJson(json.decode(response.body));
-  }else{
-    throw Exception('Failed to load post');
-  }
-}
 
 class _ControlScreenState extends State<ControlScreen> {
 
-  Future<Post> post;
+
 
   @override
   void initState() {
     super.initState();
-    post = restApiGet();
   }
 
   @override
@@ -133,10 +123,10 @@ class _ControlScreenState extends State<ControlScreen> {
                                     padding: const EdgeInsets.all(6),
                                     child: IconButton(
                                       onPressed: (){
-                                        post = restApiGet();
                                       },
                                       icon: Icon(Icons.power_settings_new_outlined,color: Colors.white,size: 30,),
                                     ))),
+
                           )
                         ],
                       ),
