@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcm_notifications/restAPI/todo_controller.dart';
+import 'package:fcm_notifications/restAPI/todo_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   static final List<String> chartDropdownItems = ['온도', '습도', 'CO2', '조도'];
   String actualDropdown = "온도";
   String actualDropdown2 = "온도";
@@ -1215,6 +1218,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //UI
   @override
   Widget build(BuildContext context) {
+
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(

@@ -1,25 +1,20 @@
 import 'dart:convert';
 
-import 'package:fcm_notifications/data/post.dart';
+import 'package:fcm_notifications/restAPI/todo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
 
-
-
-
+import '../restAPI/todo.dart';
+import '../restAPI/todo_repository.dart';
 
 class ControlScreen extends StatefulWidget {
   @override
   _ControlScreenState createState() => _ControlScreenState();
 }
 
-
 class _ControlScreenState extends State<ControlScreen> {
-
-
-
   @override
   void initState() {
     super.initState();
@@ -30,50 +25,49 @@ class _ControlScreenState extends State<ControlScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          children: [
-            SizedBox(
-                //height: screenHeight * 0.03,
-                ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  "FarmCare Dashboard",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.menu),
-                      iconSize: 28.0,
-                      color: Colors.white,
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.refresh_outlined),
-                      iconSize: 28.0,
-                      color: Colors.white,
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
+        appBar: AppBar(
+          title: Column(
+            children: [
+              SizedBox(
+                  //height: screenHeight * 0.03,
+                  ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    "FarmCare Dashboard",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.menu),
+                        iconSize: 28.0,
+                        color: Colors.white,
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.refresh_outlined),
+                        iconSize: 28.0,
+                        color: Colors.white,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          elevation: 0.0,
+          backgroundColor: Palette.primaryColor,
         ),
-        elevation: 0.0,
-        backgroundColor: Palette.primaryColor,
-      ),
-      body: CustomScrollView(
-        physics: ClampingScrollPhysics(),
-        slivers: <Widget>[
-          mainBody(screenHeight, screenWidth),
-        ],
-      ),
-    );
+        body: CustomScrollView(
+          physics: ClampingScrollPhysics(),
+          slivers: <Widget>[
+            mainBody(screenHeight, screenWidth),
+          ],
+        ));
   }
 
   SliverToBoxAdapter mainBody(double screenHeight, double screenWidth) {
@@ -122,11 +116,13 @@ class _ControlScreenState extends State<ControlScreen> {
                                 child: Padding(
                                     padding: const EdgeInsets.all(6),
                                     child: IconButton(
-                                      onPressed: (){
-                                      },
-                                      icon: Icon(Icons.power_settings_new_outlined,color: Colors.white,size: 30,),
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.power_settings_new_outlined,
+                                        color: Colors.white,
+                                        size: 30,
+                                      ),
                                     ))),
-
                           )
                         ],
                       ),
@@ -152,15 +148,17 @@ class _ControlScreenState extends State<ControlScreen> {
                             borderRadius: BorderRadius.circular(12),
                             child: Center(
                                 child: TextButton(
-                                  onPressed: (){
-                                    print("펌프 테스트");
-                                  },
+                                    onPressed: () {
+                                      print("펌프 테스트");
+                                    },
                                     child: Padding(
                                       padding: const EdgeInsets.all(4),
                                       child: Text(
                                         "펌프 제어",
                                         style: TextStyle(
-                                            fontSize: 16, fontWeight: FontWeight.w500,color: Colors.white),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white),
                                       ),
                                     ))),
                           ),
@@ -169,13 +167,15 @@ class _ControlScreenState extends State<ControlScreen> {
                             borderRadius: BorderRadius.circular(12),
                             child: Center(
                                 child: TextButton(
-                                  onPressed: (){},
+                                    onPressed: () {},
                                     child: Padding(
                                       padding: const EdgeInsets.all(4),
                                       child: Text(
                                         "전등 제어",
                                         style: TextStyle(
-                                            fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white),
                                       ),
                                     ))),
                           ),
@@ -184,13 +184,15 @@ class _ControlScreenState extends State<ControlScreen> {
                             borderRadius: BorderRadius.circular(12),
                             child: Center(
                                 child: TextButton(
-                                  onPressed: (){},
+                                    onPressed: () {},
                                     child: Padding(
                                       padding: const EdgeInsets.all(4),
                                       child: Text(
                                         "환풍기 제어",
                                         style: TextStyle(
-                                            fontSize: 16,fontWeight: FontWeight.w500, color: Colors.white),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white),
                                       ),
                                     ))),
                           ),
@@ -200,7 +202,6 @@ class _ControlScreenState extends State<ControlScreen> {
                   )),
             ),
           ),
-
           StaggeredGridTile.count(
             crossAxisCellCount: 2,
             mainAxisCellCount: 1,

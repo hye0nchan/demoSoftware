@@ -1,3 +1,4 @@
+import 'package:fcm_notifications/screens/testRest.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/data/data.dart';
 import 'package:fcm_notifications/screens/home_screen.dart';
@@ -13,7 +14,8 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     HomeScreen(),
     ControlScreen(),
     StatsScreen(),
-    Info(),
+    TestRest()
+    //Info(),
   ];
   int _currentIndex = 0;
 
