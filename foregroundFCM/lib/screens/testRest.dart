@@ -33,7 +33,7 @@ class _TestRestState extends State<TestRest> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          Todo todo = Todo(userId: 3,title: 'sample post', completed: false);
+          Todo todo = Todo(id: 3, name: 'sample post', isComplete: false);
           todoController.postTodo(todo);
         },
       ),
@@ -51,7 +51,7 @@ class _TestRestState extends State<TestRest> {
                 child: Row(
                   children: [
                     Expanded(flex: 1, child: Text('${todo?.id}')),
-                    Expanded(flex: 3, child: Text('${todo?.title}')),
+                    Expanded(flex: 3, child: Text('${todo?.name}')),
                     Expanded(
                         flex: 3,
                         child: Row(

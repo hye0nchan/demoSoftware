@@ -5,7 +5,7 @@ import 'dart:convert';
 
 class TodoRepository implements Repository {
   // use http
-  String dataURL = 'https://jsonplaceholder.typicode.com';
+  String dataURL = 'https://localhost:44341/api/TodoItems';
 
   @override
   Future<String> deletedTodo(Todo todo) async{
@@ -39,7 +39,7 @@ class TodoRepository implements Repository {
     await http.patch(
       url,
       body: {
-        'completed': (todo.completed).toString(),
+        'completed': (todo.isComplete).toString(),
       },
       headers: {'Authorization': 'tour_token'},
     ).then((response) {
@@ -57,7 +57,7 @@ class TodoRepository implements Repository {
     await http.put(
       url,
       body: {
-        'completed': (todo.completed).toString(),
+        'completed': (todo.isComplete).toString(),
       },
       headers: {'Authorization': 'tour_token'},
     ).then((response) {

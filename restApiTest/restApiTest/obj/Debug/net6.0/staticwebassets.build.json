@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "LmBs5+T0Q38gfKwII5renWpLbbH+vn1Qs+Q7ber87hg=",
+  "Source": "restApiTest",
+  "BasePath": "_content/restApiTest",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

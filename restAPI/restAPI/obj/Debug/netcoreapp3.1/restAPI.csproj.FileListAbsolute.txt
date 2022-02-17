@@ -1,0 +1,5 @@
+C:\Users\Administrator\Desktop\demoroom\restAPI\restAPI\obj\Debug\netcoreapp3.1\restAPI.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\demoroom\restAPI\restAPI\obj\Debug\netcoreapp3.1\restAPI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\demoroom\restAPI\restAPI\obj\Debug\netcoreapp3.1\restAPI.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\demoroom\restAPI\restAPI\obj\Debug\netcoreapp3.1\restAPI.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\demoroom\restAPI\restAPI\obj\Debug\netcoreapp3.1\restAPI.csproj.CoreCompileInputs.cache

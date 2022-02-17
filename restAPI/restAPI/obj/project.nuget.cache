@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "SLAFD42XeyXSuwOz/z82e3iNeHNSX27qD/ePtOPy5ImRlm97bCiDrSLsPoysEp8G5WbZX0nSjF9dxYGVM4UAtw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Administrator\\Desktop\\demoroom\\restAPI\\restAPI\\restAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\system.servicemodel.web\\1.0.0\\system.servicemodel.web.1.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

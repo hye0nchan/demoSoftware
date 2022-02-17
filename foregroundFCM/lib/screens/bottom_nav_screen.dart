@@ -14,7 +14,8 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     HomeScreen(),
     ControlScreen(),
     StatsScreen(),
-    TestRest()
+    ControlScreen(),
+    //TestRest()
     //Info(),
   ];
   int _currentIndex = 0;
