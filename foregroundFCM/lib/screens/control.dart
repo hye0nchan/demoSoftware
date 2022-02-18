@@ -1,13 +1,11 @@
+
 import 'dart:convert';
 
-import 'package:fcm_notifications/restAPI/todo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
 
-import '../restAPI/todo.dart';
-import '../restAPI/todo_repository.dart';
 
 class ControlScreen extends StatefulWidget {
   @override
@@ -19,14 +17,27 @@ class _ControlScreenState extends State<ControlScreen> {
   void initState() {
     super.initState();
     getData();
+    //RestApi_Get();
   }
 
-  Future<http.Response> getData() {
-    var response =  http.get(
-        Uri.parse('https://172.20.2.87:44341/api/TodoItems/1'));
-    print(response.toString());
+  void RestApi_Get() async {
+    http.Response response = await http.get(
+        Uri.parse('http://echo.jsontest.com/restapi/get'),
+        headers: {"Accept": "application/json"});
+    Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
+
+    print(response.body); // 결과 출력 ==> {"restapi" : "get" }
+    print(responseBodyMap["restapi"]); // 결과 출력 ==> get
   }
 
+  Future<http.Response> getData() async{
+    http.Response response = await http.get(
+        Uri.parse('https://10.0.2.2:5001/api/TodoItems/1'),
+        headers: {"Accept": "application/json"});
+    Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
+    print(response.body); // 결과 출력 ==> {"restapi" : "get" }
+    print(responseBodyMap["gwId"]); // 결과 출력 ==> get
+  }
 
     @override
     Widget build(BuildContext context) {

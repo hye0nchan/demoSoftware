@@ -1,7 +1,6 @@
-import 'package:fcm_notifications/screens/testRest.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/data/data.dart';
-import 'package:fcm_notifications/screens/home_screen.dart';
 import 'package:fcm_notifications/screens/screens.dart';
 
 class BottomNavScreen extends StatefulWidget {
