@@ -10,8 +10,7 @@ namespace restApiTest
         public int Id { get; set; }
         public string gwId { get; set; }
         public string deviceId { get; set; }
-        public byte [] dataUnit { get; set; }
-        public bool Iscomplete { get; set; }
+        public string dataUnit { get; set; }
 
 
     }

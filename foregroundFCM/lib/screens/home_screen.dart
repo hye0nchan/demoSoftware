@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, unnecessary_statements
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +18,7 @@ import 'package:fcm_notifications/data/influxDB.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../main.dart';
 import 'package:sparkline/sparkline.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -58,6 +60,15 @@ class _HomeScreenState extends State<HomeScreen> {
   int coLDataCount = 0;
   int coMDataCount = 0;
   int coHDataCount = 0;
+
+  void getData() async {
+    http.Response response = await http.get(
+        Uri.parse('https://172.20.2.87/api/TodoItems/1'),
+        headers: {"Accept": "application/json"});
+    Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
+    print(response.body); // 결과 출력 ==> {"restapi" : "get" }
+    print(responseBodyMap["gwId"]); // 결과 출력 ==> get
+  }
 
   void reReadInfluxDB() async {
     for (int i = 0; i < allSensorList.length; i++) {
@@ -1286,7 +1297,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "데모실 환경",
+              "데모실 모니터링",
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ],
