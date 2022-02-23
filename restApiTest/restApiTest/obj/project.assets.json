@@ -2,6 +2,78 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "Grpc.Core/2.44.0": {
+        "type": "package",
+        "dependencies": {
+          "Grpc.Core.Api": "2.44.0",
+          "System.Memory": "4.5.3"
+        },
+        "compile": {
+          "lib/netstandard2.0/Grpc.Core.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Grpc.Core.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux-arm64/native/libgrpc_csharp_ext.arm64.so": {
+            "assetType": "native",
+            "rid": "linux-arm64"
+          },
+          "runtimes/linux-x64/native/libgrpc_csharp_ext.x64.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx-x64/native/libgrpc_csharp_ext.x64.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win-x64/native/grpc_csharp_ext.x64.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/grpc_csharp_ext.x86.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
+      "Grpc.Core.Api/2.44.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Memory": "4.5.3"
+        },
+        "compile": {
+          "lib/netstandard2.0/Grpc.Core.Api.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Grpc.Core.Api.dll": {}
+        }
+      },
+      "Grpc.Net.Client/2.42.0": {
+        "type": "package",
+        "dependencies": {
+          "Grpc.Net.Common": "2.42.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.0.3"
+        },
+        "compile": {
+          "lib/net6.0/Grpc.Net.Client.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Grpc.Net.Client.dll": {}
+        }
+      },
+      "Grpc.Net.Common/2.42.0": {
+        "type": "package",
+        "dependencies": {
+          "Grpc.Core.Api": "2.42.0"
+        },
+        "compile": {
+          "lib/net6.0/Grpc.Net.Common.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Grpc.Net.Common.dll": {}
+        }
+      },
       "Humanizer.Core/2.8.26": {
         "type": "package",
         "compile": {
@@ -3053,6 +3125,103 @@
     }
   },
   "libraries": {
+    "Grpc.Core/2.44.0": {
+      "sha512": "H2rTNePSYeEqUgBBqiE5KZ/yOX7jEtETjWjv4gGtnYxrlpZ79VAHe+4KtZAnt2KJMiGvqTm7eo1SPk+QpiPfaw==",
+      "type": "package",
+      "path": "grpc.core/2.44.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/net45/Grpc.Core.targets",
+        "buildTransitive/net45/Grpc.Core.targets",
+        "grpc.core.2.44.0.nupkg.sha512",
+        "grpc.core.nuspec",
+        "lib/net45/Grpc.Core.dll",
+        "lib/net45/Grpc.Core.pdb",
+        "lib/net45/Grpc.Core.xml",
+        "lib/netstandard1.5/Grpc.Core.dll",
+        "lib/netstandard1.5/Grpc.Core.pdb",
+        "lib/netstandard1.5/Grpc.Core.xml",
+        "lib/netstandard2.0/Grpc.Core.dll",
+        "lib/netstandard2.0/Grpc.Core.pdb",
+        "lib/netstandard2.0/Grpc.Core.xml",
+        "packageIcon.png",
+        "runtimes/linux-arm64/native/libgrpc_csharp_ext.arm64.so",
+        "runtimes/linux-x64/native/libgrpc_csharp_ext.x64.so",
+        "runtimes/osx-x64/native/libgrpc_csharp_ext.x64.dylib",
+        "runtimes/win-x64/native/grpc_csharp_ext.x64.dll",
+        "runtimes/win-x86/native/grpc_csharp_ext.x86.dll"
+      ]
+    },
+    "Grpc.Core.Api/2.44.0": {
+      "sha512": "FBfPMvKwT8q98T8lWa5z6nBMLdH/Mmo5g4yyYYMvbXLWDzo4beqa7CUU5QH3PKvo2X6/b+UAZ2IymXlrYG3IXg==",
+      "type": "package",
+      "path": "grpc.core.api/2.44.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "grpc.core.api.2.44.0.nupkg.sha512",
+        "grpc.core.api.nuspec",
+        "lib/net45/Grpc.Core.Api.dll",
+        "lib/net45/Grpc.Core.Api.pdb",
+        "lib/net45/Grpc.Core.Api.xml",
+        "lib/netstandard1.5/Grpc.Core.Api.dll",
+        "lib/netstandard1.5/Grpc.Core.Api.pdb",
+        "lib/netstandard1.5/Grpc.Core.Api.xml",
+        "lib/netstandard2.0/Grpc.Core.Api.dll",
+        "lib/netstandard2.0/Grpc.Core.Api.pdb",
+        "lib/netstandard2.0/Grpc.Core.Api.xml",
+        "packageIcon.png"
+      ]
+    },
+    "Grpc.Net.Client/2.42.0": {
+      "sha512": "UrVBlzAiYh04bwOjBMUlh0THwieOhoVdmhpvY1LXCdlgRUAYicoDn9SHUZEnLP/xq3lsbhhkTEOeZcFpyOLE+w==",
+      "type": "package",
+      "path": "grpc.net.client/2.42.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "grpc.net.client.2.42.0.nupkg.sha512",
+        "grpc.net.client.nuspec",
+        "lib/net5.0/Grpc.Net.Client.dll",
+        "lib/net5.0/Grpc.Net.Client.pdb",
+        "lib/net5.0/Grpc.Net.Client.xml",
+        "lib/net6.0/Grpc.Net.Client.dll",
+        "lib/net6.0/Grpc.Net.Client.pdb",
+        "lib/net6.0/Grpc.Net.Client.xml",
+        "lib/netstandard2.0/Grpc.Net.Client.dll",
+        "lib/netstandard2.0/Grpc.Net.Client.pdb",
+        "lib/netstandard2.0/Grpc.Net.Client.xml",
+        "lib/netstandard2.1/Grpc.Net.Client.dll",
+        "lib/netstandard2.1/Grpc.Net.Client.pdb",
+        "lib/netstandard2.1/Grpc.Net.Client.xml",
+        "packageIcon.png"
+      ]
+    },
+    "Grpc.Net.Common/2.42.0": {
+      "sha512": "+nYAAvpc3yg/HS+uleYoNUBR0sf0EVpY5FAos5v8PILnTbGU552QfxAaToY/wCMYExkde/zIJM/l+JvHMezYSg==",
+      "type": "package",
+      "path": "grpc.net.common/2.42.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "grpc.net.common.2.42.0.nupkg.sha512",
+        "grpc.net.common.nuspec",
+        "lib/net5.0/Grpc.Net.Common.dll",
+        "lib/net5.0/Grpc.Net.Common.pdb",
+        "lib/net5.0/Grpc.Net.Common.xml",
+        "lib/net6.0/Grpc.Net.Common.dll",
+        "lib/net6.0/Grpc.Net.Common.pdb",
+        "lib/net6.0/Grpc.Net.Common.xml",
+        "lib/netstandard2.0/Grpc.Net.Common.dll",
+        "lib/netstandard2.0/Grpc.Net.Common.pdb",
+        "lib/netstandard2.0/Grpc.Net.Common.xml",
+        "lib/netstandard2.1/Grpc.Net.Common.dll",
+        "lib/netstandard2.1/Grpc.Net.Common.pdb",
+        "lib/netstandard2.1/Grpc.Net.Common.xml",
+        "packageIcon.png"
+      ]
+    },
     "Humanizer.Core/2.8.26": {
       "sha512": "OiKusGL20vby4uDEswj2IgkdchC1yQ6rwbIkZDVBPIR6al2b7n3pC91elBul9q33KaBgRKhbZH3+2Ur4fnWx2A==",
       "type": "package",
@@ -9473,6 +9642,8 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Grpc.Core >= 2.44.0",
+      "Grpc.Net.Client >= 2.42.0",
       "Microsoft.EntityFrameworkCore >= 6.0.2",
       "Microsoft.EntityFrameworkCore.InMemory >= 6.0.2",
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.2",
@@ -9524,6 +9695,14 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Grpc.Core": {
+            "target": "Package",
+            "version": "[2.44.0, )"
+          },
+          "Grpc.Net.Client": {
+            "target": "Package",
+            "version": "[2.42.0, )"
+          },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
             "version": "[6.0.2, )"

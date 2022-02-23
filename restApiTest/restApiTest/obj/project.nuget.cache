@@ -1,9 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "RcYxJZ9PAS/jUJZeYD3sh1PJTfjNAszWNtBbAY2s0PznOuAwSSLVoV/+YheuB0TJK4r91SCss8nUoPnjF1z7Ug==",
+  "dgSpecHash": "vnHm9blhsdPGYKYp9dPRCAL3Gnv75ouVHcrEYV/Sh6RbFO/zGjfaP+NBGATVmJvx6c3QH3CE/lVZ9vlVHFh7bg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Administrator\\Desktop\\demoroom\\restApiTest\\restApiTest\\restApiTest.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\grpc.core\\2.44.0\\grpc.core.2.44.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\grpc.core.api\\2.44.0\\grpc.core.api.2.44.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\grpc.net.client\\2.42.0\\grpc.net.client.2.42.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\grpc.net.common\\2.42.0\\grpc.net.common.2.42.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\messagepack\\2.1.152\\messagepack.2.1.152.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\messagepack.annotations\\2.1.152\\messagepack.annotations.2.1.152.nupkg.sha512",

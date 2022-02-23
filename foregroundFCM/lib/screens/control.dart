@@ -1,10 +1,12 @@
 import 'dart:convert';
-
+import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:fcm_notifications/restAPI/JsonObject.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
+
+import '../config/styles.dart';
 
 class ControlScreen extends StatefulWidget {
   @override
@@ -33,6 +35,8 @@ class _ControlScreenState extends State<ControlScreen> {
   //   print(jsonObject.success); // 결과 출력 ==> success
   // }
 
+  int dialogInitialize = 0;
+
   void getData() async {
     http.Response response = await http.get(
         Uri.parse('https://10.0.2.2:44341/api/TodoItems/1'),
@@ -50,35 +54,125 @@ class _ControlScreenState extends State<ControlScreen> {
         headers: {"Content-Type": "application/json"},
         body: queryJson);
     Map<String, dynamic> responseBody = jsonDecode(response.body);
-    print(response.body); // 결과 출력 ==> {"success" : "true" }
-    print(responseBody["gwId"]); // 결과 출력 ==> success
+    print(response.body);
+    print(responseBody["gwId"]);
     JsonObject jsonObject = JsonObject.fromJson(responseBody);
-    print(jsonObject.gwId); // 결과 출력 ==> success
+    print(jsonObject.gwId);
   }
 
-  void pumpDialog(){
+  void pumpDialog() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     showDialog(
+      barrierDismissible: false,
       context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('펌프 제어'),
-          content: SingleChildScrollView(
-            child: Container(
-              child:
-              Text('This is a demo alert dialog.'),
-
+      builder: (context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '재배기 내부 제어',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                ),
+              ],
             ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('닫기'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+            content: SizedBox(
+              height: screenHeight * 0.5,
+              width: screenWidth * 0.7,
+              child: SingleChildScrollView(
+                child: DefaultTabController(
+                  initialIndex: dialogInitialize,
+                  length: 3,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                        width: screenWidth * 0.7,
+                        height: screenHeight * 0.06,
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        child: TabBar(
+                          indicator: BubbleTabIndicator(
+                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                            indicatorHeight: 40.0,
+                            indicatorColor: Colors.white,
+                          ),
+                          labelStyle: Styles.tabTextStyle,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.white,
+                          tabs: <Widget>[
+                            Text("펌프", style: TextStyle(fontSize: 18)),
+                            Text("전등", style: TextStyle(fontSize: 18)),
+                            Text("팬", style: TextStyle(fontSize: 18)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: screenHeight * 0.3,
+                        child: TabBarView(children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Material(
+                                    elevation: 14.0,
+                                    shadowColor: Color(0x802196F3),
+                                    color: Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(24),
+                                    child: Center(
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(6),
+                                            child: IconButton(
+                                              onPressed: () {},
+                                              icon: Icon(
+                                                Icons.power_settings_new_outlined,
+                                                color: Colors.white,
+                                                size: 30,
+                                              ),
+                                            ))),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [Text("test")],
+                            ),
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [Text("test")],
+                            ),
+                          ),
+                        ]),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ],
-        );
+            actions: <Widget>[
+              TextButton(
+                child: const Text('닫기'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
       },
     );
   }
@@ -289,7 +383,6 @@ class _ControlScreenState extends State<ControlScreen> {
     ]));
   }
 
-
   StaggeredGridTile staggeredGridTile(String text) {
     return StaggeredGridTile.count(
       crossAxisCellCount: 1,
@@ -299,13 +392,16 @@ class _ControlScreenState extends State<ControlScreen> {
           onTap: () {
             switch (text) {
               case "펌프\n제어":
+                dialogInitialize = 0;
                 pumpDialog();
                 break;
               case "전등\n제어":
-                print("lamp");
+                dialogInitialize = 1;
+                pumpDialog();
                 break;
               case "팬\n제어":
-                print("fan");
+                dialogInitialize = 2;
+                pumpDialog();
                 break;
             }
           },

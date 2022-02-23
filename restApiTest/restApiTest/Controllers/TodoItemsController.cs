@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -79,8 +80,9 @@ namespace restApiTest.Controllers
         {
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
-
+            Debug.WriteLine("completed");
             return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
+            
         }
 
         // DELETE: api/TodoItems/5
