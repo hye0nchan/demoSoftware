@@ -123,23 +123,40 @@ class _ControlScreenState extends State<ControlScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Material(
-                                    elevation: 14.0,
-                                    shadowColor: Color(0x802196F3),
-                                    color: Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(24),
-                                    child: Center(
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(6),
-                                            child: IconButton(
-                                              onPressed: () {},
-                                              icon: Icon(
-                                                Icons.power_settings_new_outlined,
-                                                color: Colors.white,
-                                                size: 30,
-                                              ),
-                                            ))),
-                                  )
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: screenWidth*0.3,
+                                        child: Material(
+                                          shadowColor: Color(0x802196F3),
+                                          color: Colors.blueAccent,
+                                          borderRadius: BorderRadius.circular(24),
+                                          child: Padding(
+                                          padding: const EdgeInsets.all(6),
+                                          child: IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(
+                                              Icons.power_settings_new_outlined,
+                                              color: Colors.white,
+                                              size: 30,
+                                            ),
+                                          )),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    child: Material(
+                                      shadowColor: Color(0x802196F3),
+                                      color: Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(24),
+                                      child: TextButton(
+                                        onPressed: () {},
+                                        child: Text("시간 지정",style: TextStyle(fontSize: 20,color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -298,15 +315,15 @@ class _ControlScreenState extends State<ControlScreen> {
                             borderRadius: BorderRadius.circular(24),
                             child: Center(
                                 child: Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.power_settings_new_outlined,
-                                        color: Colors.white,
-                                        size: 30,
-                                      ),
-                                    ))),
+                                padding: const EdgeInsets.all(6),
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.power_settings_new_outlined,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                ))),
                           )
                         ],
                       ),

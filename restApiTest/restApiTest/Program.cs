@@ -1,3 +1,5 @@
+using Grpc.Core;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +13,8 @@ namespace restApiTest
 {
     public class Program
     {
+        
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
