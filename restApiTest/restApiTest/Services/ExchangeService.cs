@@ -41,11 +41,6 @@ namespace NetService
             _logger.LogInformation($"Exchange Service Protocol Starts");
         }
 
-
-
-
-
-  
         internal static void RxLink(ref RtuMessage response)
         {
             IServerStreamWriter<RtuMessage> responseStream = ExchangeService.responseStream;

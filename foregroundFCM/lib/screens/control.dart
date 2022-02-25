@@ -7,6 +7,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
 
 import '../config/styles.dart';
+import '../data/data.dart';
 
 class ControlScreen extends StatefulWidget {
   @override
@@ -85,7 +86,7 @@ class _ControlScreenState extends State<ControlScreen> {
               child: SingleChildScrollView(
                 child: DefaultTabController(
                   initialIndex: dialogInitialize,
-                  length: 3,
+                  length: 4,
                   child: Column(
                     children: [
                       Container(
@@ -106,6 +107,7 @@ class _ControlScreenState extends State<ControlScreen> {
                           labelColor: Colors.black,
                           unselectedLabelColor: Colors.white,
                           tabs: <Widget>[
+                            Text("센서", style: TextStyle(fontSize: 18)),
                             Text("펌프", style: TextStyle(fontSize: 18)),
                             Text("전등", style: TextStyle(fontSize: 18)),
                             Text("팬", style: TextStyle(fontSize: 18)),
@@ -115,64 +117,10 @@ class _ControlScreenState extends State<ControlScreen> {
                       Container(
                         height: screenHeight * 0.3,
                         child: TabBarView(children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: screenWidth*0.3,
-                                        child: Material(
-                                          shadowColor: Color(0x802196F3),
-                                          color: Colors.blueAccent,
-                                          borderRadius: BorderRadius.circular(24),
-                                          child: Padding(
-                                          padding: const EdgeInsets.all(6),
-                                          child: IconButton(
-                                            onPressed: () {},
-                                            icon: Icon(
-                                              Icons.power_settings_new_outlined,
-                                              color: Colors.white,
-                                              size: 30,
-                                            ),
-                                          )),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    child: Material(
-                                      shadowColor: Color(0x802196F3),
-                                      color: Colors.blueAccent,
-                                      borderRadius: BorderRadius.circular(24),
-                                      child: TextButton(
-                                        onPressed: () {},
-                                        child: Text("시간 지정",style: TextStyle(fontSize: 20,color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [Text("test")],
-                            ),
-                          ),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [Text("test")],
-                            ),
-                          ),
+                          dialogTab(screenWidth),
+                          dialogTab(screenWidth),
+                          dialogTab(screenWidth),
+                          dialogTab(screenWidth),
                         ]),
                       )
                     ],
@@ -191,6 +139,60 @@ class _ControlScreenState extends State<ControlScreen> {
           );
         });
       },
+    );
+  }
+
+  Row dialogTab(double screenWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: screenWidth*0.5,
+                  child: Material(
+                    shadowColor: Color(0x802196F3),
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(24),
+                    child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: Switch(
+                          activeColor: Colors.white,
+                          value: sensorBool,
+                          onChanged: (bool value) {
+                            setState(() {
+                              sensorBool = value;
+                            });
+                          },
+
+                        )
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              child: Material(
+                shadowColor: Color(0x802196F3),
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(24),
+                child: TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "시간 지정",
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -294,46 +296,40 @@ class _ControlScreenState extends State<ControlScreen> {
         crossAxisSpacing: 12.0,
         mainAxisSpacing: 12.0,
         children: <Widget>[
+          //powerTile(),
           StaggeredGridTile.count(
-            crossAxisCellCount: 1,
+            crossAxisCellCount: 4,
             mainAxisCellCount: 1,
             child: _buildTile2(
               Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Material(
-                            elevation: 14.0,
-                            shadowColor: Color(0x802196F3),
-                            color: Colors.redAccent,
-                            borderRadius: BorderRadius.circular(24),
-                            child: Center(
-                                child: Padding(
-                                padding: const EdgeInsets.all(6),
-                                child: IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.power_settings_new_outlined,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                ))),
-                          )
-                        ],
-                      ),
-                    ]),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    onMaterial("센서"),
+                    onMaterial("펌프"),
+                    onMaterial("전등"),
+                    onMaterial("팬"),
+                  ],
+                ),
               ),
             ),
-          ),
-          staggeredGridTile("펌프\n제어"),
-          staggeredGridTile("전등\n제어"),
-          staggeredGridTile("팬\n제어"),
+          )
+        ],
+      ),
+      SizedBox(
+        height: screenHeight * 0.03,
+      ),
+      StaggeredGrid.count(
+        crossAxisCount: 4,
+        crossAxisSpacing: 12.0,
+        mainAxisSpacing: 12.0,
+        children: <Widget>[
+          inStaggeredGridTile("센서\n제어"),
+          inStaggeredGridTile("펌프\n제어"),
+          inStaggeredGridTile("전등\n제어"),
+          inStaggeredGridTile("팬\n제어"),
         ],
       ),
       SizedBox(
@@ -353,54 +349,126 @@ class _ControlScreenState extends State<ControlScreen> {
       SizedBox(
         height: screenHeight * 0.03,
       ),
+          StaggeredGrid.count(
+            crossAxisCount: 4,
+            crossAxisSpacing: 12.0,
+            mainAxisSpacing: 12.0,
+            children: <Widget>[
+              //powerTile(),
+              StaggeredGridTile.count(
+                crossAxisCellCount: 4,
+                mainAxisCellCount: 1,
+                child: _buildTile2(
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        onMaterial("모터"),
+                        onMaterial("팬"),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: screenHeight * 0.03,
+          ),
       StaggeredGrid.count(
           crossAxisCount: 4,
           crossAxisSpacing: 12.0,
           mainAxisSpacing: 12.0,
           children: <Widget>[
-            StaggeredGridTile.count(
-              crossAxisCellCount: 2,
-              mainAxisCellCount: 1,
-              child: _buildTile2(
-                Material(
-                  elevation: 14.0,
-                  borderRadius: BorderRadius.circular(12.0),
-                  shadowColor: Color(0x802196F3),
-                  child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Center(
-                        child: Text("모터\n제어",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 20)),
-                      )),
-                ),
-              ),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 2,
-              mainAxisCellCount: 1,
-              child: _buildTile2(
-                Material(
-                  elevation: 14.0,
-                  borderRadius: BorderRadius.circular(12.0),
-                  shadowColor: Color(0x802196F3),
-                  child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Center(
-                        child: Text("팬\n제어",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 20)),
-                      )),
-                ),
-              ),
-            ),
+            outStaggeredGridTile("모터\n제어"),
+            outStaggeredGridTile("팬\n제어"),
           ])
     ]));
   }
 
-  StaggeredGridTile staggeredGridTile(String text) {
+  Column onMaterial(String text) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('$text 전원',
+            style: TextStyle(
+                fontWeight: FontWeight.w600, color: Colors.black)),
+        if (sensorBool)
+          Text('ON',
+              style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 34.0)),
+        if(!sensorBool)
+          Text('OFF',
+              style: TextStyle(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 34.0)),
+      ],
+    );
+  }
+
+  StaggeredGridTile outStaggeredGridTile(String text) {
+    return StaggeredGridTile.count(
+      crossAxisCellCount: 2,
+      mainAxisCellCount: 1,
+      child: _buildTile2(
+        Material(
+          elevation: 14.0,
+          borderRadius: BorderRadius.circular(12.0),
+          shadowColor: Color(0x802196F3),
+          child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Center(
+                child: Text(text,
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
+              )),
+        ),
+      ),
+    );
+  }
+
+  Padding powerTile() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Material(
+                  elevation: 14.0,
+                  shadowColor: Color(0x802196F3),
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(24),
+                  child: Center(
+                      child: Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.power_settings_new_outlined,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ))),
+                )
+              ],
+            ),
+          ]),
+    );
+  }
+
+  StaggeredGridTile inStaggeredGridTile(String text) {
     return StaggeredGridTile.count(
       crossAxisCellCount: 1,
       mainAxisCellCount: 1,
@@ -408,16 +476,20 @@ class _ControlScreenState extends State<ControlScreen> {
         InkWell(
           onTap: () {
             switch (text) {
-              case "펌프\n제어":
+              case "센서\n제어":
                 dialogInitialize = 0;
                 pumpDialog();
                 break;
-              case "전등\n제어":
+              case "펌프\n제어":
                 dialogInitialize = 1;
                 pumpDialog();
                 break;
-              case "팬\n제어":
+              case "전등\n제어":
                 dialogInitialize = 2;
+                pumpDialog();
+                break;
+              case "팬\n제어":
+                dialogInitialize = 3;
                 pumpDialog();
                 break;
             }

@@ -5,6 +5,12 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:influxdb_client/api.dart';
 
+bool sensorBool = true;
+bool pumpBool = false;
+bool lampBool = false;
+bool fanBool = false;
+
+
 var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////
 // influxDB
