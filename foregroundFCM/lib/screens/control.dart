@@ -117,10 +117,10 @@ class _ControlScreenState extends State<ControlScreen> {
                       Container(
                         height: screenHeight * 0.3,
                         child: TabBarView(children: [
-                          dialogTab(screenWidth),
-                          dialogTab(screenWidth),
-                          dialogTab(screenWidth),
-                          dialogTab(screenWidth),
+                          dialogTab(screenWidth,screenHeight),
+                          dialogTab(screenWidth,screenHeight),
+                          dialogTab(screenWidth,screenHeight),
+                          dialogTab(screenWidth,screenHeight),
                         ]),
                       )
                     ],
@@ -142,7 +142,7 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  Row dialogTab(double screenWidth) {
+  Row dialogTab(double screenWidth, double screenHeight) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -169,12 +169,15 @@ class _ControlScreenState extends State<ControlScreen> {
                               sensorBool = value;
                             });
                           },
-
                         )
                     ),
                   ),
                 ),
+
               ],
+            ),
+            SizedBox(
+              height: screenHeight * 0.03,
             ),
             Container(
               child: Material(

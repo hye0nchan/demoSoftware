@@ -26,7 +26,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   static final List<String> chartDropdownItems = ['온도', '습도', 'CO2', '조도'];
   String actualDropdown = "온도";
   String actualDropdown2 = "온도";
@@ -1226,7 +1225,6 @@ class _HomeScreenState extends State<HomeScreen> {
 //UI
   @override
   Widget build(BuildContext context) {
-
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -1410,22 +1408,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     if (luxSparkLine.isNotEmpty)
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('현재 조도',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.blueAccent)),
-                        Text(
-                            '${double.parse(luxSparkLine.last.toStringAsFixed(0))}lm',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 34.0))
-                      ],
-                    ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('현재 조도',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blueAccent)),
+                          Text(
+                              '${double.parse(luxSparkLine.last.toStringAsFixed(0))}lm',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 34.0))
+                        ],
+                      ),
                   ]),
             ),
           ),
@@ -1437,22 +1435,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     if (co2SparkLine.isNotEmpty)
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('현재 CO2',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.blueAccent)),
-                        Text(
-                            '${double.parse(co2SparkLine.last.toStringAsFixed(0))}ppm',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 34.0))
-                      ],
-                    ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('현재 CO2',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blueAccent)),
+                          Text(
+                              '${double.parse(co2SparkLine.last.toStringAsFixed(0))}ppm',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 34.0))
+                        ],
+                      ),
                   ]),
             ),
           ),
@@ -1483,38 +1481,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontWeight: FontWeight.w600)),
                               Stack(
                                 children: [
-                                  Visibility(
-                                    visible: averageInMap[0],
-                                    child: Text('$temTotalValue°C',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 34.0)),
-                                  ),
-                                  Visibility(
-                                    visible: averageInMap[1],
-                                    child: Text('$humTotalValue%',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 34.0)),
-                                  ),
-                                  Visibility(
-                                    visible: averageInMap[2],
-                                    child: Text('${co2TotalValue}ppm',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 34.0)),
-                                  ),
-                                  Visibility(
-                                    visible: averageInMap[3],
-                                    child: Text('${luxTotalValue}lm',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 34.0)),
-                                  ),
+                                  graphText('$temTotalValue°C', 0),
+                                  graphText('$humTotalValue%', 1),
+                                  graphText('${co2TotalValue}ppm', 2),
+                                  graphText('${luxTotalValue}lm', 3),
                                 ],
                               ),
                             ],
@@ -1555,38 +1525,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(padding: EdgeInsets.only(bottom: 4.0)),
                       Stack(
                         children: [
-                          Visibility(
-                            visible: averageInMap[0],
-                            child: Sparkline(
-                              data: temSparkLine,
-                              lineWidth: 5.0,
-                              lineColor: Colors.blueAccent,
-                            ),
-                          ),
-                          Visibility(
-                            visible: averageInMap[1],
-                            child: Sparkline(
-                              data: humSparkLine,
-                              lineWidth: 5.0,
-                              lineColor: Colors.blueAccent,
-                            ),
-                          ),
-                          Visibility(
-                            visible: averageInMap[2],
-                            child: Sparkline(
-                              data: co2SparkLine,
-                              lineWidth: 5.0,
-                              lineColor: Colors.blueAccent,
-                            ),
-                          ),
-                          Visibility(
-                            visible: averageInMap[3],
-                            child: Sparkline(
-                              data: luxSparkLine,
-                              lineWidth: 5.0,
-                              lineColor: Colors.blueAccent,
-                            ),
-                          )
+                          graphSpark(temSparkLine,0),
+                          graphSpark(humSparkLine,1),
+                          graphSpark(co2SparkLine,2),
+                          graphSpark(luxSparkLine,3),
                         ],
                       )
                     ],
@@ -1625,22 +1567,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     if (tem2SparkLine.isNotEmpty)
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('현재 온도',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green)),
-                        Text(
-                            '${double.parse(tem2SparkLine.last.toStringAsFixed(2))}C',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 34.0))
-                      ],
-                    ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('현재 온도',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.green)),
+                          Text(
+                              '${double.parse(tem2SparkLine.last.toStringAsFixed(2))}C',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 34.0))
+                        ],
+                      ),
                   ]),
             ),
           ),
@@ -1862,5 +1804,27 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       )
     ]));
+  }
+
+  Visibility graphSpark(List<double> list, int index) {
+    return Visibility(
+      visible: averageInMap[index],
+      child: Sparkline(
+        data: list,
+        lineWidth: 5.0,
+        lineColor: Colors.blueAccent,
+      ),
+    );
+  }
+
+  Visibility graphText(String text, int index) {
+    return Visibility(
+      visible: averageInMap[index],
+      child: Text('$text',
+          style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w700,
+              fontSize: 34.0)),
+    );
   }
 }
