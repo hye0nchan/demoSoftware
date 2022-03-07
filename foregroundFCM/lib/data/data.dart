@@ -10,7 +10,6 @@ bool pumpBool = false;
 bool lampBool = false;
 bool fanBool = false;
 
-
 var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////
 // influxDB
@@ -292,8 +291,6 @@ List<double> hum2SparkLine = [0];
 List<double> co22SparkLine = [0];
 List<double> lux2SparkLine = [0];
 
-
-
 List<String> sensorList = [
   "tem_1",
   "tem_2",
@@ -544,7 +541,6 @@ Map<int, bool> averageOutMap = {
   2: false,
   3: false,
 };
-
 
 Map<int, bool> visibilityRefreshMap = {
   0: true,

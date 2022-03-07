@@ -18,7 +18,7 @@ class _ControlScreenState extends State<ControlScreen> {
   @override
   void initState() {
     super.initState();
-    postData();
+    //postData();
     //RestApi_Get();
     //RestApi_Post();
   }
@@ -38,28 +38,28 @@ class _ControlScreenState extends State<ControlScreen> {
 
   int dialogInitialize = 0;
 
-  void getData() async {
-    http.Response response = await http.get(
-        Uri.parse('https://10.0.2.2:44341/api/TodoItems/1'),
-        headers: {"Content-Type": "application/json"});
-    Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
-    print(response.body); // 결과 출력 ==> {"restapi" : "get" }
-    print(responseBodyMap["gwId"]); // 결과 출력 ==> get
-  }
+  // void getData() async {
+  //   http.Response response = await http.get(
+  //       Uri.parse('https://10.0.2.2:44341/api/TodoItems/1'),
+  //       headers: {"Content-Type": "application/json"});
+  //   Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
+  //   print(response.body); // 결과 출력 ==> {"restapi" : "get" }
+  //   print(responseBodyMap["gwId"]); // 결과 출력 ==> get
+  // }
 
-  void postData() async {
-    var queryJson = jsonEncode(
-        {"deviceId": "0x0001", "gwId": "0x000000", "dataUnit": "sensor2"});
-    http.Response response = await http.post(
-        Uri.parse('https://172.20.2.87:44341/api/TodoItems'),
-        headers: {"Content-Type": "application/json"},
-        body: queryJson);
-    Map<String, dynamic> responseBody = jsonDecode(response.body);
-    print(response.body);
-    print(responseBody["gwId"]);
-    JsonObject jsonObject = JsonObject.fromJson(responseBody);
-    print(jsonObject.gwId);
-  }
+  // void postData() async {
+  //   var queryJson = jsonEncode(
+  //       {"deviceId": "0x0001", "gwId": "0x000000", "dataUnit": "sensor2"});
+  //   http.Response response = await http.post(
+  //       Uri.parse('https://172.20.2.87:44341/api/TodoItems'),
+  //       headers: {"Content-Type": "application/json"},
+  //       body: queryJson);
+  //   Map<String, dynamic> responseBody = jsonDecode(response.body);
+  //   print(response.body);
+  //   print(responseBody["gwId"]);
+  //   JsonObject jsonObject = JsonObject.fromJson(responseBody);
+  //   print(jsonObject.gwId);
+  // }
 
   void pumpDialog() {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -117,10 +117,10 @@ class _ControlScreenState extends State<ControlScreen> {
                       Container(
                         height: screenHeight * 0.3,
                         child: TabBarView(children: [
-                          dialogTab(screenWidth,screenHeight),
-                          dialogTab(screenWidth,screenHeight),
-                          dialogTab(screenWidth,screenHeight),
-                          dialogTab(screenWidth,screenHeight),
+                          dialogTab(screenWidth, screenHeight),
+                          dialogTab(screenWidth, screenHeight),
+                          dialogTab(screenWidth, screenHeight),
+                          dialogTab(screenWidth, screenHeight),
                         ]),
                       )
                     ],
@@ -154,7 +154,7 @@ class _ControlScreenState extends State<ControlScreen> {
             Row(
               children: [
                 Container(
-                  width: screenWidth*0.5,
+                  width: screenWidth * 0.5,
                   child: Material(
                     shadowColor: Color(0x802196F3),
                     color: Colors.blue,
@@ -169,11 +169,9 @@ class _ControlScreenState extends State<ControlScreen> {
                               sensorBool = value;
                             });
                           },
-                        )
-                    ),
+                        )),
                   ),
                 ),
-
               ],
             ),
             SizedBox(
@@ -352,34 +350,34 @@ class _ControlScreenState extends State<ControlScreen> {
       SizedBox(
         height: screenHeight * 0.03,
       ),
-          StaggeredGrid.count(
-            crossAxisCount: 4,
-            crossAxisSpacing: 12.0,
-            mainAxisSpacing: 12.0,
-            children: <Widget>[
-              //powerTile(),
-              StaggeredGridTile.count(
-                crossAxisCellCount: 4,
-                mainAxisCellCount: 1,
-                child: _buildTile2(
-                  Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        onMaterial("모터"),
-                        onMaterial("팬"),
-                      ],
-                    ),
-                  ),
+      StaggeredGrid.count(
+        crossAxisCount: 4,
+        crossAxisSpacing: 12.0,
+        mainAxisSpacing: 12.0,
+        children: <Widget>[
+          //powerTile(),
+          StaggeredGridTile.count(
+            crossAxisCellCount: 4,
+            mainAxisCellCount: 1,
+            child: _buildTile2(
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    onMaterial("모터"),
+                    onMaterial("팬"),
+                  ],
                 ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: screenHeight * 0.03,
-          ),
+              ),
+            ),
+          )
+        ],
+      ),
+      SizedBox(
+        height: screenHeight * 0.03,
+      ),
       StaggeredGrid.count(
           crossAxisCount: 4,
           crossAxisSpacing: 12.0,
@@ -397,15 +395,14 @@ class _ControlScreenState extends State<ControlScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('$text 전원',
-            style: TextStyle(
-                fontWeight: FontWeight.w600, color: Colors.black)),
+            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black)),
         if (sensorBool)
           Text('ON',
               style: TextStyle(
                   color: Colors.blueAccent,
                   fontWeight: FontWeight.w700,
                   fontSize: 34.0)),
-        if(!sensorBool)
+        if (!sensorBool)
           Text('OFF',
               style: TextStyle(
                   color: Colors.redAccent,
