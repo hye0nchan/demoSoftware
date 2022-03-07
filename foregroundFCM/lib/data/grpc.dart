@@ -53,6 +53,12 @@ class Grpc {
   List<int> coMResiter = [0x01, 0x03, 0x0E, 0x04];
   List<int> coHResiter = [0x01, 0x03, 0x11, 0x04];
 
+  //임의 값
+  List<int> pumpResister = [0x00, 0x00, 0x00, 0x00];
+  List<int> lampResister = [0x00, 0x00, 0x00, 0x00];
+  List<int> fanResister = [0x00, 0x00, 0x00, 0x00];
+  List<int> motorResister = [0x00, 0x00, 0x00, 0x00];
+
   //fireStore 선언
   final fireStore = FirebaseFirestore.instance;
 
@@ -91,6 +97,102 @@ class Grpc {
   }
 
   final box = new RtuMessage();
+
+  Future<RtuMessage> controlPump() async {
+    var protocol = 200;
+    stub = ExProtoClient(ClientChannel(fireStoreIp,
+        port: 5054,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure())));
+    await stub.exClientstream(box
+      ..channel = protocol
+      ..sequenceNumber = 0
+      ..gwId = 0
+      ..dataUnit = [
+        pumpResister[0],
+        pumpResister[1],
+        0x00,
+        pumpResister[2],
+        0x00,
+        pumpResister[3],
+        0xAD,
+        0xDE
+      ]
+      ..deviceId = de1);
+    return (box);
+  }
+
+  Future<RtuMessage> controlLamp() async {
+    var protocol = 200;
+    stub = ExProtoClient(ClientChannel(fireStoreIp,
+        port: 5054,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure())));
+    await stub.exClientstream(box
+      ..channel = protocol
+      ..sequenceNumber = 0
+      ..gwId = 0
+      ..dataUnit = [
+        lampResister[0],
+        lampResister[1],
+        0x00,
+        lampResister[2],
+        0x00,
+        lampResister[3],
+        0xAD,
+        0xDE
+      ]
+      ..deviceId = de1);
+    return (box);
+  }
+
+  Future<RtuMessage> controlFan() async {
+    var protocol = 200;
+    stub = ExProtoClient(ClientChannel(fireStoreIp,
+        port: 5054,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure())));
+    await stub.exClientstream(box
+      ..channel = protocol
+      ..sequenceNumber = 0
+      ..gwId = 0
+      ..dataUnit = [
+        fanResister[0],
+        fanResister[1],
+        0x00,
+        fanResister[2],
+        0x00,
+        fanResister[3],
+        0xAD,
+        0xDE
+      ]
+      ..deviceId = de1);
+    return (box);
+  }
+
+  Future<RtuMessage> controlMotor() async {
+    var protocol = 200;
+    stub = ExProtoClient(ClientChannel(fireStoreIp,
+        port: 5054,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure())));
+    await stub.exClientstream(box
+      ..channel = protocol
+      ..sequenceNumber = 0
+      ..gwId = 0
+      ..dataUnit = [
+        motorResister[0],
+        motorResister[1],
+        0x00,
+        motorResister[2],
+        0x00,
+        motorResister[3],
+        0xAD,
+        0xDE
+      ]
+      ..deviceId = de1);
+    return (box);
+  }
 
   Future<RtuMessage> sendSensor1() async {
     var protocol = 200;
@@ -179,7 +281,7 @@ class Grpc {
     ExProtoClient stub = ExProtoClient(ClientChannel(fireStoreIp,
         port: 5054,
         options:
-        const ChannelOptions(credentials: ChannelCredentials.insecure())));
+            const ChannelOptions(credentials: ChannelCredentials.insecure())));
     await for (response in stub.exServerstream(request)) {
       da = response.dataUnit;
       de = response.deviceId;
@@ -789,10 +891,7 @@ class Grpc {
     sensor3Device = false;
   }
 
-
-
-
-    Future<RtuMessage> sendTemperature() async {
+  Future<RtuMessage> sendTemperature() async {
     stub = ExProtoClient(ClientChannel(fireStoreIp,
         port: 5054,
         options:
