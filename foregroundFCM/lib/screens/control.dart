@@ -36,7 +36,8 @@ class _ControlScreenState extends State<ControlScreen> {
   //   print(jsonObject.success); // 결과 출력 ==> success
   // }
 
-  int dialogInitialize = 0;
+  int inDialogInitialize = 0;
+  int outDialogInitialize = 0;
 
   // void getData() async {
   //   http.Response response = await http.get(
@@ -61,7 +62,7 @@ class _ControlScreenState extends State<ControlScreen> {
   //   print(jsonObject.gwId);
   // }
 
-  void pumpDialog() {
+  void inDialog() {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     showDialog(
@@ -85,7 +86,7 @@ class _ControlScreenState extends State<ControlScreen> {
               width: screenWidth * 0.7,
               child: SingleChildScrollView(
                 child: DefaultTabController(
-                  initialIndex: dialogInitialize,
+                  initialIndex: inDialogInitialize,
                   length: 4,
                   child: Column(
                     children: [
@@ -138,6 +139,83 @@ class _ControlScreenState extends State<ControlScreen> {
             ],
           );
         });
+      },
+    );
+  }
+
+  void outDialog() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return AlertDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      '재배기 외부 제어',
+                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                content: SizedBox(
+                  height: screenHeight * 0.5,
+                  width: screenWidth * 0.7,
+                  child: SingleChildScrollView(
+                    child: DefaultTabController(
+                      initialIndex: outDialogInitialize,
+                      length: 2,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                            width: screenWidth * 0.7,
+                            height: screenHeight * 0.06,
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            child: TabBar(
+                              indicator: BubbleTabIndicator(
+                                tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                                indicatorHeight: 40.0,
+                                indicatorColor: Colors.white,
+                              ),
+                              labelStyle: Styles.tabTextStyle,
+                              labelColor: Colors.black,
+                              unselectedLabelColor: Colors.white,
+                              tabs: <Widget>[
+                                Text("모터", style: TextStyle(fontSize: 18)),
+                                Text("팬", style: TextStyle(fontSize: 18)),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: screenHeight * 0.3,
+                            child: TabBarView(children: [
+                              dialogTab(screenWidth, screenHeight),
+                              dialogTab(screenWidth, screenHeight),
+                            ]),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('닫기'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
       },
     );
   }
@@ -417,18 +495,32 @@ class _ControlScreenState extends State<ControlScreen> {
       crossAxisCellCount: 2,
       mainAxisCellCount: 1,
       child: _buildTile2(
-        Material(
-          elevation: 14.0,
-          borderRadius: BorderRadius.circular(12.0),
-          shadowColor: Color(0x802196F3),
-          child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Center(
-                child: Text(text,
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
-              )),
+        InkWell(
+          onTap: (){
+            switch (text) {
+              case "모터\n제어":
+                outDialogInitialize = 0;
+                outDialog();
+                break;
+              case "팬\n제어":
+                outDialogInitialize = 1;
+                outDialog();
+                break;
+            }
+          },
+          child: Material(
+            elevation: 14.0,
+            borderRadius: BorderRadius.circular(12.0),
+            shadowColor: Color(0x802196F3),
+            child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Center(
+                  child: Text(text,
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
+                )),
+          ),
         ),
       ),
     );
@@ -477,20 +569,20 @@ class _ControlScreenState extends State<ControlScreen> {
           onTap: () {
             switch (text) {
               case "센서\n제어":
-                dialogInitialize = 0;
-                pumpDialog();
+                inDialogInitialize = 0;
+                inDialog();
                 break;
               case "펌프\n제어":
-                dialogInitialize = 1;
-                pumpDialog();
+                inDialogInitialize = 1;
+                inDialog();
                 break;
               case "전등\n제어":
-                dialogInitialize = 2;
-                pumpDialog();
+                inDialogInitialize = 2;
+                inDialog();
                 break;
               case "팬\n제어":
-                dialogInitialize = 3;
-                pumpDialog();
+                inDialogInitialize = 3;
+                inDialog();
                 break;
             }
           },
