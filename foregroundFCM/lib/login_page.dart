@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget{
+class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>{
+class _LoginPageState extends State<LoginPage> {
   final formKey = new GlobalKey<FormState>();
 
   String _email;
   String _password;
 
-  void validateAndSave(){
+  void validateAndSave() {
     final form = formKey.currentState;
-    if(form.validate()) {
+    if (form.validate()) {
       form.save();
       print('Form is valid Email : $_email, password : $_password');
-    }else{
+    } else {
       print('Form is invalid Email : $_email, password : $_password');
     }
   }
@@ -36,15 +36,15 @@ class _LoginPageState extends State<LoginPage>{
             children: <Widget>[
               new TextFormField(
                 decoration: new InputDecoration(labelText: 'Email'),
-                validator: (value)=>
-                value.isEmpty?'Email can\'t be empty' : null,
+                validator: (value) =>
+                    value.isEmpty ? 'Email can\'t be empty' : null,
                 onSaved: (value) => _email = value,
               ),
               new TextFormField(
                 obscureText: true,
                 decoration: new InputDecoration(labelText: "Password"),
-                validator: (value)=>
-                value.isEmpty?'Password can\'t be empty' : null,
+                validator: (value) =>
+                    value.isEmpty ? 'Password can\'t be empty' : null,
                 onSaved: (value) => _password = value,
               ),
             ],
@@ -53,8 +53,4 @@ class _LoginPageState extends State<LoginPage>{
       ),
     );
   }
-
-
-
-
 }

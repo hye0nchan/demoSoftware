@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/data/data.dart';
 import 'package:fcm_notifications/screens/screens.dart';

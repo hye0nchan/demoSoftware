@@ -152,70 +152,70 @@ class _ControlScreenState extends State<ControlScreen> {
       builder: (context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return AlertDialog(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      '재배기 외부 제어',
-                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
-                    ),
-                  ],
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '재배기 외부 제어',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
                 ),
-                content: SizedBox(
-                  height: screenHeight * 0.5,
-                  width: screenWidth * 0.7,
-                  child: SingleChildScrollView(
-                    child: DefaultTabController(
-                      initialIndex: outDialogInitialize,
-                      length: 2,
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                            width: screenWidth * 0.7,
-                            height: screenHeight * 0.06,
-                            decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              borderRadius: BorderRadius.circular(25.0),
-                            ),
-                            child: TabBar(
-                              indicator: BubbleTabIndicator(
-                                tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                                indicatorHeight: 40.0,
-                                indicatorColor: Colors.white,
-                              ),
-                              labelStyle: Styles.tabTextStyle,
-                              labelColor: Colors.black,
-                              unselectedLabelColor: Colors.white,
-                              tabs: <Widget>[
-                                Text("모터", style: TextStyle(fontSize: 18)),
-                                Text("팬", style: TextStyle(fontSize: 18)),
-                              ],
-                            ),
+              ],
+            ),
+            content: SizedBox(
+              height: screenHeight * 0.5,
+              width: screenWidth * 0.7,
+              child: SingleChildScrollView(
+                child: DefaultTabController(
+                  initialIndex: outDialogInitialize,
+                  length: 2,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                        width: screenWidth * 0.7,
+                        height: screenHeight * 0.06,
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        child: TabBar(
+                          indicator: BubbleTabIndicator(
+                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                            indicatorHeight: 40.0,
+                            indicatorColor: Colors.white,
                           ),
-                          Container(
-                            height: screenHeight * 0.3,
-                            child: TabBarView(children: [
-                              dialogTab(screenWidth, screenHeight),
-                              dialogTab(screenWidth, screenHeight),
-                            ]),
-                          )
-                        ],
+                          labelStyle: Styles.tabTextStyle,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.white,
+                          tabs: <Widget>[
+                            Text("모터", style: TextStyle(fontSize: 18)),
+                            Text("팬", style: TextStyle(fontSize: 18)),
+                          ],
+                        ),
                       ),
-                    ),
+                      Container(
+                        height: screenHeight * 0.3,
+                        child: TabBarView(children: [
+                          dialogTab(screenWidth, screenHeight),
+                          dialogTab(screenWidth, screenHeight),
+                        ]),
+                      )
+                    ],
                   ),
                 ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('닫기'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            });
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('닫기'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
       },
     );
   }
@@ -231,25 +231,6 @@ class _ControlScreenState extends State<ControlScreen> {
           children: [
             Row(
               children: [
-                Container(
-                  width: screenWidth * 0.5,
-                  child: Material(
-                    shadowColor: Color(0x802196F3),
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(24),
-                    child: Padding(
-                        padding: const EdgeInsets.all(6),
-                        child: Switch(
-                          activeColor: Colors.white,
-                          value: sensorBool,
-                          onChanged: (bool value) {
-                            setState(() {
-                              sensorBool = value;
-                            });
-                          },
-                        )),
-                  ),
-                ),
               ],
             ),
             SizedBox(
@@ -267,6 +248,11 @@ class _ControlScreenState extends State<ControlScreen> {
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
+              ),
+            ),
+            Container(
+              child: DropdownButton(
+
               ),
             ),
           ],
@@ -496,7 +482,7 @@ class _ControlScreenState extends State<ControlScreen> {
       mainAxisCellCount: 1,
       child: _buildTile2(
         InkWell(
-          onTap: (){
+          onTap: () {
             switch (text) {
               case "모터\n제어":
                 outDialogInitialize = 0;

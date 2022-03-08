@@ -18,112 +18,102 @@ import 'data/data.dart';
 import 'network.pbgrpc.dart';
 
 void readInfluxDB() async {
-
-    for (int i = 0; i < allSensorList.length; i++) {
-      var sensorStream = await queryService.query('''
+  for (int i = 0; i < allSensorList.length; i++) {
+    var sensorStream = await queryService.query('''
   from(bucket: "farmcare")
   |> range(start: -24h)
   |> filter(fn: (r) => r["_measurement"] == "${allSensorList[i]}")
   |> yield(name: "mean")
   ''');
-      await sensorStream.forEach((record) {
-        DateTime date = DateTime.parse(record['_time']);
-        var value = record['_value'];
+    await sensorStream.forEach((record) {
+      DateTime date = DateTime.parse(record['_time']);
+      var value = record['_value'];
 
-        if (i != 4 && value != 0) {
-          sensorChartData[i].add(ChartData(date, value));
-          if (i < 3 && i > 0) {
-            if(0<i && i<2){
-              temSparkLine.add(value);
-              temTotalSparkLine += value;
-              totalTemCount += 1;
-            }
-            else{
-              tem2SparkLine.add(value);
-              tem2TotalSparkLine += value;
-              totalTem2Count += 1;
-            }
-
-          }
-          if (i < 6 && i > 2) {
-            if(2<i && i<5){
-              humSparkLine.add(value);
-              humTotalSparkLine += value;
-              totalHumCount += 1;
-            }
-            else{
-              hum2SparkLine.add(value);
-              hum2TotalSparkLine += value;
-              totalHum2Count += 1;
-            }
-
-          }
-          if (i < 9 && i > 5) {
-            if(5<i&&i<8){
-              co2SparkLine.add(value);
-              co2TotalSparkLine += value;
-              totalCo2Count += 1;
-            }
-            else{
-              co22SparkLine.add(value);
-              co22TotalSparkLine += value;
-              totalCo22Count += 1;
-            }
-
-          }
-          if (i < 12 && i > 8) {
-            if(8<i&&i<11){
-              luxSparkLine.add(value);
-              luxTotalSparkLine += value;
-              totalLuxCount += 1;
-            }
-            else{
-              lux2SparkLine.add(value);
-              lux2TotalSparkLine += value;
-              totalLux2Count += 1;
-            }
-
+      if (i != 4 && value != 0) {
+        sensorChartData[i].add(ChartData(date, value));
+        if (i < 3 && i > 0) {
+          if (0 < i && i < 2) {
+            temSparkLine.add(value);
+            temTotalSparkLine += value;
+            totalTemCount += 1;
+          } else {
+            tem2SparkLine.add(value);
+            tem2TotalSparkLine += value;
+            totalTem2Count += 1;
           }
         }
-      });
-    }
+        if (i < 6 && i > 2) {
+          if (2 < i && i < 5) {
+            humSparkLine.add(value);
+            humTotalSparkLine += value;
+            totalHumCount += 1;
+          } else {
+            hum2SparkLine.add(value);
+            hum2TotalSparkLine += value;
+            totalHum2Count += 1;
+          }
+        }
+        if (i < 9 && i > 5) {
+          if (5 < i && i < 8) {
+            co2SparkLine.add(value);
+            co2TotalSparkLine += value;
+            totalCo2Count += 1;
+          } else {
+            co22SparkLine.add(value);
+            co22TotalSparkLine += value;
+            totalCo22Count += 1;
+          }
+        }
+        if (i < 12 && i > 8) {
+          if (8 < i && i < 11) {
+            luxSparkLine.add(value);
+            luxTotalSparkLine += value;
+            totalLuxCount += 1;
+          } else {
+            lux2SparkLine.add(value);
+            lux2TotalSparkLine += value;
+            totalLux2Count += 1;
+          }
+        }
+      }
+    });
+  }
 
-    temTotalValue =
-        double.parse((temTotalSparkLine / totalTemCount).toStringAsFixed(2));
-    temSparkLine.removeAt(0);
+  temTotalValue =
+      double.parse((temTotalSparkLine / totalTemCount).toStringAsFixed(2));
+  temSparkLine.removeAt(0);
 
-    tem2TotalValue =
-        double.parse((tem2TotalSparkLine / totalTem2Count).toStringAsFixed(2));
-    tem2SparkLine.removeAt(0);
+  tem2TotalValue =
+      double.parse((tem2TotalSparkLine / totalTem2Count).toStringAsFixed(2));
+  tem2SparkLine.removeAt(0);
 
-    humTotalValue =
-        double.parse((humTotalSparkLine / totalHumCount).toStringAsFixed(2));
-    humSparkLine.removeAt(0);
+  humTotalValue =
+      double.parse((humTotalSparkLine / totalHumCount).toStringAsFixed(2));
+  humSparkLine.removeAt(0);
 
-    hum2TotalValue =
-        double.parse((hum2TotalSparkLine / totalHum2Count).toStringAsFixed(2));
-    hum2SparkLine.removeAt(0);
+  hum2TotalValue =
+      double.parse((hum2TotalSparkLine / totalHum2Count).toStringAsFixed(2));
+  hum2SparkLine.removeAt(0);
 
-    co2TotalValue =
-        double.parse((co2TotalSparkLine / totalCo2Count).toStringAsFixed(2));
-    co2SparkLine.removeAt(0);
+  co2TotalValue =
+      double.parse((co2TotalSparkLine / totalCo2Count).toStringAsFixed(2));
+  co2SparkLine.removeAt(0);
 
-    co22TotalValue =
-        double.parse((co22TotalSparkLine / totalCo22Count).toStringAsFixed(2));
-    co22SparkLine.removeAt(0);
+  co22TotalValue =
+      double.parse((co22TotalSparkLine / totalCo22Count).toStringAsFixed(2));
+  co22SparkLine.removeAt(0);
 
-    luxTotalValue =
-        double.parse((luxTotalSparkLine / totalLuxCount).toStringAsFixed(2));
-    luxSparkLine.removeAt(0);
+  luxTotalValue =
+      double.parse((luxTotalSparkLine / totalLuxCount).toStringAsFixed(2));
+  luxSparkLine.removeAt(0);
 
-    lux2TotalValue =
-        double.parse((lux2TotalSparkLine / totalLux2Count).toStringAsFixed(2));
-    lux2SparkLine.removeAt(0);
+  lux2TotalValue =
+      double.parse((lux2TotalSparkLine / totalLux2Count).toStringAsFixed(2));
+  lux2SparkLine.removeAt(0);
 
-    print(totalTemCount);
-    print(temTotalSparkLine);
-    print(temSparkLine.length);
-
+  print(totalTemCount);
+  print(temTotalSparkLine);
+  print(temSparkLine.length);
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -153,11 +143,12 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-class MyHttpOverrides extends HttpOverrides{
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context){
+  HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
@@ -252,8 +243,6 @@ var request = RtuMessage();
 var response;
 final fireStore = FirebaseFirestore.instance;
 var device;
-
-
 
 Future<ExMessage> receiveMessage() async {
   print("receive");

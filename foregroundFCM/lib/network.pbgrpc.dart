@@ -159,16 +159,22 @@ abstract class ExProtoServiceBase extends $grpc.Service {
 
   $async.Stream<$0.RtuMessage> messageRtu(
       $grpc.ServiceCall call, $async.Stream<$0.RtuMessage> request);
+
   $async.Stream<$0.ExtMessage> messageExt(
       $grpc.ServiceCall call, $async.Stream<$0.ExtMessage> request);
+
   $async.Stream<$0.CmdMessage> messageCmd(
       $grpc.ServiceCall call, $async.Stream<$0.CmdMessage> request);
+
   $async.Stream<$0.ExMessage> exLink(
       $grpc.ServiceCall call, $async.Stream<$0.ExMessage> request);
+
   $async.Stream<$0.RtuMessage> influxDB(
       $grpc.ServiceCall call, $async.Stream<$0.RtuMessage> request);
+
   $async.Future<$0.RtuMessage> exClientstream(
       $grpc.ServiceCall call, $0.RtuMessage request);
+
   $async.Stream<$0.RtuMessage> exServerstream(
       $grpc.ServiceCall call, $0.RtuMessage request);
 }
