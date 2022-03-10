@@ -1525,10 +1525,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(padding: EdgeInsets.only(bottom: 4.0)),
                       Stack(
                         children: [
-                          graphSpark(temSparkLine,0),
-                          graphSpark(humSparkLine,1),
-                          graphSpark(co2SparkLine,2),
-                          graphSpark(luxSparkLine,3),
+                          graphSpark(temSparkLine, 0),
+                          graphSpark(humSparkLine, 1),
+                          graphSpark(co2SparkLine, 2),
+                          graphSpark(luxSparkLine, 3),
                         ],
                       )
                     ],
