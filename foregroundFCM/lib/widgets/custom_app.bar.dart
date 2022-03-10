@@ -7,11 +7,6 @@ import 'package:fcm_notifications/data/grpc.dart';
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   var grpcSend = Grpc();
 
-  void send() {
-    // grpcSend.sendMessage();
-    // tem = double.parse(redTemData);
-  }
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -21,7 +16,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         IconButton(
           icon: const Icon(Icons.refresh),
           iconSize: 28.0,
-          onPressed: send,
+          onPressed: (){},
         )
       ],
     );

@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:fcm_notifications/restAPI/JsonObject.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:http/http.dart' as http;
 
 import '../config/styles.dart';
 import '../data/data.dart';
@@ -230,8 +227,7 @@ class _ControlScreenState extends State<ControlScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
-              children: [
-              ],
+              children: [],
             ),
             SizedBox(
               height: screenHeight * 0.03,
@@ -248,11 +244,6 @@ class _ControlScreenState extends State<ControlScreen> {
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
-              ),
-            ),
-            Container(
-              child: DropdownButton(
-
               ),
             ),
           ],
