@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:influxdb_client/api.dart';
 
 bool sensorBool = true;
-bool pumpBool = false;
-bool lampBool = false;
+bool pumpBool = true;
+bool lampBool = true;
 bool fanBool = false;
+bool motorBool = true;
+bool outFanBool = false;
 
 var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////

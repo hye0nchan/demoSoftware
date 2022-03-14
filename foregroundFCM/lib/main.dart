@@ -12,7 +12,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
-import 'package:fcm_notifications/network.pb.dart';
 import 'package:fcm_notifications/screens/bottom_nav_screen.dart';
 import 'data/data.dart';
 import 'network.pbgrpc.dart';

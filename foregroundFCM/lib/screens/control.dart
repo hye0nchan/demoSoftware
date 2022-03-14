@@ -1,4 +1,5 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -79,11 +80,11 @@ class _ControlScreenState extends State<ControlScreen> {
               ],
             ),
             content: SizedBox(
-              height: screenHeight * 0.5,
+              height: screenHeight * 0.6,
               width: screenWidth * 0.7,
               child: SingleChildScrollView(
                 child: DefaultTabController(
-                  initialIndex: inDialogInitialize,
+                  initialIndex: outDialogInitialize,
                   length: 4,
                   child: Column(
                     children: [
@@ -115,10 +116,10 @@ class _ControlScreenState extends State<ControlScreen> {
                       Container(
                         height: screenHeight * 0.3,
                         child: TabBarView(children: [
-                          dialogTab(screenWidth, screenHeight),
-                          dialogTab(screenWidth, screenHeight),
-                          dialogTab(screenWidth, screenHeight),
-                          dialogTab(screenWidth, screenHeight),
+                          dialogTab(screenWidth, screenHeight, "sensor"),
+                          dialogTab(screenWidth, screenHeight, "pump"),
+                          dialogTab(screenWidth, screenHeight, "lamp"),
+                          dialogTab(screenWidth, screenHeight, "fan"),
                         ]),
                       )
                     ],
@@ -160,7 +161,7 @@ class _ControlScreenState extends State<ControlScreen> {
               ],
             ),
             content: SizedBox(
-              height: screenHeight * 0.5,
+              height: screenHeight * 0.6,
               width: screenWidth * 0.7,
               child: SingleChildScrollView(
                 child: DefaultTabController(
@@ -194,8 +195,8 @@ class _ControlScreenState extends State<ControlScreen> {
                       Container(
                         height: screenHeight * 0.3,
                         child: TabBarView(children: [
-                          dialogTab(screenWidth, screenHeight),
-                          dialogTab(screenWidth, screenHeight),
+                          dialogTab(screenWidth, screenHeight, "motor"),
+                          dialogTab(screenWidth, screenHeight, "outFan"),
                         ]),
                       )
                     ],
@@ -217,36 +218,54 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  Row dialogTab(double screenWidth, double screenHeight) {
-    return Row(
+  Column dialogTab(double screenWidth, double screenHeight, String device) {
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              children: [],
-            ),
-            SizedBox(
-              height: screenHeight * 0.03,
-            ),
-            Container(
-              child: Material(
-                shadowColor: Color(0x802196F3),
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(24),
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "시간 지정",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
+        SizedBox(
+          height: screenHeight*0.03,
+        ),
+        Container(
+          height: screenHeight * 0.3,
+          width: screenWidth * 0.7,
+          child: Center(
+            child: StaggeredGrid.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 50.0,
+                mainAxisSpacing: 30.0,
+                children: <Widget>[
+                  StaggeredGridTile.count(
+                    crossAxisCellCount: 1,
+                    mainAxisCellCount: 2,
+                    child: Material(
+                      elevation: 14.0,
+                      borderRadius: BorderRadius.circular(12.0),
+                      shadowColor: Color(0x802196F3),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                      '${double.parse(temSparkLine.last.toStringAsFixed(2))}°C',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 25.0))
+                                ],
+                              ),
+                            ]),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ],
+                ]),
+          ),
         ),
       ],
     );
@@ -356,17 +375,20 @@ class _ControlScreenState extends State<ControlScreen> {
           StaggeredGridTile.count(
             crossAxisCellCount: 4,
             mainAxisCellCount: 1,
-            child: _buildTile2(
-              Padding(
-                padding: const EdgeInsets.all(24.0),
+            child: Material(
+              elevation: 14.0,
+              borderRadius: BorderRadius.circular(30.0),
+              shadowColor: Color(0x802196F3),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    onMaterial("센서"),
-                    onMaterial("펌프"),
-                    onMaterial("전등"),
-                    onMaterial("팬"),
+                    onMaterial("센서", sensorBool),
+                    onMaterial("펌프", pumpBool),
+                    onMaterial("전등", lampBool),
+                    onMaterial("팬", fanBool),
                   ],
                 ),
               ),
@@ -414,15 +436,18 @@ class _ControlScreenState extends State<ControlScreen> {
           StaggeredGridTile.count(
             crossAxisCellCount: 4,
             mainAxisCellCount: 1,
-            child: _buildTile2(
-              Padding(
-                padding: const EdgeInsets.all(24.0),
+            child: Material(
+              elevation: 14.0,
+              borderRadius: BorderRadius.circular(30.0),
+              shadowColor: Color(0x802196F3),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    onMaterial("모터"),
-                    onMaterial("팬"),
+                    onMaterial("모터", motorBool),
+                    onMaterial("팬", outFanBool),
                   ],
                 ),
               ),
@@ -444,20 +469,20 @@ class _ControlScreenState extends State<ControlScreen> {
     ]));
   }
 
-  Column onMaterial(String text) {
+  Column onMaterial(String text, bool onOff) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text('$text 전원',
-            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black)),
-        if (sensorBool)
+            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black,fontSize: 17)),
+        if (onOff)
           Text('ON',
               style: TextStyle(
                   color: Colors.blueAccent,
                   fontWeight: FontWeight.w700,
                   fontSize: 34.0)),
-        if (!sensorBool)
+        if (!onOff)
           Text('OFF',
               style: TextStyle(
                   color: Colors.redAccent,
@@ -471,7 +496,7 @@ class _ControlScreenState extends State<ControlScreen> {
     return StaggeredGridTile.count(
       crossAxisCellCount: 2,
       mainAxisCellCount: 1,
-      child: _buildTile2(
+      child: _buildTile(
         InkWell(
           onTap: () {
             switch (text) {
@@ -503,7 +528,7 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  Padding powerTile() {
+  Padding powerTile(String device) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Row(
@@ -515,15 +540,52 @@ class _ControlScreenState extends State<ControlScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Material(
-                  elevation: 14.0,
-                  shadowColor: Color(0x802196F3),
-                  color: Colors.redAccent,
+                  color: Colors.blueAccent,
                   borderRadius: BorderRadius.circular(24),
                   child: Center(
                       child: Padding(
                           padding: const EdgeInsets.all(6),
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              switch (device) {
+                                case "sensor":
+                                  setState(() {
+                                    sensorBool = !sensorBool;
+                                    //grpc 명령어
+                                  });
+                                  break;
+
+                                case "pump":
+                                  setState(() {
+                                    pumpBool = !pumpBool;
+                                  });
+                                  break;
+
+                                case "lamp":
+                                  setState(() {
+                                    lampBool = !lampBool;
+                                  });
+                                  break;
+
+                                case "fan":
+                                  setState(() {
+                                    fanBool = !fanBool;
+                                  });
+                                  break;
+
+                                case "motor":
+                                  setState(() {
+                                    motorBool = !motorBool;
+                                  });
+                                  break;
+
+                                case "outFan":
+                                  setState(() {
+                                    outFanBool = !outFanBool;
+                                  });
+                                  break;
+                              }
+                            },
                             icon: Icon(
                               Icons.power_settings_new_outlined,
                               color: Colors.white,
@@ -541,7 +603,7 @@ class _ControlScreenState extends State<ControlScreen> {
     return StaggeredGridTile.count(
       crossAxisCellCount: 1,
       mainAxisCellCount: 1,
-      child: _buildTile2(
+      child: _buildTile(
         InkWell(
           onTap: () {
             switch (text) {
@@ -581,22 +643,7 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  Widget _buildTile(Widget child, {Function() onTap}) {
-    return Material(
-        elevation: 14.0,
-        borderRadius: BorderRadius.circular(12.0),
-        shadowColor: Color(0x802196F3),
-        child: InkWell(
-            // Do onTap() if it isn't null, otherwise do print()
-            onTap: onTap != null
-                ? () => onTap()
-                : () {
-                    print('Not set yet');
-                  },
-            child: child));
-  }
-
-  Widget _buildTile2(Widget child) {
+  Widget _buildTile(Widget child) {
     return Material(
       elevation: 14.0,
       borderRadius: BorderRadius.circular(12.0),
