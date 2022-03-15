@@ -12,6 +12,13 @@ bool fanBool = false;
 bool motorBool = true;
 bool outFanBool = false;
 
+Color sensorPowerColor = Colors.blueAccent;
+Color pumpPowerColor = Colors.blueAccent;
+Color lampPowerColor = Colors.blueAccent;
+Color fanPowerColor = Colors.blueAccent;
+Color motorPowerColor = Colors.blueAccent;
+Color outFanPowerColor = Colors.blueAccent;
+
 var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////
 // influxDB

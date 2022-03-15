@@ -114,7 +114,7 @@ class _ControlScreenState extends State<ControlScreen> {
                         ),
                       ),
                       Container(
-                        height: screenHeight * 0.3,
+                        height: screenHeight * 0.5,
                         child: TabBarView(children: [
                           dialogTab(screenWidth, screenHeight, "sensor"),
                           dialogTab(screenWidth, screenHeight, "pump"),
@@ -220,54 +220,175 @@ class _ControlScreenState extends State<ControlScreen> {
 
   Column dialogTab(double screenWidth, double screenHeight, String device) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-          height: screenHeight*0.03,
+          height: screenHeight * 0.03,
         ),
         Container(
           height: screenHeight * 0.3,
           width: screenWidth * 0.7,
-          child: Center(
-            child: StaggeredGrid.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 50.0,
-                mainAxisSpacing: 30.0,
-                children: <Widget>[
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 1,
-                    mainAxisCellCount: 2,
-                    child: Material(
-                      elevation: 14.0,
-                      borderRadius: BorderRadius.circular(12.0),
-                      shadowColor: Color(0x802196F3),
-                      child: Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: StaggeredGrid.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 50.0,
+              mainAxisSpacing: 30.0,
+              children: <Widget>[
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 1,
+                  mainAxisCellCount: 2,
+                  child: Material(
+                    elevation: 14.0,
+                    borderRadius: BorderRadius.circular(12.0),
+                    shadowColor: Color(0x802196F3),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Column(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                      '${double.parse(temSparkLine.last.toStringAsFixed(2))}°C',
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('$device 전원',
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 25.0))
+                                          fontSize: 25.0)),
+                                  SizedBox(
+                                    width: screenWidth * 0.05,
+                                  ),
+                                  if (device == "sensor")
+                                    powerMaterial("sensor")
+                                  else if (device == "pump")
+                                    powerMaterial("pump")
+                                  else if (device == "lamp")
+                                    powerMaterial("lamp")
+                                  else if (device == "fan")
+                                    powerMaterial("fan")
+                                  else if (device == "motor")
+                                    powerMaterial("motor")
+                                  else if (device == "outFan")
+                                    powerMaterial("outFan")
+
                                 ],
-                              ),
-                            ]),
-                      ),
-                    ),
+                              )
+                            ],
+                          ),
+                        ]),
                   ),
-                ]),
-          ),
+                ),
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 1,
+                  mainAxisCellCount: 2,
+                  child: Material(
+                    elevation: 14.0,
+                    borderRadius: BorderRadius.circular(12.0),
+                    shadowColor: Color(0x802196F3),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('$device 전원',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 25.0)),
+                                  SizedBox(
+                                    width: screenWidth * 0.05,
+                                  ),
+                                  if (device == "sensor")
+                                    powerMaterial("sensor")
+                                  else if (device == "pump")
+                                    powerMaterial("pump")
+                                  else if (device == "lamp")
+                                      powerMaterial("lamp")
+                                    else if (device == "fan")
+                                        powerMaterial("fan")
+                                      else if (device == "motor")
+                                          powerMaterial("motor")
+                                        else if (device == "outFan")
+                                            powerMaterial("outFan")
+                                ],
+                              )
+                            ],
+                          ),
+                        ]),
+                  ),
+                ),
+              ]),
         ),
       ],
+    );
+  }
+
+  Material powerMaterial(String device) {
+    return Material(
+      color: sensorPowerColor,
+      borderRadius: BorderRadius.circular(24),
+      child: Center(
+          child: IconButton(
+        onPressed: () {
+          switch (device) {
+            case "sensor":
+              setState(() {
+                sensorBool = !sensorBool;
+                sensorBool
+                    ? sensorPowerColor = Colors.blueAccent
+                    : sensorPowerColor = Colors.grey;
+
+                //grpc 명령어
+              });
+              break;
+
+            case "pump":
+              setState(() {
+                pumpBool = !pumpBool;
+              });
+              break;
+
+            case "lamp":
+              setState(() {
+                lampBool = !lampBool;
+              });
+              break;
+
+            case "fan":
+              setState(() {
+                fanBool = !fanBool;
+              });
+              break;
+
+            case "motor":
+              setState(() {
+                motorBool = !motorBool;
+              });
+              break;
+
+            case "outFan":
+              setState(() {
+                outFanBool = !outFanBool;
+              });
+              break;
+          }
+        },
+        icon: Icon(
+          Icons.power_settings_new_outlined,
+          color: Colors.white,
+          size: 30,
+        ),
+      )),
     );
   }
 
@@ -475,7 +596,10 @@ class _ControlScreenState extends State<ControlScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text('$text 전원',
-            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black,fontSize: 17)),
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+                fontSize: 17)),
         if (onOff)
           Text('ON',
               style: TextStyle(
