@@ -261,19 +261,19 @@ class _ControlScreenState extends State<ControlScreen> {
                                   SizedBox(
                                     width: screenWidth * 0.05,
                                   ),
-                                  if (device == "sensor")
-                                    powerMaterial("sensor")
-                                  else if (device == "pump")
-                                    powerMaterial("pump")
-                                  else if (device == "lamp")
-                                    powerMaterial("lamp")
-                                  else if (device == "fan")
-                                    powerMaterial("fan")
-                                  else if (device == "motor")
-                                    powerMaterial("motor")
-                                  else if (device == "outFan")
-                                    powerMaterial("outFan")
-
+                                  powerMaterial("sensor")
+                                  // if (device == "sensor")
+                                  //   powerMaterial("sensor")
+                                  // else if (device == "pump")
+                                  //   powerMaterial("pump")
+                                  // else if (device == "lamp")
+                                  //   powerMaterial("lamp")
+                                  // else if (device == "fan")
+                                  //   powerMaterial("fan")
+                                  // else if (device == "motor")
+                                  //   powerMaterial("motor")
+                                  // else if (device == "outFan")
+                                  //   powerMaterial("outFan")
                                 ],
                               )
                             ],
@@ -313,13 +313,13 @@ class _ControlScreenState extends State<ControlScreen> {
                                   else if (device == "pump")
                                     powerMaterial("pump")
                                   else if (device == "lamp")
-                                      powerMaterial("lamp")
-                                    else if (device == "fan")
-                                        powerMaterial("fan")
-                                      else if (device == "motor")
-                                          powerMaterial("motor")
-                                        else if (device == "outFan")
-                                            powerMaterial("outFan")
+                                    powerMaterial("lamp")
+                                  else if (device == "fan")
+                                    powerMaterial("fan")
+                                  else if (device == "motor")
+                                    powerMaterial("motor")
+                                  else if (device == "outFan")
+                                    powerMaterial("outFan")
                                 ],
                               )
                             ],
@@ -382,6 +382,31 @@ class _ControlScreenState extends State<ControlScreen> {
               });
               break;
           }
+        },
+        icon: Icon(
+          Icons.power_settings_new_outlined,
+          color: Colors.white,
+          size: 30,
+        ),
+      )),
+    );
+  }
+
+  Material powerMaterial2(String device) {
+    return Material(
+      color: sensorPowerColor,
+      borderRadius: BorderRadius.circular(24),
+      child: Center(
+          child: IconButton(
+        onPressed: () {
+          setState(() {
+            sensorBool = !sensorBool;
+            sensorBool
+                ? sensorPowerColor = Colors.blueAccent
+                : sensorPowerColor = Colors.grey;
+
+            //grpc 명령어
+          });
         },
         icon: Icon(
           Icons.power_settings_new_outlined,

@@ -1554,31 +1554,31 @@ class _HomeScreenState extends State<HomeScreen> {
       SizedBox(
         height: screenHeight * 0.03,
       ),
-          Material(
-            elevation: 14.0,
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
-            shadowColor: Color(0x802196F3),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
+      Material(
+        elevation: 14.0,
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
+        shadowColor: Color(0x802196F3),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        if (temSparkLine.isNotEmpty)
-                          Text('재배기 외부 센서',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 25.0))
-                      ],
-                    ),
-                  ]),
-            ),
-          ),
+                    if (temSparkLine.isNotEmpty)
+                      Text('재배기 외부 센서',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25.0))
+                  ],
+                ),
+              ]),
+        ),
+      ),
       SizedBox(
         height: screenHeight * 0.03,
       ),
@@ -1831,9 +1831,9 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-          SizedBox(
-            height: screenHeight * 0.03,
-          ),
+      SizedBox(
+        height: screenHeight * 0.03,
+      ),
     ]));
   }
 
