@@ -141,6 +141,67 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
+  void testDialog(){
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState)
+          {
+            return AlertDialog(
+              title: Text("test"),
+              content: SizedBox(
+                height: screenHeight * 0.6,
+                width: screenWidth * 0.7,
+                child: DefaultTabController(
+                  initialIndex: outDialogInitialize,
+                  length: 2,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                        width: screenWidth * 0.7,
+                        height: screenHeight * 0.06,
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        child: TabBar(
+                          indicator: BubbleTabIndicator(
+                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                            indicatorHeight: 40.0,
+                            indicatorColor: Colors.white,
+                          ),
+                          labelStyle: Styles.tabTextStyle,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.white,
+                          tabs: <Widget>[
+                            Text("모터", style: TextStyle(fontSize: 18)),
+                            Text("팬", style: TextStyle(fontSize: 18)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: screenHeight * 0.6,
+                        child: TabBarView(children: [
+                          Text("test")
+                          //dialogTab(screenWidth, screenHeight, "motor"),
+                          //dialogTab(screenWidth, screenHeight, "outFan"),
+                        ]),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
+        }
+    );
+  }
+
   void outDialog() {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -262,64 +323,6 @@ class _ControlScreenState extends State<ControlScreen> {
                                     width: screenWidth * 0.05,
                                   ),
                                   powerMaterial("sensor")
-                                  // if (device == "sensor")
-                                  //   powerMaterial("sensor")
-                                  // else if (device == "pump")
-                                  //   powerMaterial("pump")
-                                  // else if (device == "lamp")
-                                  //   powerMaterial("lamp")
-                                  // else if (device == "fan")
-                                  //   powerMaterial("fan")
-                                  // else if (device == "motor")
-                                  //   powerMaterial("motor")
-                                  // else if (device == "outFan")
-                                  //   powerMaterial("outFan")
-                                ],
-                              )
-                            ],
-                          ),
-                        ]),
-                  ),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 1,
-                  mainAxisCellCount: 2,
-                  child: Material(
-                    elevation: 14.0,
-                    borderRadius: BorderRadius.circular(12.0),
-                    shadowColor: Color(0x802196F3),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('$device 전원',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 25.0)),
-                                  SizedBox(
-                                    width: screenWidth * 0.05,
-                                  ),
-                                  if (device == "sensor")
-                                    powerMaterial("sensor")
-                                  else if (device == "pump")
-                                    powerMaterial("pump")
-                                  else if (device == "lamp")
-                                    powerMaterial("lamp")
-                                  else if (device == "fan")
-                                    powerMaterial("fan")
-                                  else if (device == "motor")
-                                    powerMaterial("motor")
-                                  else if (device == "outFan")
-                                    powerMaterial("outFan")
                                 ],
                               )
                             ],
@@ -404,7 +407,6 @@ class _ControlScreenState extends State<ControlScreen> {
             sensorBool
                 ? sensorPowerColor = Colors.blueAccent
                 : sensorPowerColor = Colors.grey;
-
             //grpc 명령어
           });
         },
@@ -758,7 +760,8 @@ class _ControlScreenState extends State<ControlScreen> {
             switch (text) {
               case "센서\n제어":
                 inDialogInitialize = 0;
-                inDialog();
+                //inDialog();
+                testDialog();
                 break;
               case "펌프\n제어":
                 inDialogInitialize = 1;
@@ -771,6 +774,7 @@ class _ControlScreenState extends State<ControlScreen> {
               case "팬\n제어":
                 inDialogInitialize = 3;
                 inDialog();
+                testDialog();
                 break;
             }
           },
