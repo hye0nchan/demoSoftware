@@ -16,49 +16,10 @@ class _ControlScreenState extends State<ControlScreen> {
   @override
   void initState() {
     super.initState();
-    //postData();
-    //RestApi_Get();
-    //RestApi_Post();
   }
-
-  // void RestApi_Post() async {
-  //   Map<String, dynamic> queryJson = {"login": "jjeaby", "password": "pw"};
-  //   http.Response response = await http.post(
-  //       Uri.parse('https://reqbin.com/echo/post/json'),
-  //       headers: {"Accept": "application/json"},
-  //       body: queryJson);
-  //   Map<String, dynamic> responseBody = jsonDecode(response.body);
-  //   print(response.body);  // 결과 출력 ==> {"success" : "true" }
-  //   print(responseBody["success"]);  // 결과 출력 ==> success
-  //   JsonObject jsonObject = JsonObject.fromJson(responseBody);
-  //   print(jsonObject.success); // 결과 출력 ==> success
-  // }
 
   int inDialogInitialize = 0;
   int outDialogInitialize = 0;
-
-  // void getData() async {
-  //   http.Response response = await http.get(
-  //       Uri.parse('https://10.0.2.2:44341/api/TodoItems/1'),
-  //       headers: {"Content-Type": "application/json"});
-  //   Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
-  //   print(response.body); // 결과 출력 ==> {"restapi" : "get" }
-  //   print(responseBodyMap["gwId"]); // 결과 출력 ==> get
-  // }
-
-  // void postData() async {
-  //   var queryJson = jsonEncode(
-  //       {"deviceId": "0x0001", "gwId": "0x000000", "dataUnit": "sensor2"});
-  //   http.Response response = await http.post(
-  //       Uri.parse('https://172.20.2.87:44341/api/TodoItems'),
-  //       headers: {"Content-Type": "application/json"},
-  //       body: queryJson);
-  //   Map<String, dynamic> responseBody = jsonDecode(response.body);
-  //   print(response.body);
-  //   print(responseBody["gwId"]);
-  //   JsonObject jsonObject = JsonObject.fromJson(responseBody);
-  //   print(jsonObject.gwId);
-  // }
 
   void inDialog() {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -116,10 +77,10 @@ class _ControlScreenState extends State<ControlScreen> {
                       Container(
                         height: screenHeight * 0.5,
                         child: TabBarView(children: [
-                          dialogTab(screenWidth, screenHeight, "sensor"),
-                          dialogTab(screenWidth, screenHeight, "pump"),
-                          dialogTab(screenWidth, screenHeight, "lamp"),
-                          dialogTab(screenWidth, screenHeight, "fan"),
+                          dialogPowerWidget(screenHeight, screenWidth, "센서"),
+                          dialogPowerWidget(screenHeight, screenWidth, "펌프"),
+                          dialogPowerWidget(screenHeight, screenWidth, "전등"),
+                          dialogPowerWidget(screenHeight, screenWidth, "팬"),
                         ]),
                       )
                     ],
@@ -141,18 +102,17 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  void testDialog(){
+  void testDialog() {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     showDialog(
-      barrierDismissible: false,
-      context: context,
+        barrierDismissible: false,
+        context: context,
         builder: (context) {
           return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState)
-          {
+              builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
-              title: Text("test"),
+              title: Text("재배기 외부 제어"),
               content: SizedBox(
                 height: screenHeight * 0.6,
                 width: screenWidth * 0.7,
@@ -185,20 +145,73 @@ class _ControlScreenState extends State<ControlScreen> {
                         ),
                       ),
                       Container(
-                        height: screenHeight * 0.6,
+                        height: screenHeight * 0.5,
                         child: TabBarView(children: [
-                          Text("test")
-                          //dialogTab(screenWidth, screenHeight, "motor"),
-                          //dialogTab(screenWidth, screenHeight, "outFan"),
+                          dialogPowerWidget(screenHeight, screenWidth,"모터"),
+                          dialogPowerWidget(screenHeight, screenWidth, "팬"),
                         ]),
                       )
                     ],
                   ),
                 ),
               ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('닫기'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             );
           });
-        }
+        });
+  }
+
+  Column dialogPowerWidget(double screenHeight, double screenWidth,String device) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: screenHeight * 0.03,
+        ),
+        Container(
+          width: screenWidth*0.6,
+          height: screenHeight * 0.1,
+          child: Material(
+            elevation: 14.0,
+            borderRadius: BorderRadius.circular(24.0),
+            shadowColor: Color(0x802196F3),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('$device 전원',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 25.0)),
+                          SizedBox(
+                            width: screenWidth * 0.05,
+                          ),
+                          powerMaterial("sensor")
+                        ],
+                      )
+                    ],
+                  ),
+                ]),
+          ),
+        ),
+      ],
     );
   }
 
@@ -256,8 +269,8 @@ class _ControlScreenState extends State<ControlScreen> {
                       Container(
                         height: screenHeight * 0.3,
                         child: TabBarView(children: [
-                          dialogTab(screenWidth, screenHeight, "motor"),
-                          dialogTab(screenWidth, screenHeight, "outFan"),
+                          dialogPowerWidget(screenHeight, screenWidth, "모터"),
+                          dialogPowerWidget(screenHeight, screenWidth, "팬"),
                         ]),
                       )
                     ],
@@ -760,8 +773,7 @@ class _ControlScreenState extends State<ControlScreen> {
             switch (text) {
               case "센서\n제어":
                 inDialogInitialize = 0;
-                //inDialog();
-                testDialog();
+                inDialog();
                 break;
               case "펌프\n제어":
                 inDialogInitialize = 1;
@@ -774,7 +786,6 @@ class _ControlScreenState extends State<ControlScreen> {
               case "팬\n제어":
                 inDialogInitialize = 3;
                 inDialog();
-                testDialog();
                 break;
             }
           },
