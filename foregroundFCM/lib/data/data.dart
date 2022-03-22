@@ -19,6 +19,9 @@ Color fanPowerColor = Colors.blueAccent;
 Color motorPowerColor = Colors.blueAccent;
 Color outFanPowerColor = Colors.blueAccent;
 
+List<String> pumpCycle = ["1h","2h","3h","6h","12h"];
+String pumpInitialize = "1h";
+
 var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////
 // influxDB

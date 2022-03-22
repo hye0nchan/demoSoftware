@@ -1,5 +1,4 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -45,7 +44,7 @@ class _ControlScreenState extends State<ControlScreen> {
               width: screenWidth * 0.7,
               child: SingleChildScrollView(
                 child: DefaultTabController(
-                  initialIndex: outDialogInitialize,
+                  initialIndex: inDialogInitialize,
                   length: 4,
                   child: Column(
                     children: [
@@ -102,82 +101,17 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  void testDialog() {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              title: Text("재배기 외부 제어"),
-              content: SizedBox(
-                height: screenHeight * 0.6,
-                width: screenWidth * 0.7,
-                child: DefaultTabController(
-                  initialIndex: outDialogInitialize,
-                  length: 2,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                        width: screenWidth * 0.7,
-                        height: screenHeight * 0.06,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        child: TabBar(
-                          indicator: BubbleTabIndicator(
-                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                            indicatorHeight: 40.0,
-                            indicatorColor: Colors.white,
-                          ),
-                          labelStyle: Styles.tabTextStyle,
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.white,
-                          tabs: <Widget>[
-                            Text("모터", style: TextStyle(fontSize: 18)),
-                            Text("팬", style: TextStyle(fontSize: 18)),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: screenHeight * 0.5,
-                        child: TabBarView(children: [
-                          dialogPowerWidget(screenHeight, screenWidth,"모터"),
-                          dialogPowerWidget(screenHeight, screenWidth, "팬"),
-                        ]),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('닫기'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          });
-        });
-  }
-
-  Column dialogPowerWidget(double screenHeight, double screenWidth,String device) {
+  Column dialogPowerWidget(
+      double screenHeight, double screenWidth, String device) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(
-          height: screenHeight * 0.03,
-        ),
+        // SizedBox(
+        //   height: screenHeight * 0.03,
+        // ),
         Container(
-          width: screenWidth*0.6,
+          width: screenWidth * 0.6,
           height: screenHeight * 0.1,
           child: Material(
             elevation: 14.0,
@@ -203,7 +137,59 @@ class _ControlScreenState extends State<ControlScreen> {
                           SizedBox(
                             width: screenWidth * 0.05,
                           ),
-                          powerMaterial("sensor")
+                          powerMaterial(device)
+                        ],
+                      )
+                    ],
+                  ),
+                ]),
+          ),
+        ),
+        if(device=="펌프")
+        Container(
+          width: screenWidth * 0.6,
+          height: screenHeight * 0.1,
+          child: Material(
+            elevation: 14.0,
+            borderRadius: BorderRadius.circular(24.0),
+            shadowColor: Color(0x802196F3),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('주기',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 25.0)),
+                          SizedBox(
+                            width: screenWidth * 0.05,
+                          ),
+                          DropdownButton(
+                              isDense: true,
+                              value: pumpInitialize,
+                              onChanged: (String value) => setState(() {
+                                pumpInitialize = value;
+                                //grpc 명령어
+                              }),
+                              items: pumpCycle.map((String title) {
+                                return DropdownMenuItem(
+                                  value: title,
+                                  child: Text(title,
+                                      style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 22.0)),
+                                );
+                              }).toList())
                         ],
                       )
                     ],
@@ -262,7 +248,7 @@ class _ControlScreenState extends State<ControlScreen> {
                           unselectedLabelColor: Colors.white,
                           tabs: <Widget>[
                             Text("모터", style: TextStyle(fontSize: 18)),
-                            Text("팬", style: TextStyle(fontSize: 18)),
+                            Text("외부 팬", style: TextStyle(fontSize: 18)),
                           ],
                         ),
                       ),
@@ -270,7 +256,7 @@ class _ControlScreenState extends State<ControlScreen> {
                         height: screenHeight * 0.3,
                         child: TabBarView(children: [
                           dialogPowerWidget(screenHeight, screenWidth, "모터"),
-                          dialogPowerWidget(screenHeight, screenWidth, "팬"),
+                          dialogPowerWidget(screenHeight, screenWidth, "외부 팬"),
                         ]),
                       )
                     ],
@@ -351,48 +337,44 @@ class _ControlScreenState extends State<ControlScreen> {
 
   Material powerMaterial(String device) {
     return Material(
-      color: sensorPowerColor,
+      color: Colors.blueAccent,
       borderRadius: BorderRadius.circular(24),
       child: Center(
           child: IconButton(
         onPressed: () {
           switch (device) {
-            case "sensor":
+            case "센서":
               setState(() {
                 sensorBool = !sensorBool;
-                sensorBool
-                    ? sensorPowerColor = Colors.blueAccent
-                    : sensorPowerColor = Colors.grey;
-
                 //grpc 명령어
               });
               break;
 
-            case "pump":
+            case "펌프":
               setState(() {
                 pumpBool = !pumpBool;
               });
               break;
 
-            case "lamp":
+            case "전등":
               setState(() {
                 lampBool = !lampBool;
               });
               break;
 
-            case "fan":
+            case "팬":
               setState(() {
                 fanBool = !fanBool;
               });
               break;
 
-            case "motor":
+            case "모터":
               setState(() {
                 motorBool = !motorBool;
               });
               break;
 
-            case "outFan":
+            case "외부 팬":
               setState(() {
                 outFanBool = !outFanBool;
               });
@@ -451,22 +433,6 @@ class _ControlScreenState extends State<ControlScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.menu),
-                        iconSize: 28.0,
-                        color: Colors.white,
-                        onPressed: () {},
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.refresh_outlined),
-                        iconSize: 28.0,
-                        color: Colors.white,
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ],
@@ -513,17 +479,31 @@ class _ControlScreenState extends State<ControlScreen> {
       SizedBox(
         height: screenHeight * 0.03,
       ),
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Text(("재배기 내부 제어"),
-            style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 25.0)),
-      ),
+          Material(
+            elevation: 14.0,
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
+            shadowColor: Color(0x802196F3),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        if (temSparkLine.isNotEmpty)
+                          Text('재배기 내부 제어',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 25.0))
+                      ],
+                    ),
+                  ]),
+            ),
+          ),
       SizedBox(
         height: screenHeight * 0.03,
       ),
@@ -558,7 +538,7 @@ class _ControlScreenState extends State<ControlScreen> {
         ],
       ),
       SizedBox(
-        height: screenHeight * 0.03,
+        height: screenHeight * 0.015,
       ),
       StaggeredGrid.count(
         crossAxisCount: 4,
@@ -574,17 +554,31 @@ class _ControlScreenState extends State<ControlScreen> {
       SizedBox(
         height: screenHeight * 0.03,
       ),
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Text(("재배기 외부 제어"),
-            style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 25.0)),
-      ),
+          Material(
+            elevation: 14.0,
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
+            shadowColor: Color(0x802196F3),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        if (temSparkLine.isNotEmpty)
+                          Text('재배기 외부 제어',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 25.0))
+                      ],
+                    ),
+                  ]),
+            ),
+          ),
       SizedBox(
         height: screenHeight * 0.03,
       ),
@@ -617,7 +611,7 @@ class _ControlScreenState extends State<ControlScreen> {
         ],
       ),
       SizedBox(
-        height: screenHeight * 0.03,
+        height: screenHeight * 0.015,
       ),
       StaggeredGrid.count(
           crossAxisCount: 4,
@@ -625,7 +619,7 @@ class _ControlScreenState extends State<ControlScreen> {
           mainAxisSpacing: 12.0,
           children: <Widget>[
             outStaggeredGridTile("모터\n제어"),
-            outStaggeredGridTile("팬\n제어"),
+            outStaggeredGridTile("외부 팬\n제어"),
           ])
     ]));
   }
@@ -668,7 +662,7 @@ class _ControlScreenState extends State<ControlScreen> {
                 outDialogInitialize = 0;
                 outDialog();
                 break;
-              case "팬\n제어":
+              case "외부 팬\n제어":
                 outDialogInitialize = 1;
                 outDialog();
                 break;
