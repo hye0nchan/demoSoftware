@@ -19,8 +19,24 @@ Color fanPowerColor = Colors.blueAccent;
 Color motorPowerColor = Colors.blueAccent;
 Color outFanPowerColor = Colors.blueAccent;
 
-List<String> pumpCycle = ["1h","2h","3h","6h","12h"];
+List<String> controlPeriod = ["1h", "2h", "3h", "6h", "12h"];
 String pumpInitialize = "1h";
+String lampInitialize = "1h";
+String fanInitialize = "1h";
+String motorInitialize = "1h";
+String outFanInitialize = "1h";
+
+String currentSensor = "온도";
+List<String> graphSensorList = [
+  "온도",
+  "습도",
+  "이산화탄소",
+  "조도",
+  "자외선",
+  "암모니아",
+  "이산화질소",
+  "일산화탄소",
+];
 
 var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////

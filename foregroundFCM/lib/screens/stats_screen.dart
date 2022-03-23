@@ -19,14 +19,13 @@ class _StatsScreenState extends State<StatsScreen> {
   bool switchValue = false;
 
   ZoomPanBehavior _zoomPanBehavior =
-  ZoomPanBehavior(enablePinching: true, enableDoubleTapZooming: true);
+      ZoomPanBehavior(enablePinching: true, enableDoubleTapZooming: true);
 
   //센서1
 
   @override
   void initState() {
     _zoomPanBehavior = ZoomPanBehavior(enablePinching: true);
-    functionBox.changeVisibilityStatScreenLists(0);
     super.initState();
   }
 
@@ -44,9 +43,9 @@ class _StatsScreenState extends State<StatsScreen> {
             ),
             title: Center(
                 child: new Text(
-                  "Loading Data",
-                  style: TextStyle(fontSize: 20),
-                )),
+              "Loading Data",
+              style: TextStyle(fontSize: 20),
+            )),
             content: SizedBox(
               height: 60,
               child: Column(
@@ -94,492 +93,200 @@ class _StatsScreenState extends State<StatsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Palette.primaryColor,
       appBar: AppBar(
+        title: Column(
+          children: [
+            SizedBox(
+                //height: screenHeight * 0.03,
+                ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  "FarmCare Dashboard",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
+          ],
+        ),
         elevation: 0.0,
         backgroundColor: Palette.primaryColor,
-        actions: <Widget>[
-          IconButton(
-              onPressed: () {
-                print(sensor1redTemData);
-                readInfluxDB();
-              },
-              icon: Icon(Icons.menu))
-        ],
       ),
       body: CustomScrollView(
         physics: ClampingScrollPhysics(),
         slivers: <Widget>[
-          _buildHeader(),
-          _buildRegionTabBar(screenHeight),
-          _buildStatsTabBar(),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            sliver: SliverToBoxAdapter(
-              child: Container(
-                height: screenHeight * 0.6,
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Container(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.6,
-                      child: Stack(
-                        children: [
-                          //test
-                          Visibility(
-                            visible: visibilityStatScreenMap[0],
-                            child: Container(
-                              padding: const EdgeInsets.all(20.0),
-                              child: SfCartesianChart(
-                                zoomPanBehavior: _zoomPanBehavior,
-                                primaryXAxis: DateTimeAxis(
-                                    minimum: firstDate,
-                                    maximum: currentDate,
-                                    intervalType: DateTimeIntervalType.hours,
-                                    interval: 1),
-                                title: ChartTitle(
-                                  text: "Temperature Chart",
-                                  textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                legend: Legend(
-                                  isVisible: true,
-                                  position: LegendPosition.bottom,
-                                ),
-                                series: <ChartSeries<ChartData, DateTime>>[
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: tem1ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: tem2ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: tem3ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: visibilityStatScreenMap[1],
-                            child: Container(
-                              padding: const EdgeInsets.all(20.0),
-                              child: SfCartesianChart(
-                                zoomPanBehavior: _zoomPanBehavior,
-                                primaryXAxis: DateTimeAxis(
-                                    minimum: firstDate,
-                                    maximum: currentDate,
-                                    intervalType: DateTimeIntervalType.hours,
-                                    interval: 1),
-                                title: ChartTitle(
-                                  text: "Humidity Chart",
-                                  textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                legend: Legend(
-                                  isVisible: true,
-                                  position: LegendPosition.bottom,
-                                ),
-                                series: <ChartSeries<ChartData, DateTime>>[
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "%",
-                                    dataSource: hum1ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "%",
-                                    dataSource: hum2ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "%",
-                                    dataSource: hum3ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: visibilityStatScreenMap[2],
-                            child: Container(
-                              padding: const EdgeInsets.all(20.0),
-                              child: SfCartesianChart(
-                                zoomPanBehavior: _zoomPanBehavior,
-                                primaryXAxis: DateTimeAxis(
-                                    minimum: firstDate,
-                                    maximum: currentDate,
-                                    intervalType: DateTimeIntervalType.hours,
-                                    interval: 1),
-                                title: ChartTitle(
-                                  text: "Co2 Chart",
-                                  textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                legend: Legend(
-                                  isVisible: true,
-                                  position: LegendPosition.bottom,
-                                ),
-                                series: <ChartSeries<ChartData, DateTime>>[
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "ppm",
-                                    dataSource: co21ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "ppm",
-                                    dataSource: co22ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "ppm",
-                                    dataSource: co23ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: visibilityStatScreenMap[3],
-                            child: Container(
-                              padding: const EdgeInsets.all(20.0),
-                              child: SfCartesianChart(
-                                zoomPanBehavior: _zoomPanBehavior,
-                                primaryXAxis: DateTimeAxis(
-                                    minimum: firstDate,
-                                    maximum: currentDate,
-                                    intervalType: DateTimeIntervalType.hours,
-                                    interval: 1),
-                                title: ChartTitle(
-                                  text: "Lux Chart",
-                                  textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                legend: Legend(
-                                  isVisible: true,
-                                  position: LegendPosition.bottom,
-                                ),
-                                series: <ChartSeries<ChartData, DateTime>>[
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: lux1ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: lux2ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: lux3ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: visibilityStatScreenMap[4],
-                            child: Container(
-                              padding: const EdgeInsets.all(20.0),
-                              child: SfCartesianChart(
-                                zoomPanBehavior: _zoomPanBehavior,
-                                primaryXAxis: DateTimeAxis(
-                                    minimum: firstDate,
-                                    maximum: currentDate,
-                                    intervalType: DateTimeIntervalType.hours,
-                                    interval: 1),
-                                title: ChartTitle(
-                                  text: "Uv Chart",
-                                  textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                legend: Legend(
-                                  isVisible: true,
-                                  position: LegendPosition.bottom,
-                                ),
-                                series: <ChartSeries<ChartData, DateTime>>[
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: uv1ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: uv2ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: uv3ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: visibilityStatScreenMap[5],
-                            child: Container(
-                              padding: const EdgeInsets.all(20.0),
-                              child: SfCartesianChart(
-                                zoomPanBehavior: _zoomPanBehavior,
-                                primaryXAxis: DateTimeAxis(
-                                    minimum: firstDate,
-                                    maximum: currentDate,
-                                    intervalType: DateTimeIntervalType.hours,
-                                    interval: 1),
-                                title: ChartTitle(
-                                  text: "Ammonia Chart",
-                                  textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                legend: Legend(
-                                  isVisible: true,
-                                  position: LegendPosition.bottom,
-                                ),
-                                series: <ChartSeries<ChartData, DateTime>>[
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: nh31ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: nh32ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: nh33ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: visibilityStatScreenMap[6],
-                            child: Container(
-                              padding: const EdgeInsets.all(20.0),
-                              child: SfCartesianChart(
-                                zoomPanBehavior: _zoomPanBehavior,
-                                primaryXAxis: DateTimeAxis(
-                                    minimum: firstDate,
-                                    maximum: currentDate,
-                                    intervalType: DateTimeIntervalType.hours,
-                                    interval: 1),
-                                title: ChartTitle(
-                                  text: "No2 Chart",
-                                  textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                legend: Legend(
-                                  isVisible: true,
-                                  position: LegendPosition.bottom,
-                                ),
-                                series: <ChartSeries<ChartData, DateTime>>[
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: no21ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: no22ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: no23ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: visibilityStatScreenMap[7],
-                            child: Container(
-                              padding: const EdgeInsets.all(20.0),
-                              child: SfCartesianChart(
-                                zoomPanBehavior: _zoomPanBehavior,
-                                primaryXAxis: DateTimeAxis(
-                                    minimum: firstDate,
-                                    maximum: currentDate,
-                                    intervalType: DateTimeIntervalType.hours,
-                                    interval: 1),
-                                title: ChartTitle(
-                                  text: "Co Chart",
-                                  textStyle: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                legend: Legend(
-                                  isVisible: true,
-                                  position: LegendPosition.bottom,
-                                ),
-                                series: <ChartSeries<ChartData, DateTime>>[
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: co1ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: co2ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                  LineSeries<ChartData, DateTime>(
-                                    name: "℃",
-                                    dataSource: co3ChartData,
-                                    xValueMapper: (ChartData sales, _) =>
-                                    sales.time,
-                                    yValueMapper: (ChartData sales, _) =>
-                                    sales.value,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          _buildHeader(screenHeight, screenWidth),
+          mainBody(screenHeight, screenWidth),
+          dataChart(screenHeight, context),
         ],
       ),
     );
   }
 
-  SliverPadding _buildHeader() {
+  SliverPadding dataChart(double screenHeight, BuildContext context) {
     return SliverPadding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
       sliver: SliverToBoxAdapter(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Container(
+          height: screenHeight * 0.7,
+          color: Colors.white,
+          child: Column(
+            children: [
+              SizedBox(
+                height: screenHeight*0.03,
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Stack(
+                  children: [
+                    //test
+                    sensorGraph(0),
+                    sensorGraph(1),
+                    sensorGraph(2),
+                    sensorGraph(3),
+                    sensorGraph(4),
+                    sensorGraph(5),
+                    sensorGraph(6),
+                    sensorGraph(7),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Visibility sensorGraph(int index) {
+    String chartName = "온도";
+    List<ChartData> chartData = [];
+    List<ChartData> chartData2 = [];
+    List<ChartData> chartData3 = [];
+
+    switch (index) {
+      case 0:
+        chartName = "온도";
+        chartData = tem1ChartData;
+        chartData2 = tem2ChartData;
+        chartData3 = tem3ChartData;
+        break;
+      case 1:
+        chartName = "습도";
+        chartData = hum1ChartData;
+        chartData2 = hum2ChartData;
+        chartData3 = hum3ChartData;
+        break;
+      case 2:
+        chartName = "이산화탄소";
+        chartData = co21ChartData;
+        chartData2 = co22ChartData;
+        chartData3 = co23ChartData;
+        break;
+      case 3:
+        chartName = "조도";
+        chartData = lux1ChartData;
+        chartData2 = lux2ChartData;
+        chartData3 = lux3ChartData;
+        break;
+      case 4:
+        chartName = "자외선";
+        chartData = uv1ChartData;
+        chartData2 = uv2ChartData;
+        chartData3 = uv3ChartData;
+        break;
+      case 5:
+        chartName = "암모니아";
+        chartData = nh31ChartData;
+        chartData2 = nh32ChartData;
+        chartData3 = nh33ChartData;
+        break;
+      case 6:
+        chartName = "이산화질소";
+        chartData = no21ChartData;
+        chartData2 = no22ChartData;
+        chartData3 = no23ChartData;
+        break;
+      case 7:
+        chartName = "일산화탄소";
+        chartData = co1ChartData;
+        chartData2 = co2ChartData;
+        chartData3 = co3ChartData;
+        break;
+    }
+    return Visibility(
+      visible: visibilityStatScreenMap[index],
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Material(
+          elevation: 14.0,
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+          shadowColor: Color(0x802196F3),
+          child: SfCartesianChart(
+            zoomPanBehavior: _zoomPanBehavior,
+            primaryXAxis: DateTimeAxis(
+                minimum: firstDate,
+                maximum: currentDate,
+                intervalType: DateTimeIntervalType.hours,
+                interval: 1),
+            title: ChartTitle(
+              text: "$chartName 차트",
+              textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            series: <ChartSeries<ChartData, DateTime>>[
+              LineSeries<ChartData, DateTime>(
+                opacity: 0.7,
+                width: 4,
+                color: Colors.blueAccent,
+                dataSource: chartData,
+                xValueMapper: (ChartData sales, _) => sales.time,
+                yValueMapper: (ChartData sales, _) => sales.value,
+              ),
+              LineSeries<ChartData, DateTime>(
+                opacity: 0.7,
+                width: 4,
+                color: Colors.redAccent,
+                dataSource: chartData2,
+                xValueMapper: (ChartData sales, _) => sales.time,
+                yValueMapper: (ChartData sales, _) => sales.value,
+              ),
+              LineSeries<ChartData, DateTime>(
+                opacity: 0.7,
+                width: 4,
+                color: Colors.greenAccent,
+                dataSource: chartData3,
+                xValueMapper: (ChartData sales, _) => sales.time,
+                yValueMapper: (ChartData sales, _) => sales.value,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  SliverToBoxAdapter _buildHeader(double screenHeight, double screenWidth) {
+    return SliverToBoxAdapter(
+      child: Container(
+        height: screenHeight * 0.05,
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+            color: Palette.primaryColor,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(45.0),
+              bottomRight: Radius.circular(45.0),
+            )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Cartesian Chart',
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold),
-            ),
-            Row(
-              children: [
-                Text(
-                  "Recent Data",
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                Container(
-                    height: 10,
-                    child: Switch(
-                        value: switchValue,
-                        onChanged: (value) {
-                          setState(() {
-                            switchValue = !switchValue;
-                          });
-                        }))
-              ],
+              "센서 그래프",
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ],
         ),
@@ -587,156 +294,97 @@ class _StatsScreenState extends State<StatsScreen> {
     );
   }
 
-  SliverToBoxAdapter _buildRegionTabBar(double screenHeight) {
+  SliverToBoxAdapter mainBody(double screenHeight, double screenWidth) {
     return SliverToBoxAdapter(
-      child: DefaultTabController(
-        length: 8,
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20.0),
-          height: screenHeight * 0.055,
-          decoration: BoxDecoration(
-            color: Colors.white24,
-            borderRadius: BorderRadius.circular(25.0),
+      child: Column(
+        children: [
+          SizedBox(
+            height: screenHeight * 0.03,
           ),
-          child: TabBar(
-            indicator: BubbleTabIndicator(
-              tabBarIndicatorSize: TabBarIndicatorSize.tab,
-              indicatorHeight: 45.0,
-              indicatorColor: Colors.white,
-            ),
-            labelStyle: Styles.tabTextStyle,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.white,
-            tabs: <Widget>[
-              Center(
-                  child: Text(
-                    "T\ne\nm",
-                  )),
-              Center(
-                  child: Text(
-                    "H\nu\nm",
-                  )),
-              Center(
-                  child: Text(
-                    "C\nO\n2",
-                  )),
-              Center(
-                  child: Text(
-                    "L\nu\nx",
-                  )),
-              Center(
-                  child: Text(
-                    "U\nv",
-                  )),
-              Center(
-                  child: Text(
-                    "A\nm\nm",
-                  )),
-              Center(
-                  child: Text(
-                    "N\no\n2",
-                  )),
-              Center(
-                  child: Text(
-                    "C\no",
-                  )),
-            ],
-            onTap: (index) {
-              if (index == 0) {
-                setState(() {
-                  functionBox.changeVisibilityStatScreenLists(0);
-                  statHolder = "Tem";
-                });
-              } else if (index == 1) {
-                setState(() {
-                  functionBox.changeVisibilityStatScreenLists(1);
-                  statHolder = "Hum";
-                });
-              } else if (index == 2) {
-                setState(() {
-                  functionBox.changeVisibilityStatScreenLists(2);
-                  statHolder = "Co2";
-                });
-              } else if (index == 3) {
-                setState(() {
-                  functionBox.changeVisibilityStatScreenLists(3);
-                  statHolder = "Lux";
-                });
-              } else if (index == 4) {
-                setState(() {
-                  functionBox.changeVisibilityStatScreenLists(4);
-                  statHolder = "Uv";
-                });
-              } else if (index == 5) {
-                setState(() {
-                  functionBox.changeVisibilityStatScreenLists(5);
-                  statHolder = "Amm";
-                });
-              } else if (index == 6) {
-                setState(() {
-                  functionBox.changeVisibilityStatScreenLists(6);
-                  statHolder = "No2";
-                });
-              } else if (index == 7) {
-                setState(() {
-                  functionBox.changeVisibilityStatScreenLists(7);
-                  statHolder = "Co";
-                });
-              }
-            },
-          ),
-        ),
-      ),
-    );
-  }
+          Container(
+            height: screenHeight * 0.09,
+            child: Material(
+              elevation: 14.0,
+              borderRadius: BorderRadius.circular(30),
+              shadowColor: Color(0x802196F3),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          if (temSparkLine.isNotEmpty)
+                            Text('센서 선택',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 22.0))
+                        ],
+                      ),
+                      DropdownButton(
+                          isDense: true,
+                          value: currentSensor,
+                          onChanged: (String value) {
+                            setState(() {
+                              currentSensor = value;
 
-  SliverPadding _buildStatsTabBar() {
-    return SliverPadding(
-      padding: const EdgeInsets.all(20.0),
-      sliver: SliverToBoxAdapter(
-        child: DefaultTabController(
-          length: 5,
-          child: TabBar(
-            indicatorColor: Colors.transparent,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white60,
-            tabs: <Widget>[
-              Text(
-                "1 HOUR",
-                textAlign: TextAlign.center,
+                              switch (value) {
+                                case "온도":
+                                  functionBox
+                                      .changeVisibilityStatScreenLists(0);
+                                  break;
+                                case "습도":
+                                  functionBox
+                                      .changeVisibilityStatScreenLists(1);
+                                  break;
+                                case "이산화탄소":
+                                  functionBox
+                                      .changeVisibilityStatScreenLists(2);
+                                  break;
+                                case "조도":
+                                  functionBox
+                                      .changeVisibilityStatScreenLists(3);
+                                  break;
+                                case "자외선":
+                                  functionBox
+                                      .changeVisibilityStatScreenLists(4);
+                                  break;
+                                case "암모니아":
+                                  functionBox
+                                      .changeVisibilityStatScreenLists(5);
+                                  break;
+                                case "이산화질소":
+                                  functionBox
+                                      .changeVisibilityStatScreenLists(6);
+                                  break;
+                                case "일산화탄소":
+                                  functionBox
+                                      .changeVisibilityStatScreenLists(7);
+                                  break;
+                              }
+
+                              //grpc 명령어
+                            });
+                          },
+                          items: graphSensorList.map((String title) {
+                            return DropdownMenuItem(
+                              value: title,
+                              child: Text(title,
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20.0)),
+                            );
+                          }).toList()),
+                    ]),
               ),
-              Text(
-                "3 HOUR",
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "12 HOUR",
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "1\nDAY",
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "2 DAYS",
-                textAlign: TextAlign.center,
-              ),
-            ],
-            onTap: (index) {
-              if (index == 0) {
-                rate = 1;
-              } else if (index == 1) {
-                rate = 3;
-              } else if (index == 2) {
-                rate = 12;
-              } else if (index == 3) {
-                rate = 24;
-              } else if (index == 4) {
-                rate = 48;
-              }
-            },
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -749,7 +397,7 @@ class _StatsScreenState extends State<StatsScreen> {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             actions: <Widget>[
               TextButton(
                 child: Text(
@@ -762,14 +410,8 @@ class _StatsScreenState extends State<StatsScreen> {
               )
             ],
             title: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.05,
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.05,
+              width: MediaQuery.of(context).size.width * 0.05,
+              height: MediaQuery.of(context).size.height * 0.05,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Palette.primaryColor,
@@ -785,46 +427,40 @@ class _StatsScreenState extends State<StatsScreen> {
               ),
             ),
             content: SizedBox(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.5,
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.5,
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height * 0.5,
                 child: Center(
                     child: Column(
-                      children: [
-                        // Container(
-                        //   width: MediaQuery.of(context).size.width * 0.4,
-                        //   child: RaisedButton(
-                        //     color: Colors.lightBlue,
-                        //     onPressed: fireStoreTest,
-                        //     child: Stack(
-                        //       children: [
-                        //         Visibility(
-                        //           visible: loadingCount,
-                        //           child: Text(
-                        //             "Connecting Server",
-                        //             style: TextStyle(color: Colors.white),
-                        //             //Timer.period
-                        //           ),
-                        //         ),
-                        //         Visibility(
-                        //           visible: !loadingCount,
-                        //           child: Text(
-                        //             "Load Grapgh",
-                        //             style: TextStyle(color: Colors.white),
-                        //             //Timer.period
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    ))),
+                  children: [
+                    // Container(
+                    //   width: MediaQuery.of(context).size.width * 0.4,
+                    //   child: RaisedButton(
+                    //     color: Colors.lightBlue,
+                    //     onPressed: fireStoreTest,
+                    //     child: Stack(
+                    //       children: [
+                    //         Visibility(
+                    //           visible: loadingCount,
+                    //           child: Text(
+                    //             "Connecting Server",
+                    //             style: TextStyle(color: Colors.white),
+                    //             //Timer.period
+                    //           ),
+                    //         ),
+                    //         Visibility(
+                    //           visible: !loadingCount,
+                    //           child: Text(
+                    //             "Load Grapgh",
+                    //             style: TextStyle(color: Colors.white),
+                    //             //Timer.period
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ))),
           );
         });
       },

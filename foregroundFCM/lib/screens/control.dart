@@ -27,8 +27,7 @@ class _ControlScreenState extends State<ControlScreen> {
       barrierDismissible: false,
       context: context,
       builder: (context) {
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+        return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +73,7 @@ class _ControlScreenState extends State<ControlScreen> {
                         ),
                       ),
                       Container(
-                        height: screenHeight * 0.5,
+                        height: screenHeight * 0.3,
                         child: TabBarView(children: [
                           dialogPowerWidget(screenHeight, screenWidth, "센서"),
                           dialogPowerWidget(screenHeight, screenWidth, "펌프"),
@@ -89,7 +88,7 @@ class _ControlScreenState extends State<ControlScreen> {
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('닫기'),
+                child: Text("닫기"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -101,104 +100,108 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  Column dialogPowerWidget(
+  StatefulBuilder dialogPowerWidget(
       double screenHeight, double screenWidth, String device) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // SizedBox(
-        //   height: screenHeight * 0.03,
-        // ),
-        Container(
-          width: screenWidth * 0.6,
-          height: screenHeight * 0.1,
-          child: Material(
-            elevation: 14.0,
-            borderRadius: BorderRadius.circular(24.0),
-            shadowColor: Color(0x802196F3),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Column(
+    return StatefulBuilder(builder: (context, setState) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // SizedBox(
+          //   height: screenHeight * 0.03,
+          // ),
+          Container(
+            width: screenWidth * 0.6,
+            height: screenHeight * 0.1,
+            child: Material(
+              elevation: 14.0,
+              borderRadius: BorderRadius.circular(24.0),
+              shadowColor: Color(0x802196F3),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('$device 전원',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 25.0)),
+                            SizedBox(
+                              width: screenWidth * 0.05,
+                            ),
+                            powerMaterial(device)
+                          ],
+                        )
+                      ],
+                    ),
+                  ]),
+            ),
+          ),
+          if (device != "센서")
+            Container(
+              width: screenWidth * 0.6,
+              height: screenHeight * 0.1,
+              child: Material(
+                elevation: 14.0,
+                borderRadius: BorderRadius.circular(24.0),
+                shadowColor: Color(0x802196F3),
+                child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Row(
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('$device 전원',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 25.0)),
-                          SizedBox(
-                            width: screenWidth * 0.05,
-                          ),
-                          powerMaterial(device)
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('주기',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 25.0)),
+                              SizedBox(
+                                width: screenWidth * 0.05,
+                              ),
+                              DropdownButton(
+                                  isDense: true,
+                                  value: pumpInitialize,
+                                  onChanged: (String value) {
+                                    setState(() {
+                                      pumpInitialize = value;
+                                      //grpc 명령어
+                                    });
+                                  },
+                                  items: controlPeriod.map((String title) {
+                                    return DropdownMenuItem(
+                                      value: title,
+                                      child: Text(title,
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 22.0)),
+                                    );
+                                  }).toList())
+                            ],
+                          )
                         ],
-                      )
-                    ],
-                  ),
-                ]),
-          ),
-        ),
-        if(device=="펌프")
-        Container(
-          width: screenWidth * 0.6,
-          height: screenHeight * 0.1,
-          child: Material(
-            elevation: 14.0,
-            borderRadius: BorderRadius.circular(24.0),
-            shadowColor: Color(0x802196F3),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('주기',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 25.0)),
-                          SizedBox(
-                            width: screenWidth * 0.05,
-                          ),
-                          DropdownButton(
-                              isDense: true,
-                              value: pumpInitialize,
-                              onChanged: (String value) => setState(() {
-                                pumpInitialize = value;
-                                //grpc 명령어
-                              }),
-                              items: pumpCycle.map((String title) {
-                                return DropdownMenuItem(
-                                  value: title,
-                                  child: Text(title,
-                                      style: TextStyle(
-                                          color: Colors.blue,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 22.0)),
-                                );
-                              }).toList())
-                        ],
-                      )
-                    ],
-                  ),
-                ]),
-          ),
-        ),
-      ],
-    );
+                      ),
+                    ]),
+              ),
+            ),
+        ],
+      );
+    });
   }
 
   void outDialog() {
@@ -208,8 +211,7 @@ class _ControlScreenState extends State<ControlScreen> {
       barrierDismissible: false,
       context: context,
       builder: (context) {
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+        return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -278,61 +280,64 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  Column dialogTab(double screenWidth, double screenHeight, String device) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: screenHeight * 0.03,
-        ),
-        Container(
-          height: screenHeight * 0.3,
-          width: screenWidth * 0.7,
-          child: StaggeredGrid.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 50.0,
-              mainAxisSpacing: 30.0,
-              children: <Widget>[
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 1,
-                  mainAxisCellCount: 2,
-                  child: Material(
-                    elevation: 14.0,
-                    borderRadius: BorderRadius.circular(12.0),
-                    shadowColor: Color(0x802196F3),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('$device 전원',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 25.0)),
-                                  SizedBox(
-                                    width: screenWidth * 0.05,
-                                  ),
-                                  powerMaterial("sensor")
-                                ],
-                              )
-                            ],
-                          ),
-                        ]),
+  StatefulBuilder dialogTab(
+      double screenWidth, double screenHeight, String device) {
+    return StatefulBuilder(builder: (context, setState) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: screenHeight * 0.03,
+          ),
+          Container(
+            height: screenHeight * 0.3,
+            width: screenWidth * 0.7,
+            child: StaggeredGrid.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 50.0,
+                mainAxisSpacing: 30.0,
+                children: <Widget>[
+                  StaggeredGridTile.count(
+                    crossAxisCellCount: 1,
+                    mainAxisCellCount: 2,
+                    child: Material(
+                      elevation: 14.0,
+                      borderRadius: BorderRadius.circular(12.0),
+                      shadowColor: Color(0x802196F3),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('$device 전원',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 25.0)),
+                                    SizedBox(
+                                      width: screenWidth * 0.05,
+                                    ),
+                                    powerMaterial("sensor")
+                                  ],
+                                )
+                              ],
+                            ),
+                          ]),
+                    ),
                   ),
-                ),
-              ]),
-        ),
-      ],
-    );
+                ]),
+          ),
+        ],
+      );
+    });
   }
 
   Material powerMaterial(String device) {
@@ -444,6 +449,7 @@ class _ControlScreenState extends State<ControlScreen> {
           physics: ClampingScrollPhysics(),
           slivers: <Widget>[
             _buildHeader(screenHeight, screenWidth),
+
             mainBody(screenHeight, screenWidth),
           ],
         ));
@@ -479,31 +485,31 @@ class _ControlScreenState extends State<ControlScreen> {
       SizedBox(
         height: screenHeight * 0.03,
       ),
-          Material(
-            elevation: 14.0,
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
-            shadowColor: Color(0x802196F3),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
+      Material(
+        elevation: 14.0,
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
+        shadowColor: Color(0x802196F3),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        if (temSparkLine.isNotEmpty)
-                          Text('재배기 내부 제어',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 25.0))
-                      ],
-                    ),
-                  ]),
-            ),
-          ),
+                    if (temSparkLine.isNotEmpty)
+                      Text('재배기 내부 제어',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25.0))
+                  ],
+                ),
+              ]),
+        ),
+      ),
       SizedBox(
         height: screenHeight * 0.03,
       ),
@@ -554,31 +560,31 @@ class _ControlScreenState extends State<ControlScreen> {
       SizedBox(
         height: screenHeight * 0.03,
       ),
-          Material(
-            elevation: 14.0,
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
-            shadowColor: Color(0x802196F3),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
+      Material(
+        elevation: 14.0,
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
+        shadowColor: Color(0x802196F3),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        if (temSparkLine.isNotEmpty)
-                          Text('재배기 외부 제어',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 25.0))
-                      ],
-                    ),
-                  ]),
-            ),
-          ),
+                    if (temSparkLine.isNotEmpty)
+                      Text('재배기 외부 제어',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25.0))
+                  ],
+                ),
+              ]),
+        ),
+      ),
       SizedBox(
         height: screenHeight * 0.03,
       ),

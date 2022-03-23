@@ -141,17 +141,6 @@ class _DateScreenState extends State<DateScreen> {
                 child: Center(
                     child: Column(
                   children: [
-                    // Container(
-                    //   width: MediaQuery.of(context).size.width * 0.4,
-                    //   child: RaisedButton(
-                    //     color: Colors.lightBlue,
-                    //     onPressed: fireStoreTest,
-                    //     child: Text(
-                    //       "Load Graph",
-                    //       style: TextStyle(color: Colors.white),
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ))),
           );
@@ -164,17 +153,13 @@ class _DateScreenState extends State<DateScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Palette.primaryColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Palette.primaryColor,
+        backgroundColor: Colors.white,
         actions: <Widget>[
           Stack(
             children: [
-              // Visibility(
-              //     visible: visibilityMap[0],
-              //     child: IconButton(
-              //         onPressed: fireStoreTest, icon: Icon(Icons.refresh))),
             ],
           )
         ],
