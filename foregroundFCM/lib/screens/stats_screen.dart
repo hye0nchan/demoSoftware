@@ -1,7 +1,5 @@
-import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
-import 'package:fcm_notifications/config/styles.dart';
 import 'package:fcm_notifications/data/data.dart';
 import 'package:fcm_notifications/data/function.dart';
 import 'package:fcm_notifications/data/grpc.dart';
@@ -15,57 +13,18 @@ class StatsScreen extends StatefulWidget {
 
 class _StatsScreenState extends State<StatsScreen> {
   var functionBox = FunctionBox();
-  int rate;
-  bool switchValue = false;
-
-  ZoomPanBehavior _zoomPanBehavior =
-      ZoomPanBehavior(enablePinching: true, enableDoubleTapZooming: true);
-
-  //센서1
 
   @override
   void initState() {
-    _zoomPanBehavior = ZoomPanBehavior(enablePinching: true);
     super.initState();
   }
 
-  void loadingDialog() {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          Future.delayed(Duration(seconds: 3), () {
-            Navigator.pop(context);
-          });
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            title: Center(
-                child: new Text(
-              "Loading Data",
-              style: TextStyle(fontSize: 20),
-            )),
-            content: SizedBox(
-              height: 60,
-              child: Column(
-                children: [
-                  Center(
-                    child: new CircularProgressIndicator(
-                        valueColor: new AlwaysStoppedAnimation(Colors.blue),
-                        strokeWidth: 5.0),
-                  ),
-                  Text(
-                    "Click again",
-                    style: TextStyle(fontSize: 18),
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
+  var grpc = Grpc();
 
+  bool barChartVisible = false;
+  bool chartVisible = true;
+
+  //influxDB 데이터 가져오는 함수
   void readInfluxDB() async {
     for (int i = 0; i < allSensorList.length; i++) {
       var sensorStream = await queryService.query('''
@@ -86,11 +45,7 @@ class _StatsScreenState extends State<StatsScreen> {
     }
   }
 
-  var grpc = Grpc();
-
-  bool barChartVisible = false;
-  bool chartVisible = true;
-
+  //UI
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -99,9 +54,6 @@ class _StatsScreenState extends State<StatsScreen> {
       appBar: AppBar(
         title: Column(
           children: [
-            SizedBox(
-                //height: screenHeight * 0.03,
-                ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -110,6 +62,16 @@ class _StatsScreenState extends State<StatsScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
                 ),
+                IconButton(
+                  onPressed: () {
+                    readInfluxDB();
+                  },
+                  icon: Icon(
+                    Icons.refresh,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                )
               ],
             ),
           ],
@@ -128,153 +90,10 @@ class _StatsScreenState extends State<StatsScreen> {
     );
   }
 
-  SliverPadding dataChart(double screenHeight, BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      sliver: SliverToBoxAdapter(
-        child: Container(
-          height: screenHeight * 0.7,
-          color: Colors.white,
-          child: Column(
-            children: [
-              SizedBox(
-                height: screenHeight*0.03,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: Stack(
-                  children: [
-                    //test
-                    sensorGraph(0),
-                    sensorGraph(1),
-                    sensorGraph(2),
-                    sensorGraph(3),
-                    sensorGraph(4),
-                    sensorGraph(5),
-                    sensorGraph(6),
-                    sensorGraph(7),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Visibility sensorGraph(int index) {
-    String chartName = "온도";
-    List<ChartData> chartData = [];
-    List<ChartData> chartData2 = [];
-    List<ChartData> chartData3 = [];
-
-    switch (index) {
-      case 0:
-        chartName = "온도";
-        chartData = tem1ChartData;
-        chartData2 = tem2ChartData;
-        chartData3 = tem3ChartData;
-        break;
-      case 1:
-        chartName = "습도";
-        chartData = hum1ChartData;
-        chartData2 = hum2ChartData;
-        chartData3 = hum3ChartData;
-        break;
-      case 2:
-        chartName = "이산화탄소";
-        chartData = co21ChartData;
-        chartData2 = co22ChartData;
-        chartData3 = co23ChartData;
-        break;
-      case 3:
-        chartName = "조도";
-        chartData = lux1ChartData;
-        chartData2 = lux2ChartData;
-        chartData3 = lux3ChartData;
-        break;
-      case 4:
-        chartName = "자외선";
-        chartData = uv1ChartData;
-        chartData2 = uv2ChartData;
-        chartData3 = uv3ChartData;
-        break;
-      case 5:
-        chartName = "암모니아";
-        chartData = nh31ChartData;
-        chartData2 = nh32ChartData;
-        chartData3 = nh33ChartData;
-        break;
-      case 6:
-        chartName = "이산화질소";
-        chartData = no21ChartData;
-        chartData2 = no22ChartData;
-        chartData3 = no23ChartData;
-        break;
-      case 7:
-        chartName = "일산화탄소";
-        chartData = co1ChartData;
-        chartData2 = co2ChartData;
-        chartData3 = co3ChartData;
-        break;
-    }
-    return Visibility(
-      visible: visibilityStatScreenMap[index],
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        child: Material(
-          elevation: 14.0,
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-          shadowColor: Color(0x802196F3),
-          child: SfCartesianChart(
-            zoomPanBehavior: _zoomPanBehavior,
-            primaryXAxis: DateTimeAxis(
-                minimum: firstDate,
-                maximum: currentDate,
-                intervalType: DateTimeIntervalType.hours,
-                interval: 1),
-            title: ChartTitle(
-              text: "$chartName 차트",
-              textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            series: <ChartSeries<ChartData, DateTime>>[
-              LineSeries<ChartData, DateTime>(
-                opacity: 0.7,
-                width: 4,
-                color: Colors.blueAccent,
-                dataSource: chartData,
-                xValueMapper: (ChartData sales, _) => sales.time,
-                yValueMapper: (ChartData sales, _) => sales.value,
-              ),
-              LineSeries<ChartData, DateTime>(
-                opacity: 0.7,
-                width: 4,
-                color: Colors.redAccent,
-                dataSource: chartData2,
-                xValueMapper: (ChartData sales, _) => sales.time,
-                yValueMapper: (ChartData sales, _) => sales.value,
-              ),
-              LineSeries<ChartData, DateTime>(
-                opacity: 0.7,
-                width: 4,
-                color: Colors.greenAccent,
-                dataSource: chartData3,
-                xValueMapper: (ChartData sales, _) => sales.time,
-                yValueMapper: (ChartData sales, _) => sales.value,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   SliverToBoxAdapter _buildHeader(double screenHeight, double screenWidth) {
     return SliverToBoxAdapter(
       child: Container(
         height: screenHeight * 0.05,
-        padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
             color: Palette.primaryColor,
             borderRadius: BorderRadius.only(
@@ -374,10 +193,11 @@ class _StatsScreenState extends State<StatsScreen> {
                             return DropdownMenuItem(
                               value: title,
                               child: Text(title,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 20.0)),
+                                      fontSize: 18.0)),
                             );
                           }).toList()),
                     ]),
@@ -389,81 +209,144 @@ class _StatsScreenState extends State<StatsScreen> {
     );
   }
 
-  void showMenu() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            actions: <Widget>[
-              TextButton(
-                child: Text(
-                  "Close",
-                  style: TextStyle(fontSize: 14),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-            title: Container(
-              width: MediaQuery.of(context).size.width * 0.05,
-              height: MediaQuery.of(context).size.height * 0.05,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Palette.primaryColor,
+  SliverPadding dataChart(double screenHeight, BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      sliver: SliverToBoxAdapter(
+        child: Container(
+          height: screenHeight * 0.7,
+          color: Colors.white,
+          child: Column(
+            children: [
+              SizedBox(
+                height: screenHeight * 0.03,
               ),
-              child: Center(
-                child: Text(
-                  "Graph Setting",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 17),
-                ),
-              ),
-            ),
-            content: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.height * 0.5,
-                child: Center(
-                    child: Column(
+              Container(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Stack(
                   children: [
-                    // Container(
-                    //   width: MediaQuery.of(context).size.width * 0.4,
-                    //   child: RaisedButton(
-                    //     color: Colors.lightBlue,
-                    //     onPressed: fireStoreTest,
-                    //     child: Stack(
-                    //       children: [
-                    //         Visibility(
-                    //           visible: loadingCount,
-                    //           child: Text(
-                    //             "Connecting Server",
-                    //             style: TextStyle(color: Colors.white),
-                    //             //Timer.period
-                    //           ),
-                    //         ),
-                    //         Visibility(
-                    //           visible: !loadingCount,
-                    //           child: Text(
-                    //             "Load Grapgh",
-                    //             style: TextStyle(color: Colors.white),
-                    //             //Timer.period
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
+                    //test
+                    sensorGraph(0),
+                    sensorGraph(1),
+                    sensorGraph(2),
+                    sensorGraph(3),
+                    sensorGraph(4),
+                    sensorGraph(5),
+                    sensorGraph(6),
+                    sensorGraph(7),
                   ],
-                ))),
-          );
-        });
-      },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Visibility sensorGraph(int index) {
+    String chartName = "온도";
+    List<ChartData> chartData = [];
+    List<ChartData> chartData2 = [];
+    List<ChartData> chartData3 = [];
+
+    switch (index) {
+      case 0:
+        chartName = "온도";
+        chartData = tem1ChartData;
+        chartData2 = tem2ChartData;
+        chartData3 = tem3ChartData;
+        break;
+      case 1:
+        chartName = "습도";
+        chartData = hum1ChartData;
+        chartData2 = hum2ChartData;
+        chartData3 = hum3ChartData;
+        break;
+      case 2:
+        chartName = "이산화탄소";
+        chartData = co21ChartData;
+        chartData2 = co22ChartData;
+        chartData3 = co23ChartData;
+        break;
+      case 3:
+        chartName = "조도";
+        chartData = lux1ChartData;
+        chartData2 = lux2ChartData;
+        chartData3 = lux3ChartData;
+        break;
+      case 4:
+        chartName = "자외선";
+        chartData = uv1ChartData;
+        chartData2 = uv2ChartData;
+        chartData3 = uv3ChartData;
+        break;
+      case 5:
+        chartName = "암모니아";
+        chartData = nh31ChartData;
+        chartData2 = nh32ChartData;
+        chartData3 = nh33ChartData;
+        break;
+      case 6:
+        chartName = "이산화질소";
+        chartData = no21ChartData;
+        chartData2 = no22ChartData;
+        chartData3 = no23ChartData;
+        break;
+      case 7:
+        chartName = "일산화탄소";
+        chartData = co1ChartData;
+        chartData2 = co2ChartData;
+        chartData3 = co3ChartData;
+        break;
+    }
+    return Visibility(
+      visible: visibilityStatScreenMap[index],
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Material(
+          elevation: 14.0,
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+          shadowColor: Color(0x802196F3),
+          child: SfCartesianChart(
+            primaryXAxis: DateTimeAxis(
+                minimum: firstDate,
+                maximum: currentDate,
+                intervalType: DateTimeIntervalType.hours,
+                interval: 1),
+            title: ChartTitle(
+              text: "$chartName 차트",
+              textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            series: <ChartSeries<ChartData, DateTime>>[
+              LineSeries<ChartData, DateTime>(
+                opacity: 0.7,
+                width: 4,
+                color: Colors.blueAccent,
+                dataSource: chartData,
+                xValueMapper: (ChartData sales, _) => sales.time,
+                yValueMapper: (ChartData sales, _) => sales.value,
+              ),
+              LineSeries<ChartData, DateTime>(
+                opacity: 0.7,
+                width: 4,
+                color: Colors.redAccent,
+                dataSource: chartData2,
+                xValueMapper: (ChartData sales, _) => sales.time,
+                yValueMapper: (ChartData sales, _) => sales.value,
+              ),
+              LineSeries<ChartData, DateTime>(
+                opacity: 0.7,
+                width: 4,
+                color: Colors.greenAccent,
+                dataSource: chartData3,
+                xValueMapper: (ChartData sales, _) => sales.time,
+                yValueMapper: (ChartData sales, _) => sales.value,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

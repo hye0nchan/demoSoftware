@@ -40,8 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool switchValue = true;
 
-  get nn => null;
-
   int temDataCount = 0;
   int humDataCount = 0;
   int co2DataCount = 0;
@@ -60,14 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
   int coMDataCount = 0;
   int coHDataCount = 0;
 
-  void getData() async {
-    http.Response response = await http.get(
-        Uri.parse('https://172.20.2.87/api/TodoItems/1'),
-        headers: {"Accept": "application/json"});
-    Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
-    print(response.body); // 결과 출력 ==> {"restapi" : "get" }
-    print(responseBodyMap["gwId"]); // 결과 출력 ==> get
-  }
+  //restAPI
+  // void getData() async {
+  //   http.Response response = await http.get(
+  //       Uri.parse('https://172.20.2.87/api/TodoItems/1'),
+  //       headers: {"Accept": "application/json"});
+  //   Map<String, dynamic> responseBodyMap = jsonDecode(response.body);
+  //   print(response.body); // 결과 출력 ==> {"restapi" : "get" }
+  //   print(responseBodyMap["gwId"]); // 결과 출력 ==> get
+  // }
 
   void reReadInfluxDB() async {
     for (int i = 0; i < allSensorList.length; i++) {
@@ -340,7 +339,6 @@ class _HomeScreenState extends State<HomeScreen> {
               android: AndroidNotificationDetails(
                 channel.id,
                 channel.name,
-                channel.description,
                 icon: android?.smallIcon,
               ),
             ));
@@ -396,779 +394,137 @@ class _HomeScreenState extends State<HomeScreen> {
     tokenCount = false;
   }
 
-  //Dialog
+  StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
+    return StatefulBuilder(builder: (context, setState) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // SizedBox(
+          //   height: screenHeight * 0.03,
+          // ),
+          Container(
+            width: screenWidth * 0.6,
+            height: screenHeight * 0.1,
+            child: Material(
+              elevation: 14.0,
+              borderRadius: BorderRadius.circular(24.0),
+              shadowColor: Color(0x802196F3),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('장치 주소',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18.0)),
+                            Container(
+                              width: screenWidth * 0.2,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                    labelText: '입력',
+                                    labelStyle: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w300)),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ]),
+            ),
+          ),
+        ],
+      );
+    });
+  }
 
-  void _showMenu() {
-    functionBox.changeVisibilityMenuLists(0);
+  //Dialog
+  void homeMenu() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     showDialog(
-      context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      context: context,
+      builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            actions: <Widget>[
-              TextButton(
-                child: Text(
-                  "Close",
-                  style: TextStyle(fontSize: 14),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-            title: Column(
+            title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Text(
-                    "Menu",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-                DefaultTabController(
-                  length: 3,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                    height: 50.0,
-                    decoration: BoxDecoration(
-                      color: Palette.primaryColor,
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    child: TabBar(
-                        indicator: BubbleTabIndicator(
-                          tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                          indicatorHeight: 40.0,
-                          indicatorColor: Colors.white,
-                        ),
-                        labelStyle: Styles.tabTextStyle,
-                        labelColor: Colors.black,
-                        unselectedLabelColor: Colors.white,
-                        tabs: <Widget>[
-                          Text("Network"),
-                          Text("Sensor"),
-                          Text("Last Data"),
-                        ],
-                        onTap: (index) {
-                          switch (index) {
-                            case 0:
-                              setState(() {
-                                functionBox.changeVisibilityMenuLists(0);
-                              });
-                              break;
-                            case 1:
-                              setState(() {
-                                functionBox.changeVisibilityMenuLists(1);
-                              });
-                              break;
-                            case 2:
-                              setState(() {
-                                functionBox.changeVisibilityMenuLists(2);
-                              });
-                              break;
-                          }
-                        }),
-                  ),
+                const Text(
+                  '환경 설정',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
             content: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: Center(
-                  child: Stack(
+              height: screenHeight * 0.6,
+              width: screenWidth * 0.7,
+              child: SingleChildScrollView(
+                child: DefaultTabController(
+                  initialIndex: homeMenuInitialize,
+                  length: 3,
+                  child: Column(
                     children: [
-                      Visibility(
-                        visible: visibilityMenuMap[0],
-                        child: Center(
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.03,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                child: RaisedButton(
-                                  elevation: 0.0,
-                                  color: Colors.lightBlue,
-                                  onPressed: grpc.getIp,
-                                  child: Text(
-                                    "Get Server IP",
-                                    style: TextStyle(
-                                        fontSize: 18, color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                child: RaisedButton(
-                                  elevation: 0.0,
-                                  color: Colors.lightBlue,
-                                  onPressed: grpc.receiveMessage,
-                                  child: Center(
-                                    child: Text(
-                                      "Connect Server",
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 50.0,
-                                  vertical: 10.0,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 5),
-                                decoration: BoxDecoration(
-                                    color: Palette.primaryColor,
-                                    borderRadius: BorderRadius.circular(20.0)),
-                                alignment: Alignment.center,
-                                child: DropdownButtonFormField(
-                                  decoration: InputDecoration(
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Palette.primaryColor))),
-                                  onTap: functionBox.readDeviceFunc,
-                                  dropdownColor: Palette.primaryColor,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedDeviceID = value;
-                                      sendDevice = value;
-                                    });
-                                  },
-                                  value: selectedDeviceID,
-                                  items: deviceID
-                                      .map((e) => DropdownMenuItem(
-                                            child: Row(
-                                              children: <Widget>[
-                                                Text(
-                                                  e,
-                                                  style: TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white),
-                                                )
-                                              ],
-                                            ),
-                                            value: e,
-                                          ))
-                                      .toList(),
-                                ),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.03,
-                              ),
-                              SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.4,
-                                      child: TextField(
-                                        controller: ipInputController,
-                                        onChanged: (text) {
-                                          setState(() {});
-                                        },
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          labelText: 'input ip',
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.4,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            inputText = ipInputController.text;
-                                            influxIp = "http://$inputText:8086";
-                                            fireStoreIp =
-                                                "http://$inputText:5054";
-                                          });
-                                        },
-                                        style: ButtonStyle(
-                                            textStyle:
-                                                MaterialStateProperty.all(
-                                                    TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.white)),
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.blue)),
-                                        child: Text("Apply"),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                        width: screenWidth * 0.7,
+                        height: screenHeight * 0.06,
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(25.0),
                         ),
-                      ),
-                      Visibility(
-                        visible: visibilityMenuMap[1],
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[0],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(0);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Temperature")),
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[6],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(6);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Ammonia_L"))
-                                    ]),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[1],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(1);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Humidity")),
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[7],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(7);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Ammonia_M"))
-                                    ]),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[2],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(2);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Co2")),
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[8],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(8);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Ammonia_H"))
-                                    ]),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[5],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(5);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.2,
-                                              child: Text("Ammonia"))),
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[10],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(10);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("No2_L"))
-                                    ]),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[3],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(3);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Lux")),
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[11],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(11);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("No2_M"))
-                                    ]),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[4],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(4);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Uv")),
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[12],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(12);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("No2_H"))
-                                    ]),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[9],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(9);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("No2")),
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[14],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(14);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Co_L"))
-                                    ]),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[13],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(13);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Co")),
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[15],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(15);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Co_M"))
-                                    ]),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        child: Checkbox(
-                                          value: isCheckedMap[16],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              functionBox
-                                                  .changeIsCheckedLists(16);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          child: Text("Co_H"))
-                                    ]),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.05,
-                                  child: RaisedButton(
-                                    elevation: 0.0,
-                                    color: Colors.lightBlue,
-                                    child: Text(
-                                      "Sensing Start",
-                                      style: Styles.tabTextStyle3,
-                                    ),
-                                    onPressed: () {
-                                      refreshAll();
-                                      // for (int i = 0;
-                                      //     i < isCheckedMap.length;
-                                      //     i++) {
-                                      //   if (isCheckedMap[i]) {
-                                      //     switch (i) {
-                                      //       case 0:
-                                      //         refreshTem();
-                                      //         break;
-                                      //       case 1:
-                                      //         refreshHum();
-                                      //         break;
-                                      //       case 2:
-                                      //         refreshCo2();
-                                      //         break;
-                                      //       case 3:
-                                      //         refreshNh3();
-                                      //         break;
-                                      //       case 4:
-                                      //         refreshLux();
-                                      //         break;
-                                      //       case 5:
-                                      //         refreshNo2();
-                                      //         break;
-                                      //       case 6:
-                                      //         refreshCo();
-                                      //         break;
-                                      //     }
-                                      //   }
-                                      // }
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.05,
-                                  child: RaisedButton(
-                                    elevation: 0.0,
-                                    color: Colors.lightBlue,
-                                    child: Text(
-                                      "Sensing Stop",
-                                      style: Styles.tabTextStyle3,
-                                    ),
-                                    onPressed: () {
-                                      timerSensor1.cancel();
-                                      timerSensor2.cancel();
-                                      timerSensor3.cancel();
-                                      // switch (dropDownSelectedItem) {
-                                      //   case "Tem":
-                                      //     temTimerStop();
-                                      //     break;
-                                      //   case "Hum":
-                                      //     humTimerStop();
-                                      //     break;
-                                      //   case "CO2":
-                                      //     co2TimerStop();
-                                      //     break;
-                                      //   case "NH3":
-                                      //     nh3TimerStop();
-                                      //     break;
-                                      //   case "LUX":
-                                      //     luxTimerStop();
-                                      //     break;
-                                      // }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+                        child: TabBar(
+                          indicator: BubbleTabIndicator(
+                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                            indicatorHeight: 40.0,
+                            indicatorColor: Colors.white,
+                          ),
+                          labelStyle: Styles.tabTextStyle,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.white,
+                          tabs: <Widget>[
+                            Text("장치 등록", style: TextStyle(fontSize: 16)),
+                            Text("장치 변경", style: TextStyle(fontSize: 16)),
+                            Text("장치 제거", style: TextStyle(fontSize: 16)),
                           ],
                         ),
                       ),
-                      Visibility(
-                        visible: visibilityMenuMap[2],
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: RaisedButton(
-                            elevation: 0.0,
-                            color: Colors.lightBlue,
-                            onPressed: _showDialog,
-                            child: Text(
-                              "Open Last Data List",
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
-                            ),
-                          ),
-                        ),
+                      Container(
+                        height: screenHeight * 0.3,
+                        child: TabBarView(children: [
+                          menuWidget(screenHeight, screenWidth),
+                          menuWidget(screenHeight, screenWidth),
+                          menuWidget(screenHeight, screenWidth),
+                        ]),
                       )
                     ],
                   ),
-                )),
-          );
-        });
-      },
-    );
-  }
-
-  void _showDialog() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Center(
-                child: new Text(
-              "Error",
-              style: TextStyle(fontSize: 20),
-            )),
-            content: SizedBox(
-              height: 40,
-              child: Center(
-                  child: new Text(
-                "\nList is empty",
-                style: TextStyle(fontSize: 17),
-              )),
+                ),
+              ),
             ),
             actions: <Widget>[
-              new TextButton(
-                  child: new Text("Close"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
+              TextButton(
+                child: Text("닫기"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ],
           );
-        });
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(
-                    "Close",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    setState(() {
-                      functionBox.changeVisibilityDialogLists(0);
-                    });
-                  },
-                )
-              ],
-              title: DefaultTabController(
-                  length: 5,
-                  child: TabBar(
-                    labelStyle: Styles.tabTextStyle,
-                    labelColor: Palette.primaryColor,
-                    unselectedLabelColor: Colors.black,
-                    tabs: [
-                      Text("Tem"),
-                      Text("Hum"),
-                      Text("Co2"),
-                      Text("Nh3"),
-                      Text("Lux")
-                    ],
-                    onTap: (index) {
-                      switch (index) {
-                        case 0:
-                          setState(() {
-                            functionBox.changeVisibilityDialogLists(0);
-                          });
-                          break;
-
-                        case 1:
-                          setState(() {
-                            functionBox.changeVisibilityDialogLists(1);
-                          });
-                          break;
-
-                        case 2:
-                          setState(() {
-                            functionBox.changeVisibilityDialogLists(2);
-                          });
-                          break;
-
-                        case 3:
-                          setState(() {
-                            functionBox.changeVisibilityDialogLists(3);
-                          });
-                          break;
-
-                        case 4:
-                          setState(() {
-                            functionBox.changeVisibilityDialogLists(4);
-                          });
-                      }
-                    },
-                  )),
-              content: SizedBox());
         });
       },
     );
@@ -1249,7 +605,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       iconSize: 28.0,
                       color: Colors.white,
                       onPressed: () {
-                        _showMenu();
+                        homeMenu();
                       },
                     ),
                     IconButton(
@@ -1284,7 +640,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return SliverToBoxAdapter(
       child: Container(
         height: screenHeight * 0.05,
-        padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
             color: Palette.primaryColor,
             borderRadius: BorderRadius.only(

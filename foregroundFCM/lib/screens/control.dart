@@ -2,7 +2,6 @@ import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
 import '../config/styles.dart';
 import '../data/data.dart';
 
@@ -29,6 +28,7 @@ class _ControlScreenState extends State<ControlScreen> {
       builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -89,6 +89,83 @@ class _ControlScreenState extends State<ControlScreen> {
             actions: <Widget>[
               TextButton(
                 child: Text("닫기"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+      },
+    );
+  }
+
+  void outDialog() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '재배기 외부 제어',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+            content: SizedBox(
+              height: screenHeight * 0.6,
+              width: screenWidth * 0.7,
+              child: SingleChildScrollView(
+                child: DefaultTabController(
+                  initialIndex: outDialogInitialize,
+                  length: 2,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                        width: screenWidth * 0.7,
+                        height: screenHeight * 0.06,
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        child: TabBar(
+                          indicator: BubbleTabIndicator(
+                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                            indicatorHeight: 40.0,
+                            indicatorColor: Colors.white,
+                          ),
+                          labelStyle: Styles.tabTextStyle,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.white,
+                          tabs: <Widget>[
+                            Text("모터", style: TextStyle(fontSize: 18)),
+                            Text("외부 팬", style: TextStyle(fontSize: 18)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: screenHeight * 0.3,
+                        child: TabBarView(children: [
+                          dialogPowerWidget(screenHeight, screenWidth, "모터"),
+                          dialogPowerWidget(screenHeight, screenWidth, "외부 팬"),
+                        ]),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('닫기'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -202,82 +279,6 @@ class _ControlScreenState extends State<ControlScreen> {
         ],
       );
     });
-  }
-
-  void outDialog() {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  '재배기 외부 제어',
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
-            content: SizedBox(
-              height: screenHeight * 0.6,
-              width: screenWidth * 0.7,
-              child: SingleChildScrollView(
-                child: DefaultTabController(
-                  initialIndex: outDialogInitialize,
-                  length: 2,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                        width: screenWidth * 0.7,
-                        height: screenHeight * 0.06,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        child: TabBar(
-                          indicator: BubbleTabIndicator(
-                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                            indicatorHeight: 40.0,
-                            indicatorColor: Colors.white,
-                          ),
-                          labelStyle: Styles.tabTextStyle,
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.white,
-                          tabs: <Widget>[
-                            Text("모터", style: TextStyle(fontSize: 18)),
-                            Text("외부 팬", style: TextStyle(fontSize: 18)),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: screenHeight * 0.3,
-                        child: TabBarView(children: [
-                          dialogPowerWidget(screenHeight, screenWidth, "모터"),
-                          dialogPowerWidget(screenHeight, screenWidth, "외부 팬"),
-                        ]),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('닫기'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-      },
-    );
   }
 
   StatefulBuilder dialogTab(
@@ -395,30 +396,6 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  Material powerMaterial2(String device) {
-    return Material(
-      color: sensorPowerColor,
-      borderRadius: BorderRadius.circular(24),
-      child: Center(
-          child: IconButton(
-        onPressed: () {
-          setState(() {
-            sensorBool = !sensorBool;
-            sensorBool
-                ? sensorPowerColor = Colors.blueAccent
-                : sensorPowerColor = Colors.grey;
-            //grpc 명령어
-          });
-        },
-        icon: Icon(
-          Icons.power_settings_new_outlined,
-          color: Colors.white,
-          size: 30,
-        ),
-      )),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -427,16 +404,13 @@ class _ControlScreenState extends State<ControlScreen> {
         appBar: AppBar(
           title: Column(
             children: [
-              SizedBox(
-                  //height: screenHeight * 0.03,
-                  ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
                     "FarmCare Dashboard",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
                   ),
                 ],
               ),
@@ -449,7 +423,6 @@ class _ControlScreenState extends State<ControlScreen> {
           physics: ClampingScrollPhysics(),
           slivers: <Widget>[
             _buildHeader(screenHeight, screenWidth),
-
             mainBody(screenHeight, screenWidth),
           ],
         ));
@@ -459,7 +432,6 @@ class _ControlScreenState extends State<ControlScreen> {
     return SliverToBoxAdapter(
       child: Container(
         height: screenHeight * 0.05,
-        padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
             color: Palette.primaryColor,
             borderRadius: BorderRadius.only(
@@ -471,7 +443,7 @@ class _ControlScreenState extends State<ControlScreen> {
           children: [
             Text(
               "데모실 제어",
-              style: TextStyle(fontSize: 20, color: Colors.white),
+              style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ],
         ),

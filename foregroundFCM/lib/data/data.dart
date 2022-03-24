@@ -38,11 +38,13 @@ List<String> graphSensorList = [
   "일산화탄소",
 ];
 
+int homeMenuInitialize = 0;
+
 var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////
 // influxDB
 
-var influxIp = "http://172.20.2.87:8086";
+var influxIp = "http://192.168.137.1:8086";
 var inputText = "test";
 var client = InfluxDBClient(
     url: influxIp,
