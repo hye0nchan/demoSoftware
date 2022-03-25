@@ -73,7 +73,7 @@ class _ControlScreenState extends State<ControlScreen> {
                         ),
                       ),
                       Container(
-                        height: screenHeight * 0.3,
+                       height: screenHeight * 0.55,
                         child: TabBarView(children: [
                           dialogPowerWidget(screenHeight, screenWidth, "센서"),
                           dialogPowerWidget(screenHeight, screenWidth, "펌프"),
@@ -181,12 +181,12 @@ class _ControlScreenState extends State<ControlScreen> {
       double screenHeight, double screenWidth, String device) {
     return StatefulBuilder(builder: (context, setState) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // SizedBox(
-          //   height: screenHeight * 0.03,
-          // ),
+          SizedBox(
+            height: screenHeight * 0.03,
+          ),
           Container(
             width: screenWidth * 0.6,
             height: screenHeight * 0.1,
@@ -222,10 +222,13 @@ class _ControlScreenState extends State<ControlScreen> {
                   ]),
             ),
           ),
+          SizedBox(
+            height: screenHeight * 0.03,
+          ),
           if (device != "센서")
             Container(
               width: screenWidth * 0.6,
-              height: screenHeight * 0.1,
+              height: screenHeight * 0.15,
               child: Material(
                 elevation: 14.0,
                 borderRadius: BorderRadius.circular(24.0),
@@ -242,11 +245,45 @@ class _ControlScreenState extends State<ControlScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text('주기',
+                              Text('시작 시간',
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w700,
-                                      fontSize: 25.0)),
+                                      fontSize: 22.0)),
+                              SizedBox(
+                                width: screenWidth * 0.05,
+                              ),
+                              DropdownButton(
+                                  isDense: true,
+                                  value: pumpInitialize,
+                                  onChanged: (String value) {
+                                    setState(() {
+                                      pumpInitialize = value;
+                                      //grpc 명령어
+                                    });
+                                  },
+                                  items: controlPeriod.map((String title) {
+                                    return DropdownMenuItem(
+                                      value: title,
+                                      child: Text(title,
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 22.0)),
+                                    );
+                                  }).toList()),
+                            ],
+                          ),
+                          SizedBox(
+                            height: screenHeight*0.01,
+                          ),
+                          Row(
+                            children: [
+                              Text('종료 시간',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 22.0)),
                               SizedBox(
                                 width: screenWidth * 0.05,
                               ),
@@ -276,6 +313,48 @@ class _ControlScreenState extends State<ControlScreen> {
                     ]),
               ),
             ),
+          SizedBox(
+            height: screenHeight*0.03,
+          ),
+          Container(
+            width: screenWidth * 0.6,
+            height: screenHeight * 0.1,
+            child: Material(
+              elevation: 14.0,
+              borderRadius: BorderRadius.circular(24.0),
+              shadowColor: Color(0x802196F3),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('$device 상태',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 25.0)),
+                            SizedBox(
+                              width: screenWidth * 0.05,
+                            ),
+                            Text('정상',
+                                style: TextStyle(
+                                    color: Colors.blueAccent,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 22.0)),
+                          ],
+                        )
+                      ],
+                    ),
+                  ]),
+            ),
+          ),
         ],
       );
     });
@@ -411,6 +490,13 @@ class _ControlScreenState extends State<ControlScreen> {
                     "FarmCare Dashboard",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.menu),
+                    iconSize: 28.0,
+                    color: Colors.white,
+                    onPressed: () {
+                    },
                   ),
                 ],
               ),

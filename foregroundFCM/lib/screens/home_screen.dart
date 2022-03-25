@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:influxdb_client/api.dart';
@@ -405,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // ),
           Container(
             width: screenWidth * 0.6,
-            height: screenHeight * 0.1,
+            height: screenHeight * 0.2,
             child: Material(
               elevation: 14.0,
               borderRadius: BorderRadius.circular(24.0),
@@ -418,7 +419,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Row(
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -426,12 +427,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 18.0)),
+                                    fontSize: 22.0)),
+                            SizedBox(
+                              height: screenHeight*0.02,
+                            ),
                             Container(
-                              width: screenWidth * 0.2,
+                              width: screenWidth*0.4,
                               child: TextField(
                                 decoration: InputDecoration(
-                                    labelText: '입력',
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                      borderSide: BorderSide(width: 1, color: Colors.blueAccent),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                      borderSide: BorderSide(width: 1, color: Colors.blueAccent),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                    ),
+                                    hintText: '주소 입력',
                                     labelStyle: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w300)),
@@ -530,48 +545,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void changeFunction(int changeNumber){
+    functionBox.changeVisibilityLists(changeNumber);
+    functionBox.changeVisibilityRefreshLists(changeNumber);
+    functionBox.changeVisibilityOnLists(changeNumber);
+  }
+
   void hideGauge() {
     if (homeSelectedItem == "Tem") {
       setState(() {
-        functionBox.changeVisibilityLists(0);
-        functionBox.changeVisibilityRefreshLists(0);
-        functionBox.changeVisibilityOnLists(0);
+        changeFunction(0);
       });
     } else if (homeSelectedItem == "Hum") {
       setState(() {
-        functionBox.changeVisibilityLists(1);
-        functionBox.changeVisibilityRefreshLists(1);
-        functionBox.changeVisibilityOnLists(1);
+        changeFunction(1);
       });
     } else if (homeSelectedItem == "CO2") {
       setState(() {
-        functionBox.changeVisibilityLists(2);
-        functionBox.changeVisibilityRefreshLists(2);
-        functionBox.changeVisibilityOnLists(2);
+        changeFunction(2);
       });
     } else if (homeSelectedItem == "LUX") {
       setState(() {
-        functionBox.changeVisibilityLists(4);
-        functionBox.changeVisibilityRefreshLists(4);
-        functionBox.changeVisibilityOnLists(4);
+        changeFunction(4);
       });
     } else if (homeSelectedItem == "NH3") {
       setState(() {
-        functionBox.changeVisibilityLists(3);
-        functionBox.changeVisibilityRefreshLists(3);
-        functionBox.changeVisibilityOnLists(3);
+        changeFunction(3);
       });
     } else if (homeSelectedItem == "NO2") {
       setState(() {
-        functionBox.changeVisibilityLists(5);
-        functionBox.changeVisibilityRefreshLists(5);
-        functionBox.changeVisibilityOnLists(5);
+        changeFunction(5);
       });
     } else if (homeSelectedItem == "CO") {
       setState(() {
-        functionBox.changeVisibilityLists(6);
-        functionBox.changeVisibilityRefreshLists(6);
-        functionBox.changeVisibilityOnLists(6);
+        changeFunction(6);
       });
     }
 
@@ -886,7 +893,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       style: TextStyle(
                                           color: Colors.blue,
                                           fontWeight: FontWeight.w500,
-                                          fontSize: 15.0)),
+                                          fontSize: 17.0)),
                                 );
                               }).toList())
                         ],

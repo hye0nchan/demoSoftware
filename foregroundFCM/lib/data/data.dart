@@ -19,7 +19,18 @@ Color fanPowerColor = Colors.blueAccent;
 Color motorPowerColor = Colors.blueAccent;
 Color outFanPowerColor = Colors.blueAccent;
 
-List<String> controlPeriod = ["1h", "2h", "3h", "6h", "12h"];
+List<String> controlPeriod = [
+  "0h",
+  "1h",
+  "2h",
+  "3h",
+  "4h",
+  "5h",
+  "6h",
+  "7h",
+  "8h",
+  "9h"
+];
 String pumpInitialize = "1h";
 String lampInitialize = "1h";
 String fanInitialize = "1h";
@@ -44,7 +55,7 @@ var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////
 // influxDB
 
-var influxIp = "http://192.168.137.1:8086";
+var influxIp = "http://172.20.2.105:8086";
 var inputText = "test";
 var client = InfluxDBClient(
     url: influxIp,
@@ -515,7 +526,7 @@ String dateSelectedItem = "Tem";
 //firestore
 
 List<String> fireStoreTokenList = [];
-String fireStoreIp = "172.20.2.87";
+String fireStoreIp = "172.20.2.105";
 ////////////////////////////////////////////////////////////////////////////////
 //Map
 Map<int, bool> isCheckedMap = {
