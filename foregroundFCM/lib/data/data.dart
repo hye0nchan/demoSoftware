@@ -19,6 +19,8 @@ Color fanPowerColor = Colors.blueAccent;
 Color motorPowerColor = Colors.blueAccent;
 Color outFanPowerColor = Colors.blueAccent;
 
+
+
 List<String> controlPeriod = [
   "0h",
   "1h",
@@ -55,7 +57,7 @@ var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////
 // influxDB
 
-var influxIp = "http://172.20.2.105:8086";
+var influxIp = "http://172.20.2.128:8086";
 var inputText = "test";
 var client = InfluxDBClient(
     url: influxIp,
@@ -526,7 +528,7 @@ String dateSelectedItem = "Tem";
 //firestore
 
 List<String> fireStoreTokenList = [];
-String fireStoreIp = "172.20.2.105";
+String fireStoreIp = "172.20.2.128";
 ////////////////////////////////////////////////////////////////////////////////
 //Map
 Map<int, bool> isCheckedMap = {

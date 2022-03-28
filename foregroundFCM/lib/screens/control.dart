@@ -152,7 +152,7 @@ class _ControlScreenState extends State<ControlScreen> {
                         ),
                       ),
                       Container(
-                        height: screenHeight * 0.3,
+                        height: screenHeight * 0.55,
                         child: TabBarView(children: [
                           dialogPowerWidget(screenHeight, screenWidth, "모터"),
                           dialogPowerWidget(screenHeight, screenWidth, "외부 팬"),
@@ -481,23 +481,27 @@ class _ControlScreenState extends State<ControlScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
+          actions: [
+            // IconButton(
+            //   icon: const Icon(Icons.menu),
+            //   iconSize: 28.0,
+            //   color: Colors.white,
+            //   onPressed: () {
+            //
+            //   },
+            // ),
+          ],
           title: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "FarmCare Dashboard",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+                    style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.menu),
-                    iconSize: 28.0,
-                    color: Colors.white,
-                    onPressed: () {
-                    },
-                  ),
+
                 ],
               ),
             ],
@@ -529,7 +533,7 @@ class _ControlScreenState extends State<ControlScreen> {
           children: [
             Text(
               "데모실 제어",
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ],
         ),
@@ -569,7 +573,7 @@ class _ControlScreenState extends State<ControlScreen> {
         ),
       ),
       SizedBox(
-        height: screenHeight * 0.03,
+        height: screenHeight * 0.01,
       ),
       StaggeredGrid.count(
         crossAxisCount: 4,
@@ -644,7 +648,7 @@ class _ControlScreenState extends State<ControlScreen> {
         ),
       ),
       SizedBox(
-        height: screenHeight * 0.03,
+        height: screenHeight * 0.01,
       ),
       StaggeredGrid.count(
         crossAxisCount: 4,

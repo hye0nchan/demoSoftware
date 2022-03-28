@@ -52,26 +52,28 @@ class _StatsScreenState extends State<StatsScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              readInfluxDB();
+            },
+            icon: Icon(
+              Icons.refresh,
+              color: Colors.white,
+              size: 30,
+            ),
+          )
+        ],
         title: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "FarmCare Dashboard",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
                 ),
-                IconButton(
-                  onPressed: () {
-                    readInfluxDB();
-                  },
-                  icon: Icon(
-                    Icons.refresh,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                )
               ],
             ),
           ],

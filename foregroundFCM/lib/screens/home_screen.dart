@@ -77,119 +77,123 @@ class _HomeScreenState extends State<HomeScreen> {
   |> filter(fn: (r) => r["_measurement"] == "${allSensorList[i]}")
   |> yield(name: "mean")
   ''');
-      await sensorStream.forEach((record) {
-        var value = record['_value'];
+      if (sensorStream != null) {
+        await sensorStream.forEach((record) {
+          var value = record['_value'];
 
-        if (i != 4 && value != 0) {
-          if (i < 3 && i > 0) {
-            if (i == 0) {
-              if (!temSparkLine.contains(value)) {
-                setState(() {
-                  temSparkLine.add(value);
-                  temTotalSparkLine += value;
-                  totalTemCount += 1;
-                });
+          if (i != 4 && value != 0) {
+            if (i < 3 && i > 0) {
+              if (i == 0) {
+                if (!temSparkLine.contains(value)) {
+                  setState(() {
+                    temSparkLine.add(value);
+                    temTotalSparkLine += value;
+                    totalTemCount += 1;
+                  });
+                }
+              }
+              if (i == 1) {
+                if (!tem2SparkLine.contains(value)) {
+                  setState(() {
+                    tem2SparkLine.add(value);
+                    tem2TotalSparkLine += value;
+                    totalTem2Count += 1;
+                  });
+                }
               }
             }
-            if (i == 1) {
-              if (!tem2SparkLine.contains(value)) {
-                setState(() {
-                  tem2SparkLine.add(value);
-                  tem2TotalSparkLine += value;
-                  totalTem2Count += 1;
-                });
+            if (i < 6 && i > 2) {
+              if (i == 3) {
+                if (!humSparkLine.contains(value)) {
+                  setState(() {
+                    humSparkLine.add(value);
+                    humTotalSparkLine += value;
+                    totalHumCount += 1;
+                  });
+                }
+              }
+              if (i == 4) {
+                if (!hum2SparkLine.contains(value)) {
+                  setState(() {
+                    hum2SparkLine.add(value);
+                    hum2TotalSparkLine += value;
+                    totalHum2Count += 1;
+                  });
+                }
+              }
+            }
+            if (i < 9 && i > 5) {
+              if (i == 6) {
+                if (!co2SparkLine.contains(value)) {
+                  setState(() {
+                    co2SparkLine.add(value);
+                    co2TotalSparkLine += value;
+                    totalCo2Count += 1;
+                  });
+                }
+              }
+              if (i == 7) {
+                if (!co22SparkLine.contains(value)) {
+                  setState(() {
+                    co22SparkLine.add(value);
+                    co22TotalSparkLine += value;
+                    totalCo22Count += 1;
+                  });
+                }
+              }
+            }
+            if (8 < i && i < 11) {
+              if (i == 9) {
+                if (!luxSparkLine.contains(value)) {
+                  setState(() {
+                    luxSparkLine.add(value);
+                    luxTotalSparkLine += value;
+                    totalLuxCount += 1;
+                  });
+                }
+              }
+              if (i == 10) {
+                if (!lux2SparkLine.contains(value)) {
+                  setState(() {
+                    lux2SparkLine.add(value);
+                    lux2TotalSparkLine += value;
+                    totalLux2Count += 1;
+                  });
+                }
               }
             }
           }
-          if (i < 6 && i > 2) {
-            if (i == 3) {
-              if (!humSparkLine.contains(value)) {
-                setState(() {
-                  humSparkLine.add(value);
-                  humTotalSparkLine += value;
-                  totalHumCount += 1;
-                });
-              }
-            }
-            if (i == 4) {
-              if (!hum2SparkLine.contains(value)) {
-                setState(() {
-                  hum2SparkLine.add(value);
-                  hum2TotalSparkLine += value;
-                  totalHum2Count += 1;
-                });
-              }
-            }
-          }
-          if (i < 9 && i > 5) {
-            if (i == 6) {
-              if (!co2SparkLine.contains(value)) {
-                setState(() {
-                  co2SparkLine.add(value);
-                  co2TotalSparkLine += value;
-                  totalCo2Count += 1;
-                });
-              }
-            }
-            if (i == 7) {
-              if (!co22SparkLine.contains(value)) {
-                setState(() {
-                  co22SparkLine.add(value);
-                  co22TotalSparkLine += value;
-                  totalCo22Count += 1;
-                });
-              }
-            }
-          }
-          if (8 < i && i < 11) {
-            if (i == 9) {
-              if (!luxSparkLine.contains(value)) {
-                setState(() {
-                  luxSparkLine.add(value);
-                  luxTotalSparkLine += value;
-                  totalLuxCount += 1;
-                });
-              }
-            }
-            if (i == 10) {
-              if (!lux2SparkLine.contains(value)) {
-                setState(() {
-                  lux2SparkLine.add(value);
-                  lux2TotalSparkLine += value;
-                  totalLux2Count += 1;
-                });
-              }
-            }
-          }
-        }
-      });
+        });
+      }
     }
 
-    setState(() {
-      temTotalValue =
-          double.parse((temTotalSparkLine / totalTemCount).toStringAsFixed(2));
+    if (this.mounted) {
+      setState(() {
+        temTotalValue = double.parse(
+            (temTotalSparkLine / totalTemCount).toStringAsFixed(2));
 
-      tem2TotalValue = double.parse(
-          (tem2TotalSparkLine / totalTem2Count).toStringAsFixed(2));
+        tem2TotalValue = double.parse(
+            (tem2TotalSparkLine / totalTem2Count).toStringAsFixed(2));
 
-      humTotalValue =
-          double.parse((humTotalSparkLine / totalHumCount).toStringAsFixed(2));
+        humTotalValue = double.parse(
+            (humTotalSparkLine / totalHumCount).toStringAsFixed(2));
 
-      hum2TotalValue = double.parse(
-          (hum2TotalSparkLine / totalHum2Count).toStringAsFixed(2));
+        hum2TotalValue = double.parse(
+            (hum2TotalSparkLine / totalHum2Count).toStringAsFixed(2));
 
-      co2TotalValue =
-          double.parse((co2TotalSparkLine / totalCo2Count).toStringAsFixed(2));
+        co2TotalValue = double.parse(
+            (co2TotalSparkLine / totalCo2Count).toStringAsFixed(2));
 
-      co22TotalValue = double.parse(
-          (co22TotalSparkLine / totalCo22Count).toStringAsFixed(2));
+        co22TotalValue = double.parse(
+            (co22TotalSparkLine / totalCo22Count).toStringAsFixed(2));
 
-      luxTotalValue =
-          double.parse((luxTotalSparkLine / totalLuxCount).toStringAsFixed(2));
+        luxTotalValue = double.parse(
+            (luxTotalSparkLine / totalLuxCount).toStringAsFixed(2));
 
-      lux2TotalValue = double.parse(
-          (lux2TotalSparkLine / totalLux2Count).toStringAsFixed(2));
-    });
+        lux2TotalValue = double.parse(
+            (lux2TotalSparkLine / totalLux2Count).toStringAsFixed(2));
+      });
+    }
   }
 
   void refreshAll() {
@@ -401,9 +405,6 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // SizedBox(
-          //   height: screenHeight * 0.03,
-          // ),
           Container(
             width: screenWidth * 0.6,
             height: screenHeight * 0.2,
@@ -429,22 +430,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontWeight: FontWeight.w700,
                                     fontSize: 22.0)),
                             SizedBox(
-                              height: screenHeight*0.02,
+                              height: screenHeight * 0.02,
                             ),
                             Container(
-                              width: screenWidth*0.4,
+                              width: screenWidth * 0.4,
                               child: TextField(
                                 decoration: InputDecoration(
                                     focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                      borderSide: BorderSide(width: 1, color: Colors.blueAccent),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0)),
+                                      borderSide: BorderSide(
+                                          width: 1, color: Colors.blueAccent),
                                     ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                      borderSide: BorderSide(width: 1, color: Colors.blueAccent),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0)),
+                                      borderSide: BorderSide(
+                                          width: 1, color: Colors.blueAccent),
                                     ),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0)),
                                     ),
                                     hintText: '주소 입력',
                                     labelStyle: TextStyle(
@@ -545,7 +551,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void changeFunction(int changeNumber){
+  void changeFunction(int changeNumber) {
     functionBox.changeVisibilityLists(changeNumber);
     functionBox.changeVisibilityRefreshLists(changeNumber);
     functionBox.changeVisibilityOnLists(changeNumber);
@@ -592,6 +598,28 @@ class _HomeScreenState extends State<HomeScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.menu),
+                iconSize: 28.0,
+                color: Colors.white,
+                onPressed: () {
+                  homeMenu();
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.refresh_outlined),
+                iconSize: 28.0,
+                color: Colors.white,
+                onPressed: () {
+                  reReadInfluxDB();
+                },
+              ),
+            ],
+          ),
+        ],
         title: Column(
           children: [
             SizedBox(
@@ -604,26 +632,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   "FarmCare Dashboard",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.menu),
-                      iconSize: 28.0,
-                      color: Colors.white,
-                      onPressed: () {
-                        homeMenu();
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.refresh_outlined),
-                      iconSize: 28.0,
-                      color: Colors.white,
-                      onPressed: () {
-                        reReadInfluxDB();
-                      },
-                    ),
-                  ],
                 ),
               ],
             ),
@@ -714,7 +722,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       SizedBox(
-        height: screenHeight * 0.03,
+        height: screenHeight * 0.01,
       ),
       StaggeredGrid.count(
         crossAxisCount: 2,
@@ -942,7 +950,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       SizedBox(
-        height: screenHeight * 0.03,
+        height: screenHeight * 0.01,
       ),
       StaggeredGrid.count(
         crossAxisCount: 2,
