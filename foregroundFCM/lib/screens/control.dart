@@ -34,7 +34,7 @@ class _ControlScreenState extends State<ControlScreen> {
               children: [
                 const Text(
                   '재배기 내부 제어',
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                  style: Styles.headLineStyle,
                 ),
               ],
             ),
@@ -115,7 +115,7 @@ class _ControlScreenState extends State<ControlScreen> {
               children: [
                 const Text(
                   '재배기 외부 제어',
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                  style: Styles.headLineStyle,
                 ),
               ],
             ),
@@ -193,7 +193,7 @@ class _ControlScreenState extends State<ControlScreen> {
             child: Material(
               elevation: 14.0,
               borderRadius: BorderRadius.circular(24.0),
-              shadowColor: Color(0x802196F3),
+              shadowColor: Palette.shadowColor,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -207,10 +207,7 @@ class _ControlScreenState extends State<ControlScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text('$device 전원',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 25.0)),
+                                style: Styles.headLineStyle),
                             SizedBox(
                               width: screenWidth * 0.05,
                             ),
@@ -232,7 +229,7 @@ class _ControlScreenState extends State<ControlScreen> {
               child: Material(
                 elevation: 14.0,
                 borderRadius: BorderRadius.circular(24.0),
-                shadowColor: Color(0x802196F3),
+                shadowColor: Palette.shadowColor,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -246,10 +243,7 @@ class _ControlScreenState extends State<ControlScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text('시작 시간',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 22.0)),
+                                  style: Styles.dialogTileStyle),
                               SizedBox(
                                 width: screenWidth * 0.05,
                               ),
@@ -280,10 +274,7 @@ class _ControlScreenState extends State<ControlScreen> {
                           Row(
                             children: [
                               Text('종료 시간',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 22.0)),
+                                  style: Styles.dialogTileStyle),
                               SizedBox(
                                 width: screenWidth * 0.05,
                               ),
@@ -322,7 +313,7 @@ class _ControlScreenState extends State<ControlScreen> {
             child: Material(
               elevation: 14.0,
               borderRadius: BorderRadius.circular(24.0),
-              shadowColor: Color(0x802196F3),
+              shadowColor: Palette.shadowColor,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -336,18 +327,12 @@ class _ControlScreenState extends State<ControlScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text('$device 상태',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 25.0)),
+                                style: Styles.headLineStyle),
                             SizedBox(
                               width: screenWidth * 0.05,
                             ),
                             Text('정상',
-                                style: TextStyle(
-                                    color: Colors.blueAccent,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 22.0)),
+                                style: Styles.dialogTileStyle),
                           ],
                         )
                       ],
@@ -384,7 +369,7 @@ class _ControlScreenState extends State<ControlScreen> {
                     child: Material(
                       elevation: 14.0,
                       borderRadius: BorderRadius.circular(12.0),
-                      shadowColor: Color(0x802196F3),
+                      shadowColor: Palette.shadowColor,
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -398,10 +383,7 @@ class _ControlScreenState extends State<ControlScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text('$device 전원',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 25.0)),
+                                        style: Styles.headLineStyle),
                                     SizedBox(
                                       width: screenWidth * 0.05,
                                     ),
@@ -499,7 +481,7 @@ class _ControlScreenState extends State<ControlScreen> {
                   Text(
                     "FarmCare Dashboard",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
+                    style: Styles.appbarStyle,
                   ),
 
                 ],
@@ -533,7 +515,7 @@ class _ControlScreenState extends State<ControlScreen> {
           children: [
             Text(
               "데모실 제어",
-              style: TextStyle(fontSize: 20, color: Colors.white),
+              style: Styles.buildHeadStyle,
             ),
           ],
         ),
@@ -550,7 +532,7 @@ class _ControlScreenState extends State<ControlScreen> {
       Material(
         elevation: 14.0,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
-        shadowColor: Color(0x802196F3),
+        shadowColor: Palette.shadowColor,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Row(
@@ -563,10 +545,7 @@ class _ControlScreenState extends State<ControlScreen> {
                   children: <Widget>[
                     if (temSparkLine.isNotEmpty)
                       Text('재배기 내부 제어',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 25.0))
+                          style: Styles.headLineStyle)
                   ],
                 ),
               ]),
@@ -587,7 +566,7 @@ class _ControlScreenState extends State<ControlScreen> {
             child: Material(
               elevation: 14.0,
               borderRadius: BorderRadius.circular(30.0),
-              shadowColor: Color(0x802196F3),
+              shadowColor: Palette.shadowColor,
               child: Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 child: Row(
@@ -625,7 +604,7 @@ class _ControlScreenState extends State<ControlScreen> {
       Material(
         elevation: 14.0,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
-        shadowColor: Color(0x802196F3),
+        shadowColor: Palette.shadowColor,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Row(
@@ -638,10 +617,7 @@ class _ControlScreenState extends State<ControlScreen> {
                   children: <Widget>[
                     if (temSparkLine.isNotEmpty)
                       Text('재배기 외부 제어',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 25.0))
+                          style: Styles.headLineStyle)
                   ],
                 ),
               ]),
@@ -662,7 +638,7 @@ class _ControlScreenState extends State<ControlScreen> {
             child: Material(
               elevation: 14.0,
               borderRadius: BorderRadius.circular(30.0),
-              shadowColor: Color(0x802196F3),
+              shadowColor: Palette.shadowColor,
               child: Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 child: Row(
@@ -739,7 +715,7 @@ class _ControlScreenState extends State<ControlScreen> {
           child: Material(
             elevation: 14.0,
             borderRadius: BorderRadius.circular(12.0),
-            shadowColor: Color(0x802196F3),
+            shadowColor: Palette.shadowColor,
             child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Center(
@@ -854,14 +830,14 @@ class _ControlScreenState extends State<ControlScreen> {
           child: Material(
             elevation: 14.0,
             borderRadius: BorderRadius.circular(12.0),
-            shadowColor: Color(0x802196F3),
+            shadowColor: Palette.shadowColor,
             child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Center(
                   child: Text(text,
                       textAlign: TextAlign.center,
                       style:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
+                          Styles.StaggeredGridStyle),
                 )),
           ),
         ),
@@ -873,7 +849,7 @@ class _ControlScreenState extends State<ControlScreen> {
     return Material(
       elevation: 14.0,
       borderRadius: BorderRadius.circular(12.0),
-      shadowColor: Color(0x802196F3),
+      shadowColor: Palette.shadowColor,
       child: InkWell(
         child: child,
       ),

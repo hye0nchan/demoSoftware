@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 
 class Styles {
-  static const buttonTextStyle = TextStyle(
-    fontSize: 16.0,
-    fontWeight: FontWeight.w600,
+  static const appbarStyle = TextStyle(
+    fontSize: 27,
+    fontWeight: FontWeight.w700,
   );
 
-  static const chartLabelTexStyle = TextStyle(
-    color: Colors.grey,
-    fontSize: 14.0,
-    fontWeight: FontWeight.w500,
-  );
+  static const buildHeadStyle = TextStyle(fontSize: 20, color: Colors.white);
+
+  static const headLineStyle = TextStyle(
+      color: Colors.black, fontWeight: FontWeight.w700, fontSize: 25.0);
+
+  static const homeDataStyle = TextStyle(
+      color: Colors.black, fontWeight: FontWeight.w700, fontSize: 34.0);
+
+  static const graphAverageStyle = TextStyle(
+      color: Colors.blueAccent,
+      fontWeight: FontWeight.w600);
+
+  static const StaggeredGridStyle =
+      TextStyle(fontWeight: FontWeight.w600, fontSize: 20);
+
+  static const dialogTileStyle =
+  TextStyle(color: Colors.black,
+      fontWeight: FontWeight.w700,
+      fontSize: 22.0);
 
   static const tabTextStyle = TextStyle(
     fontSize: 14.0,
     fontWeight: FontWeight.w600,
-  );
-
-  static const tabTextStyle2 = TextStyle(
-    fontSize: 14.0,
-    fontWeight: FontWeight.w600,
-  );
-
-  static const tabTextStyle3 = TextStyle(
-    fontSize: 13.0,
-    fontWeight: FontWeight.w600,
-    color: Colors.white,
   );
 }

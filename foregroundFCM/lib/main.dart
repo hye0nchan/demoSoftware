@@ -109,16 +109,10 @@ void readInfluxDB() async {
   lux2TotalValue =
       double.parse((lux2TotalSparkLine / totalLux2Count).toStringAsFixed(2));
   lux2SparkLine.removeAt(0);
-
-  print(totalTemCount);
-  print(temTotalSparkLine);
-  print(temSparkLine.length);
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('Handling a background message ${message.messageId}');
-  print(message.data);
   flutterLocalNotificationsPlugin.show(
       message.data.hashCode,
       message.data['title'],
@@ -171,6 +165,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    receiveMessage();
     readInfluxDB();
 
     var initialzationSettingsAndroid =
@@ -257,7 +252,6 @@ Future<ExMessage> receiveMessage() async {
     } else {
       device = de;
     }
-    print(device);
     grpcChannel == 200 ? displaySensorData(da, device) : null;
   }
 
@@ -265,7 +259,6 @@ Future<ExMessage> receiveMessage() async {
 }
 
 void displaySensorData(List<int> receiveData, Int64 device) {
-  print(device);
   (isCheckedMap[0]) ? displayTemData(da, device) : null;
   (isCheckedMap[1]) ? displayHumData(da, device) : null;
   (isCheckedMap[2]) ? displayCo2Data(da, device) : null;
@@ -305,7 +298,6 @@ void displayTemData(List<int> receiveData, Int64 device) {
       "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
   int a = int.parse(total);
   bData.setInt32(0, a);
-  print(bData);
   discernDevice(device, sensor, bData);
 }
 
@@ -683,7 +675,6 @@ void discernDevice(var device, var sensor, var bData) {
       if (device == 0x24A16057F685) {
         sensor1Device = !sensor1Device;
         sensor1redTemData = bData.getFloat32(0).toStringAsFixed(2);
-        print("sensor1 enter");
       } else if (device == 0x500291AEBCD9) {
         sensor2Device = !sensor2Device;
         sensor2redTemData = bData.getFloat32(0).toStringAsFixed(2);
@@ -695,7 +686,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "hum":
       if (device == 0x24A16057F685) {
         sensor1redHumData = bData.getFloat32(0).toStringAsFixed(2);
-        print("hum : $sensor1redHumData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redHumData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -705,7 +695,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "co2":
       if (device == 0x24A16057F685) {
         sensor1redCo2Data = bData.getFloat32(0).toStringAsFixed(2);
-        print("co2 : $sensor1redCo2Data");
       } else if (device == 0x500291AEBCD9) {
         sensor2redCo2Data = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -715,7 +704,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "nh3":
       if (device == 0x24A16057F685) {
         sensor1redNh3Data = bData.getFloat32(0).toStringAsFixed(2);
-        print("nh3 : $sensor1redNh3Data");
       } else if (device == 0x500291AEBCD9) {
         sensor2redNh3Data = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -725,7 +713,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "nh3L":
       if (device == 0x24A16057F685) {
         sensor1redNh3LData = bData.getFloat32(0).toStringAsFixed(2);
-        print("nh3L : $sensor1redNh3LData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redNh3LData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -735,7 +722,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "nh3M":
       if (device == 0x24A16057F685) {
         sensor1redNh3MData = bData.getFloat32(0).toStringAsFixed(2);
-        print("nh3M : $sensor1redNh3MData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redNh3MData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -745,7 +731,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "nh3H":
       if (device == 0x24A16057F685) {
         sensor1redNh3HData = bData.getFloat32(0).toStringAsFixed(2);
-        print("nh3H : $sensor1redNh3HData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redNh3HData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -755,7 +740,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "uv":
       if (device == 0x24A16057F685) {
         sensor1redUvData = bData.getFloat32(0).toStringAsFixed(2);
-        print("uv : $sensor1redUvData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redUvData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -765,7 +749,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "lux":
       if (device == 0x24A16057F685) {
         sensor1redLuxData = bData.getFloat32(0).toStringAsFixed(2);
-        print("lux : $sensor1redLuxData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redLuxData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -775,7 +758,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "no2":
       if (device == 0x24A16057F685) {
         sensor1redNo2Data = bData.getFloat32(0).toStringAsFixed(2);
-        print("no2 : $sensor1redNo2Data");
       } else if (device == 0x500291AEBCD9) {
         sensor2redNo2Data = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -785,7 +767,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "no2L":
       if (device == 0x24A16057F685) {
         sensor1redNo2LData = bData.getFloat32(0).toStringAsFixed(2);
-        print("no2L : $sensor1redNo2LData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redNo2LData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -795,7 +776,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "no2M":
       if (device == 0x24A16057F685) {
         sensor1redNo2MData = bData.getFloat32(0).toStringAsFixed(2);
-        print("no2M : $sensor1redNo2MData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redNo2MData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -805,7 +785,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "no2H":
       if (device == 0x24A16057F685) {
         sensor1redNo2HData = bData.getFloat32(0).toStringAsFixed(2);
-        print("no2H : $sensor1redNo2HData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redNo2HData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -815,7 +794,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "co":
       if (device == 0x24A16057F685) {
         sensor1redCoData = bData.getFloat32(0).toStringAsFixed(2);
-        print("co : $sensor1redCoData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redCoData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -825,7 +803,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "coL":
       if (device == 0x24A16057F685) {
         sensor1redCoLData = bData.getFloat32(0).toStringAsFixed(2);
-        print("coL : $sensor1redCoLData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redCoLData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -835,7 +812,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "coM":
       if (device == 0x24A16057F685) {
         sensor1redCoMData = bData.getFloat32(0).toStringAsFixed(2);
-        print("coM : $sensor1redCoMData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redCoMData = bData.getFloat32(0).toStringAsFixed(2);
       } else {
@@ -845,7 +821,6 @@ void discernDevice(var device, var sensor, var bData) {
     case "coH":
       if (device == 0x24A16057F685) {
         sensor1redCoHData = bData.getFloat32(0).toStringAsFixed(2);
-        print("coH : $sensor1redCoHData");
       } else if (device == 0x500291AEBCD9) {
         sensor2redCoHData = bData.getFloat32(0).toStringAsFixed(2);
       } else {

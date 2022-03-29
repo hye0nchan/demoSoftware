@@ -1,12 +1,12 @@
 // ignore_for_file: deprecated_member_use, unnecessary_statements
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcm_notifications/widgets/dashboardWidget.dart';
+import 'package:fcm_notifications/widgets/dialogWidget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:influxdb_client/api.dart';
@@ -18,8 +18,6 @@ import 'package:fcm_notifications/data/grpc.dart';
 import 'package:fcm_notifications/data/influxDB.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../main.dart';
-import 'package:sparkline/sparkline.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -27,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static final List<String> chartDropdownItems = ['온도', '습도', 'CO2', '조도'];
+  static final List<String> chartDropdownItems = ['온도', '습도', '조도', '이산화탄소'];
   String actualDropdown = "온도";
   String actualDropdown2 = "온도";
   int actualChart = 0;
@@ -36,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var functionBox = FunctionBox();
   var home = MyApp();
   var influxDB = AddInfluxDB();
+  var dialog = DialogWidget();
 
   TextEditingController ipInputController = TextEditingController();
 
@@ -322,8 +321,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    grpc.sendSensor1();
     getToken();
-    hideGauge();
     actualDropdown = beforeActually;
     actualDropdown2 = beforeActually2;
     var initializationSettingsAndroid =
@@ -370,7 +369,6 @@ class _HomeScreenState extends State<HomeScreen> {
               .collection('Token')
               .doc('device1')
               .set({'value': token});
-          print(ds.docs.length);
         }
       });
 
@@ -389,7 +387,6 @@ class _HomeScreenState extends State<HomeScreen> {
       print("토큰 리스트 : $fireStoreTokenList");
 
       if (fireStoreTokenList.contains(token) == false) {
-        print("enter if");
         await f //fireStore에 저장
             .collection('Token')
             .doc('device${fireStoreTokenList.length + 1}')
@@ -399,196 +396,10 @@ class _HomeScreenState extends State<HomeScreen> {
     tokenCount = false;
   }
 
-  StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
-    return StatefulBuilder(builder: (context, setState) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: screenWidth * 0.6,
-            height: screenHeight * 0.2,
-            child: Material(
-              elevation: 14.0,
-              borderRadius: BorderRadius.circular(24.0),
-              shadowColor: Color(0x802196F3),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('장치 주소',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 22.0)),
-                            SizedBox(
-                              height: screenHeight * 0.02,
-                            ),
-                            Container(
-                              width: screenWidth * 0.4,
-                              child: TextField(
-                                decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0)),
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.blueAccent),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0)),
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.blueAccent),
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0)),
-                                    ),
-                                    hintText: '주소 입력',
-                                    labelStyle: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w300)),
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ]),
-            ),
-          ),
-        ],
-      );
-    });
-  }
-
-  //Dialog
-  void homeMenu() {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  '환경 설정',
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
-            content: SizedBox(
-              height: screenHeight * 0.6,
-              width: screenWidth * 0.7,
-              child: SingleChildScrollView(
-                child: DefaultTabController(
-                  initialIndex: homeMenuInitialize,
-                  length: 3,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                        width: screenWidth * 0.7,
-                        height: screenHeight * 0.06,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        child: TabBar(
-                          indicator: BubbleTabIndicator(
-                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                            indicatorHeight: 40.0,
-                            indicatorColor: Colors.white,
-                          ),
-                          labelStyle: Styles.tabTextStyle,
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.white,
-                          tabs: <Widget>[
-                            Text("장치 등록", style: TextStyle(fontSize: 16)),
-                            Text("장치 변경", style: TextStyle(fontSize: 16)),
-                            Text("장치 제거", style: TextStyle(fontSize: 16)),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: screenHeight * 0.3,
-                        child: TabBarView(children: [
-                          menuWidget(screenHeight, screenWidth),
-                          menuWidget(screenHeight, screenWidth),
-                          menuWidget(screenHeight, screenWidth),
-                        ]),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text("닫기"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-      },
-    );
-  }
-
   void changeFunction(int changeNumber) {
     functionBox.changeVisibilityLists(changeNumber);
     functionBox.changeVisibilityRefreshLists(changeNumber);
     functionBox.changeVisibilityOnLists(changeNumber);
-  }
-
-  void hideGauge() {
-    if (homeSelectedItem == "Tem") {
-      setState(() {
-        changeFunction(0);
-      });
-    } else if (homeSelectedItem == "Hum") {
-      setState(() {
-        changeFunction(1);
-      });
-    } else if (homeSelectedItem == "CO2") {
-      setState(() {
-        changeFunction(2);
-      });
-    } else if (homeSelectedItem == "LUX") {
-      setState(() {
-        changeFunction(4);
-      });
-    } else if (homeSelectedItem == "NH3") {
-      setState(() {
-        changeFunction(3);
-      });
-    } else if (homeSelectedItem == "NO2") {
-      setState(() {
-        changeFunction(5);
-      });
-    } else if (homeSelectedItem == "CO") {
-      setState(() {
-        changeFunction(6);
-      });
-    }
-
-    print(homeSelectedItem);
   }
 
 //UI
@@ -606,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 iconSize: 28.0,
                 color: Colors.white,
                 onPressed: () {
-                  homeMenu();
+                  dialog.homeMenu();
                 },
               ),
               IconButton(
@@ -631,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   "FarmCare Dashboard",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 27, fontWeight: FontWeight.w700),
+                  style: Styles.appbarStyle,
                 ),
               ],
             ),
@@ -666,27 +477,12 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Text(
               "데모실 모니터링",
-              style: TextStyle(fontSize: 20, color: Colors.white),
+              style: Styles.buildHeadStyle,
             ),
           ],
         ),
       ),
     );
-  }
-
-  Widget _buildTile(Widget child, {Function() onTap}) {
-    return Material(
-        elevation: 14.0,
-        borderRadius: BorderRadius.circular(12.0),
-        shadowColor: Color(0x802196F3),
-        child: InkWell(
-            // Do onTap() if it isn't null, otherwise do print()
-            onTap: onTap != null
-                ? () => onTap()
-                : () {
-                    print('Not set yet');
-                  },
-            child: child));
   }
 
   SliverToBoxAdapter _buildPreventionTips(
@@ -699,7 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Material(
         elevation: 14.0,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
-        shadowColor: Color(0x802196F3),
+        shadowColor: Palette.shadowColor,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Row(
@@ -711,11 +507,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     if (temSparkLine.isNotEmpty)
-                      Text('재배기 내부 센서',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 25.0))
+                      Text('재배기 내부 센서', style: Styles.headLineStyle)
                   ],
                 ),
               ]),
@@ -729,122 +521,17 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisSpacing: 12.0,
         mainAxisSpacing: 12.0,
         children: <Widget>[
-          _buildTile(
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        if (temSparkLine.isNotEmpty)
-                          Text('현재 온도',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blueAccent)),
-                        if (temSparkLine.isNotEmpty)
-                          Text(
-                              '${double.parse(temSparkLine.last.toStringAsFixed(2))}°C',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 34.0))
-                      ],
-                    ),
-                  ]),
-            ),
-          ),
-          _buildTile(
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    if (humSparkLine.isNotEmpty)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('현재 습도',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blueAccent)),
-                          Text(
-                              '${double.parse(humSparkLine.last.toStringAsFixed(2))}%',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 34.0))
-                        ],
-                      ),
-                  ]),
-            ),
-          ),
-          _buildTile(
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    if (luxSparkLine.isNotEmpty)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('현재 조도',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blueAccent)),
-                          Text(
-                              '${double.parse(luxSparkLine.last.toStringAsFixed(0))}lm',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 34.0))
-                        ],
-                      ),
-                  ]),
-            ),
-          ),
-          _buildTile(
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    if (co2SparkLine.isNotEmpty)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('현재 CO2',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blueAccent)),
-                          Text(
-                              '${double.parse(co2SparkLine.last.toStringAsFixed(0))}ppm',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 34.0))
-                        ],
-                      ),
-                  ]),
-            ),
-          ),
+          homeDataTile1("온도"),
+          homeDataTile1("습도"),
+          homeDataTile1("조도"),
+          homeDataTile1("이산화탄소"),
           StaggeredGridTile.count(
             crossAxisCellCount: 2,
             mainAxisCellCount: 1,
             child: Material(
               elevation: 14.0,
               borderRadius: BorderRadius.circular(12.0),
-              shadowColor: Color(0x802196F3),
+              shadowColor: Palette.shadowColor,
               child: Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
@@ -859,16 +546,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text('평균 값',
-                                  style: TextStyle(
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.w600)),
+                              Text('평균 값', style: Styles.graphAverageStyle),
                               Stack(
                                 children: [
-                                  graphText('$temTotalValue°C', 0),
-                                  graphText('$humTotalValue%', 1),
-                                  graphText('${co2TotalValue}ppm', 2),
-                                  graphText('${luxTotalValue}lm', 3),
+                                  graphText1('$temTotalValue°C', 0),
+                                  graphText1('$humTotalValue%', 1),
+                                  graphText1('${co2TotalValue}ppm', 2),
+                                  graphText1('${luxTotalValue}lm', 3),
                                 ],
                               ),
                             ],
@@ -886,7 +570,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       case "습도":
                                         functionBox.changeInAverageLists(1);
                                         break;
-                                      case "CO2":
+                                      case "이산화탄소":
                                         functionBox.changeInAverageLists(2);
                                         break;
                                       case "조도":
@@ -909,10 +593,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(padding: EdgeInsets.only(bottom: 4.0)),
                       Stack(
                         children: [
-                          graphSpark(temSparkLine, 0),
-                          graphSpark(humSparkLine, 1),
-                          graphSpark(co2SparkLine, 2),
-                          graphSpark(luxSparkLine, 3),
+                          graphSpark1(temSparkLine, 0),
+                          graphSpark1(humSparkLine, 1),
+                          graphSpark1(co2SparkLine, 2),
+                          graphSpark1(luxSparkLine, 3),
                         ],
                       )
                     ],
@@ -927,7 +611,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Material(
         elevation: 14.0,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
-        shadowColor: Color(0x802196F3),
+        shadowColor: Palette.shadowColor,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Row(
@@ -939,11 +623,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     if (temSparkLine.isNotEmpty)
-                      Text('재배기 외부 센서',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 25.0))
+                      Text('재배기 외부 센서', style: Styles.headLineStyle)
                   ],
                 ),
               ]),
@@ -957,118 +637,17 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisSpacing: 12.0,
         mainAxisSpacing: 12.0,
         children: <Widget>[
-          _buildTile(
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    if (tem2SparkLine.isNotEmpty)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('현재 온도',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.green)),
-                          Text(
-                              '${double.parse(tem2SparkLine.last.toStringAsFixed(2))}C',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 34.0))
-                        ],
-                      ),
-                  ]),
-            ),
-          ),
-          _buildTile(
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('현재 습도',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green)),
-                        Text(
-                            '${double.parse(hum2SparkLine.last.toStringAsFixed(2))}%',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 34.0))
-                      ],
-                    ),
-                  ]),
-            ),
-          ),
-          _buildTile(
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('현재 조도',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green)),
-                        Text(
-                            '${double.parse(lux2SparkLine.last.toStringAsFixed(2))}lm',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 34.0))
-                      ],
-                    ),
-                  ]),
-            ),
-          ),
-          _buildTile(
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('현재 CO2',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green)),
-                        Text(
-                            '${double.parse(co22SparkLine.last.toStringAsFixed(2))}ppm',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 34.0))
-                      ],
-                    ),
-                  ]),
-            ),
-          ),
+          homeDataTile2("온도"),
+          homeDataTile2("습도"),
+          homeDataTile2("조도"),
+          homeDataTile2("이산화탄소"),
           StaggeredGridTile.count(
             crossAxisCellCount: 2,
             mainAxisCellCount: 1,
             child: Material(
               elevation: 14.0,
               borderRadius: BorderRadius.circular(12.0),
-              shadowColor: Color(0x802196F3),
+              shadowColor: Palette.shadowColor,
               child: Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
@@ -1089,38 +668,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontWeight: FontWeight.w600)),
                               Stack(
                                 children: [
-                                  Visibility(
-                                    visible: averageOutMap[0],
-                                    child: Text('$tem2TotalValue°C',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 34.0)),
-                                  ),
-                                  Visibility(
-                                    visible: averageOutMap[1],
-                                    child: Text('$hum2TotalValue%',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 34.0)),
-                                  ),
-                                  Visibility(
-                                    visible: averageOutMap[2],
-                                    child: Text('${co22TotalValue}ppm',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 34.0)),
-                                  ),
-                                  Visibility(
-                                    visible: averageOutMap[3],
-                                    child: Text('${lux2TotalValue}lm',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 34.0)),
-                                  ),
+                                  graphText2('$tem2TotalValue°C', 0),
+                                  graphText2('$hum2TotalValue%', 1),
+                                  graphText2('${co22TotalValue}ppm', 2),
+                                  graphText2('${lux2TotalValue}lm', 3),
                                 ],
                               ),
                             ],
@@ -1138,7 +689,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       case "습도":
                                         functionBox.changeOutAverageLists(1);
                                         break;
-                                      case "CO2":
+                                      case "이산화탄소":
                                         functionBox.changeOutAverageLists(2);
                                         break;
                                       case "조도":
@@ -1161,38 +712,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(padding: EdgeInsets.only(bottom: 4.0)),
                       Stack(
                         children: [
-                          Visibility(
-                            visible: averageOutMap[0],
-                            child: Sparkline(
-                              data: tem2SparkLine,
-                              lineWidth: 5.0,
-                              lineColor: Colors.green,
-                            ),
-                          ),
-                          Visibility(
-                            visible: averageOutMap[1],
-                            child: Sparkline(
-                              data: hum2SparkLine,
-                              lineWidth: 5.0,
-                              lineColor: Colors.green,
-                            ),
-                          ),
-                          Visibility(
-                            visible: averageOutMap[2],
-                            child: Sparkline(
-                              data: co22SparkLine,
-                              lineWidth: 5.0,
-                              lineColor: Colors.green,
-                            ),
-                          ),
-                          Visibility(
-                            visible: averageOutMap[3],
-                            child: Sparkline(
-                              data: lux2SparkLine,
-                              lineWidth: 5.0,
-                              lineColor: Colors.green,
-                            ),
-                          )
+                          graphSpark2(tem2SparkLine, 0),
+                          graphSpark2(hum2SparkLine, 1),
+                          graphSpark2(co22SparkLine, 2),
+                          graphSpark2(lux2SparkLine, 3),
                         ],
                       )
                     ],
@@ -1205,27 +728,5 @@ class _HomeScreenState extends State<HomeScreen> {
         height: screenHeight * 0.03,
       ),
     ]));
-  }
-
-  Visibility graphSpark(List<double> list, int index) {
-    return Visibility(
-      visible: averageInMap[index],
-      child: Sparkline(
-        data: list,
-        lineWidth: 5.0,
-        lineColor: Colors.blueAccent,
-      ),
-    );
-  }
-
-  Visibility graphText(String text, int index) {
-    return Visibility(
-      visible: averageInMap[index],
-      child: Text('$text',
-          style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-              fontSize: 34.0)),
-    );
   }
 }

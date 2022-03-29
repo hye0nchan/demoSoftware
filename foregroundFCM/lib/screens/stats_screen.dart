@@ -127,7 +127,7 @@ class _StatsScreenState extends State<StatsScreen> {
             child: Material(
               elevation: 14.0,
               borderRadius: BorderRadius.circular(30),
-              shadowColor: Color(0x802196F3),
+              shadowColor: Palette.shadowColor,
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Row(
@@ -309,7 +309,7 @@ class _StatsScreenState extends State<StatsScreen> {
         child: Material(
           elevation: 14.0,
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-          shadowColor: Color(0x802196F3),
+          shadowColor: Palette.shadowColor,
           child: SfCartesianChart(
             primaryXAxis: DateTimeAxis(
                 minimum: firstDate,

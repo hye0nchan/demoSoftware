@@ -13,7 +13,7 @@
 //   List<String> valueListGateway = [];
 //   List<String> valueListDevice = [];
 //
-//   // 시작할 때 실행 (setState와 동일한 기능)
+//   // 시작할 때 실행
 //   @override
 //   void initState() {
 //     readGatewayFunc();

@@ -57,7 +57,7 @@ var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////
 // influxDB
 
-var influxIp = "http://172.20.2.128:8086";
+var influxIp = "http://172.20.2.144:8086";
 var inputText = "test";
 var client = InfluxDBClient(
     url: influxIp,
@@ -528,7 +528,7 @@ String dateSelectedItem = "Tem";
 //firestore
 
 List<String> fireStoreTokenList = [];
-String fireStoreIp = "172.20.2.128";
+String fireStoreIp = "172.31.224.1";
 ////////////////////////////////////////////////////////////////////////////////
 //Map
 Map<int, bool> isCheckedMap = {
