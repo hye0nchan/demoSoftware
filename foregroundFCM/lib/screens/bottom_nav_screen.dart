@@ -14,19 +14,19 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     StatsScreen(),
     Info(),
   ];
-  int _currentIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: _screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+        currentIndex: currentIndex,
         onTap: (index) {
           setState(() {
             homeSelectedItem = homeHolder;
             dateSelectedItem = dateHolder;
-            _currentIndex = index;
+            currentIndex = index;
           });
         },
         type: BottomNavigationBarType.fixed,
@@ -48,7 +48,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
                         horizontal: 16.0,
                       ),
                       decoration: BoxDecoration(
-                        color: _currentIndex == key
+                        color: currentIndex == key
                             ? Colors.blueAccent
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(20.0),

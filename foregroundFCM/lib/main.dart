@@ -16,6 +16,7 @@ import 'package:fcm_notifications/screens/bottom_nav_screen.dart';
 import 'data/data.dart';
 import 'network.pbgrpc.dart';
 
+//influxDB
 void readInfluxDB() async {
   for (int i = 0; i < allSensorList.length; i++) {
     var sensorStream = await queryService.query('''
@@ -111,6 +112,7 @@ void readInfluxDB() async {
   lux2SparkLine.removeAt(0);
 }
 
+//foreground
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   flutterLocalNotificationsPlugin.show(
@@ -133,6 +135,7 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+//rest API
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext context) {
@@ -145,6 +148,7 @@ class MyHttpOverrides extends HttpOverrides {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  //background
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -168,6 +172,7 @@ class _MyAppState extends State<MyApp> {
     receiveMessage();
     readInfluxDB();
 
+    //foreground
     var initialzationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings =
@@ -220,10 +225,6 @@ class _MyAppState extends State<MyApp> {
         ));
   }
 }
-
-String data;
-String gateway;
-var ro;
 var de = Int64.parseRadix('21A106057F68D', 16);
 var gw;
 var sequenceNumber;
@@ -277,6 +278,7 @@ void displaySensorData(List<int> receiveData, Int64 device) {
   (isCheckedMap[15]) ? displayCoMData(da, device) : null;
   (isCheckedMap[16]) ? displayCoHData(da, device) : null;
 }
+
 
 void displayTemData(List<int> receiveData, Int64 device) {
   var sensor = "tem";

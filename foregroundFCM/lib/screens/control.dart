@@ -1,4 +1,5 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
+import 'package:fcm_notifications/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -16,8 +17,57 @@ class _ControlScreenState extends State<ControlScreen> {
     super.initState();
   }
 
+  String _selectedTime;
+
   int inDialogInitialize = 0;
   int outDialogInitialize = 0;
+
+  void testDialog() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '동작 시간 선택',
+                  style: Styles.headLineStyle,
+                ),
+              ],
+            ),
+            content: SizedBox(
+              height: screenHeight * 0.7,
+              width: screenWidth * 0.6,
+              child: SingleChildScrollView(
+                child: DefaultTabController(
+                  initialIndex: inDialogInitialize,
+                  length: 4,
+                  child: Column(
+                    children: [],
+                  ),
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text("닫기"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+      },
+    );
+  }
 
   void inDialog() {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -28,7 +78,8 @@ class _ControlScreenState extends State<ControlScreen> {
       builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -73,7 +124,7 @@ class _ControlScreenState extends State<ControlScreen> {
                         ),
                       ),
                       Container(
-                       height: screenHeight * 0.55,
+                        height: screenHeight * 0.55,
                         child: TabBarView(children: [
                           dialogPowerWidget(screenHeight, screenWidth, "센서"),
                           dialogPowerWidget(screenHeight, screenWidth, "펌프"),
@@ -109,7 +160,8 @@ class _ControlScreenState extends State<ControlScreen> {
       builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -206,8 +258,7 @@ class _ControlScreenState extends State<ControlScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text('$device 전원',
-                                style: Styles.headLineStyle),
+                            Text('$device 전원', style: Styles.headLineStyle),
                             SizedBox(
                               width: screenWidth * 0.05,
                             ),
@@ -226,86 +277,89 @@ class _ControlScreenState extends State<ControlScreen> {
             Container(
               width: screenWidth * 0.6,
               height: screenHeight * 0.15,
-              child: Material(
-                elevation: 14.0,
-                borderRadius: BorderRadius.circular(24.0),
-                shadowColor: Palette.shadowColor,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('시작 시간',
-                                  style: Styles.dialogTileStyle),
-                              SizedBox(
-                                width: screenWidth * 0.05,
-                              ),
-                              DropdownButton(
-                                  isDense: true,
-                                  value: pumpInitialize,
-                                  onChanged: (String value) {
-                                    setState(() {
-                                      pumpInitialize = value;
-                                      //grpc 명령어
-                                    });
-                                  },
-                                  items: controlPeriod.map((String title) {
-                                    return DropdownMenuItem(
-                                      value: title,
-                                      child: Text(title,
-                                          style: TextStyle(
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 22.0)),
-                                    );
-                                  }).toList()),
-                            ],
-                          ),
-                          SizedBox(
-                            height: screenHeight*0.01,
-                          ),
-                          Row(
-                            children: [
-                              Text('종료 시간',
-                                  style: Styles.dialogTileStyle),
-                              SizedBox(
-                                width: screenWidth * 0.05,
-                              ),
-                              DropdownButton(
-                                  isDense: true,
-                                  value: pumpInitialize,
-                                  onChanged: (String value) {
-                                    setState(() {
-                                      pumpInitialize = value;
-                                      //grpc 명령어
-                                    });
-                                  },
-                                  items: controlPeriod.map((String title) {
-                                    return DropdownMenuItem(
-                                      value: title,
-                                      child: Text(title,
-                                          style: TextStyle(
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 22.0)),
-                                    );
-                                  }).toList())
-                            ],
-                          )
-                        ],
-                      ),
-                    ]),
+              child: InkWell(
+                onTap: () {
+                  sowTImePicker(context, setState);
+                },
+                child: Material(
+                  elevation: 14.0,
+                  borderRadius: BorderRadius.circular(24.0),
+                  shadowColor: Palette.shadowColor,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text('시작 시간', style: Styles.dialogTileStyle),
+                                SizedBox(
+                                  width: screenWidth * 0.05,
+                                ),
+                                DropdownButton(
+                                    isDense: true,
+                                    value: pumpInitialize,
+                                    onChanged: (String value) {
+                                      setState(() {
+                                        pumpInitialize = value;
+                                        //grpc 명령어
+                                      });
+                                    },
+                                    items: controlPeriod.map((String title) {
+                                      return DropdownMenuItem(
+                                        value: title,
+                                        child: Text(title,
+                                            style: TextStyle(
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 22.0)),
+                                      );
+                                    }).toList()),
+                              ],
+                            ),
+                            SizedBox(
+                              height: screenHeight * 0.01,
+                            ),
+                            Row(
+                              children: [
+                                Text('종료 시간', style: Styles.dialogTileStyle),
+                                SizedBox(
+                                  width: screenWidth * 0.05,
+                                ),
+                                DropdownButton(
+                                    isDense: true,
+                                    value: pumpInitialize,
+                                    onChanged: (String value) {
+                                      setState(() {
+                                        pumpInitialize = value;
+                                        //grpc 명령어
+                                      });
+                                    },
+                                    items: controlPeriod.map((String title) {
+                                      return DropdownMenuItem(
+                                        value: title,
+                                        child: Text(title,
+                                            style: TextStyle(
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 22.0)),
+                                      );
+                                    }).toList())
+                              ],
+                            )
+                          ],
+                        ),
+                      ]),
+                ),
               ),
             ),
           SizedBox(
-            height: screenHeight*0.03,
+            height: screenHeight * 0.03,
           ),
           Container(
             width: screenWidth * 0.6,
@@ -326,13 +380,11 @@ class _ControlScreenState extends State<ControlScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text('$device 상태',
-                                style: Styles.headLineStyle),
+                            Text('$device 상태', style: Styles.headLineStyle),
                             SizedBox(
                               width: screenWidth * 0.05,
                             ),
-                            Text('정상',
-                                style: Styles.dialogTileStyle),
+                            Text('정상', style: Styles.dialogTileStyle),
                           ],
                         )
                       ],
@@ -342,6 +394,20 @@ class _ControlScreenState extends State<ControlScreen> {
           ),
         ],
       );
+    });
+  }
+
+  void sowTImePicker(BuildContext context, StateSetter setState) {
+    Future<TimeOfDay> selectedTime = showTimePicker(
+      //initialEntryMode: TimePickerEntryMode.input,
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    selectedTime.then((timeOfDay) {
+      setState(() {
+        _selectedTime = '${timeOfDay.hour}:${timeOfDay.minute}';
+        print(_selectedTime);
+      });
     });
   }
 
@@ -483,7 +549,6 @@ class _ControlScreenState extends State<ControlScreen> {
                     textAlign: TextAlign.center,
                     style: Styles.appbarStyle,
                   ),
-
                 ],
               ),
             ],
@@ -544,8 +609,7 @@ class _ControlScreenState extends State<ControlScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     if (temSparkLine.isNotEmpty)
-                      Text('재배기 내부 제어',
-                          style: Styles.headLineStyle)
+                      Text('재배기 내부 제어', style: Styles.headLineStyle)
                   ],
                 ),
               ]),
@@ -616,8 +680,7 @@ class _ControlScreenState extends State<ControlScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     if (temSparkLine.isNotEmpty)
-                      Text('재배기 외부 제어',
-                          style: Styles.headLineStyle)
+                      Text('재배기 외부 제어', style: Styles.headLineStyle)
                   ],
                 ),
               ]),
@@ -836,8 +899,7 @@ class _ControlScreenState extends State<ControlScreen> {
                 child: Center(
                   child: Text(text,
                       textAlign: TextAlign.center,
-                      style:
-                          Styles.StaggeredGridStyle),
+                      style: Styles.StaggeredGridStyle),
                 )),
           ),
         ),

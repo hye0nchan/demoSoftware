@@ -1,8 +1,31 @@
+import 'dart:core';
+
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:fcm_notifications/config/styles.dart';
 import 'package:fcm_notifications/data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:sparkline/sparkline.dart';
+
+
+class DashboardWidget extends StatefulWidget {
+  @override
+  State<DashboardWidget> createState() => new DashboardWidgetState();
+
+  static DashboardWidgetState of(BuildContext context) =>
+      context.findAncestorStateOfType<DashboardWidgetState>();
+}
+
+class DashboardWidgetState extends State<DashboardWidget> {
+  String _string = "please input text";
+
+  set string(String value) => setState(() => _string = value);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
 
 Widget _buildTile(Widget child, {Function() onTap}) {
   return Material(
@@ -217,4 +240,3 @@ Visibility graphText2(String text, int index) {
     child: Text('$text', style: Styles.homeDataStyle),
   );
 }
-

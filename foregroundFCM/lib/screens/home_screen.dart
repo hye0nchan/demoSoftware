@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var home = MyApp();
   var influxDB = AddInfluxDB();
   var dialog = DialogWidget();
+  var dashboardWidget = DashboardWidget();
 
   TextEditingController ipInputController = TextEditingController();
 
@@ -336,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
       AndroidNotification android = message.notification?.android;
       if (notification != null && android != null) {
         flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
+            0,
             notification.title,
             notification.body,
             NotificationDetails(
@@ -402,6 +403,88 @@ class _HomeScreenState extends State<HomeScreen> {
     functionBox.changeVisibilityOnLists(changeNumber);
   }
 
+  //dialog
+  void homeMenu() {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '환경 설정',
+                  style: Styles.headLineStyle,
+                ),
+              ],
+            ),
+            content: SizedBox(
+              height: screenHeight * 0.6,
+              width: screenWidth * 0.7,
+              child: SingleChildScrollView(
+                child: DefaultTabController(
+                  initialIndex: homeMenuInitialize,
+                  length: 3,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                        width: screenWidth * 0.7,
+                        height: screenHeight * 0.06,
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        child: TabBar(
+                          indicator: BubbleTabIndicator(
+                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                            indicatorHeight: 40.0,
+                            indicatorColor: Colors.white,
+                          ),
+                          labelStyle: Styles.tabTextStyle,
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.white,
+                          tabs: <Widget>[
+                            Text("장치 등록", style: TextStyle(fontSize: 16)),
+                            Text("장치 변경", style: TextStyle(fontSize: 16)),
+                            Text("장치 제거", style: TextStyle(fontSize: 16)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: screenHeight * 0.3,
+                        child: TabBarView(children: [
+                          menuWidget(screenHeight, screenWidth),
+                          menuWidget(screenHeight, screenWidth),
+                          menuWidget(screenHeight, screenWidth),
+                        ]),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text("닫기"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+      },
+    );
+  }
+
+
 //UI
   @override
   Widget build(BuildContext context) {
@@ -417,7 +500,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 iconSize: 28.0,
                 color: Colors.white,
                 onPressed: () {
-                  dialog.homeMenu();
+                  homeMenu();
                 },
               ),
               IconButton(
@@ -433,9 +516,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
         title: Column(
           children: [
-            SizedBox(
-                //height: screenHeight * 0.03,
-                ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

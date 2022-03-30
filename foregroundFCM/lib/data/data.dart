@@ -19,7 +19,7 @@ Color fanPowerColor = Colors.blueAccent;
 Color motorPowerColor = Colors.blueAccent;
 Color outFanPowerColor = Colors.blueAccent;
 
-
+int currentIndex = 0;
 
 List<String> controlPeriod = [
   "0h",
