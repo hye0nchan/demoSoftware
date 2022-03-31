@@ -35,7 +35,7 @@ namespace NetService
 {
     public class Program
     {
-        private static GrpcChannel channel = GrpcChannel.ForAddress("http://localhost:5052");
+        private static GrpcChannel channel = GrpcChannel.ForAddress("http://localhost:5042");
         private static ExProto.ExProtoClient exchange = new ExProto.ExProtoClient(channel);
         internal static AsyncDuplexStreamingCall<RtuMessage, RtuMessage> rtuLink = exchange.MessageRtu();
         internal static AsyncDuplexStreamingCall<ExtMessage, ExtMessage> extLink = exchange.MessageExt();
@@ -55,7 +55,9 @@ namespace NetService
                     RtuMessage response = rtuLink.ResponseStream.Current; // From Server
                     IServerStreamWriter<RtuMessage> responseStream = ExchangeService.responseStreamRtu;
 
+                    //InfluxDB
                     IServerStreamWriter<RtuMessage> responseStream_influxDB = ExchangeService.responseStreamInflux;
+
                     var protocol = (byte)response.Channel;
                     Debug.WriteLine(protocol);
                     if (responseStream != null)
@@ -63,18 +65,19 @@ namespace NetService
                         switch (protocol)
                         {
                             case 100:
-                                //await responseStream_influxDB.WriteAsync(response);
+                                //C# dashboard or InfluxDB Client 
                                 await responseStream.WriteAsync(response);
+                        
+                                Debug.WriteLine(protocol);
                                 break;
                             case 200:
+                                // mobile Client
                                 ExchangeService.RxLink(ref response);
                                 break;
 
                         }
-                        await responseStream.WriteAsync(response); // Server to Client
-
+                        await responseStream.WriteAsync(response);
                     }
-                    ExchangeService.RxLink(ref response);
 
                 }
 
@@ -130,7 +133,7 @@ namespace NetService
                             }
                         }
                         System.Net.IPAddress ip1 = System.Net.IPAddress.Parse(localIP);
-                        options.Listen(ip1, 5054, o => o.Protocols = HttpProtocols.Http2);
+                        options.Listen(ip1, 5044, o => o.Protocols = HttpProtocols.Http2);
                     });
                     webBuilder.UseStartup<Startup>();
                 });

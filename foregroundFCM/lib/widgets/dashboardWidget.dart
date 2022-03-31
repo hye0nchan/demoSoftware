@@ -16,9 +16,7 @@ class DashboardWidget extends StatefulWidget {
 }
 
 class DashboardWidgetState extends State<DashboardWidget> {
-  String _string = "please input text";
 
-  set string(String value) => setState(() => _string = value);
 
   @override
   Widget build(BuildContext context) {

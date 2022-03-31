@@ -1,10 +1,14 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:fcm_notifications/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../config/styles.dart';
 import '../data/data.dart';
+
+//구동기 주소
+//4C7525C1CF9D
+//4C7525C1CF89
+//4C7525C1CF81
 
 class ControlScreen extends StatefulWidget {
   @override

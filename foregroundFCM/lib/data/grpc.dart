@@ -56,8 +56,17 @@ class Grpc {
   //임의 값
   List<int> pumpResister = [0x00, 0x00, 0x00, 0x00];
   List<int> lampResister = [0x00, 0x00, 0x00, 0x00];
+
+
   List<int> fanResister = [0x00, 0x00, 0x00, 0x00];
-  List<int> motorResister = [0x00, 0x00, 0x00, 0x00];
+
+
+  //motor 제어
+  List<int> motorStop = [0x01,0x10,0xF7,0x04];
+  List<int> motorStart = [];
+  List<int> motorReset = [];
+  List<int> motorLeft = [];
+  List<int> motorRight = [];
 
   //fireStore 선언
   final fireStore = FirebaseFirestore.instance;
@@ -181,16 +190,16 @@ class Grpc {
       ..sequenceNumber = 0
       ..gwId = 0
       ..dataUnit = [
-        motorResister[0],
-        motorResister[1],
+        motorStart[0],
+        motorStart[1],
         0x00,
-        motorResister[2],
+        motorStart[2],
         0x00,
-        motorResister[3],
+        motorStart[3],
         0xAD,
         0xDE
       ]
-      ..deviceId = de1);
+      ..deviceId = motorDevice);
     return (box);
   }
 

@@ -460,6 +460,10 @@ var stringDevice3 = "0x" + "500291AEBE4D";
 var intDevice3 = int.parse(stringDevice3).toString();
 var de3 = Int64.parseInt(intDevice3);
 
+var stringMotorDevice = "0x" + "4C7525C1CF89";
+var intMotorDevice = int.parse(stringMotorDevice).toString();
+var motorDevice = Int64.parseInt(intMotorDevice);
+
 num sendGateway = 0;
 num sendDevice = 0x24A16057F685;
 
