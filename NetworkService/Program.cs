@@ -40,8 +40,9 @@ namespace NetService
         internal static AsyncDuplexStreamingCall<RtuMessage, RtuMessage> rtuLink = exchange.MessageRtu();
         internal static AsyncDuplexStreamingCall<ExtMessage, ExtMessage> extLink = exchange.MessageExt();
         internal static AsyncDuplexStreamingCall<CmdMessage, CmdMessage> cmdLink = exchange.MessageCmd();
-        internal static AsyncDuplexStreamingCall<ExMessage, ExMessage> exLink = exchange.ExLink();
-        internal static AsyncDuplexStreamingCall<RtuMessage, RtuMessage> influxLink = exchange.influxDB();
+
+        internal static AsyncDuplexStreamingCall<ExMessage, ExMessage> exLink = exchange.ExLink(); //Mobile grpc Àü¿ë
+        internal static AsyncDuplexStreamingCall<RtuMessage, RtuMessage> influxLink = exchange.influxDB(); //InfluxdDB Client Àü¿Ë
 
         public static void Main(string[] args)
         {
@@ -68,7 +69,6 @@ namespace NetService
                                 //C# dashboard or InfluxDB Client 
                                 await responseStream.WriteAsync(response);
                         
-                                Debug.WriteLine(protocol);
                                 break;
                             case 200:
                                 // mobile Client
@@ -133,7 +133,8 @@ namespace NetService
                             }
                         }
                         System.Net.IPAddress ip1 = System.Net.IPAddress.Parse(localIP);
-                        options.Listen(ip1, 5044, o => o.Protocols = HttpProtocols.Http2);
+                        System.Net.IPAddress ip2 = System.Net.IPAddress.Parse("172.20.2.72");
+                        options.Listen(ip2, 5044, o => o.Protocols = HttpProtocols.Http2);
                     });
                     webBuilder.UseStartup<Startup>();
                 });

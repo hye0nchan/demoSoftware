@@ -161,6 +161,10 @@ void main() async {
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
+
+  void test(){
+
+  }
 }
 
 class _MyAppState extends State<MyApp> {
@@ -169,7 +173,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    receiveMessage();
+    //receiveMessage();
     readInfluxDB();
 
     //foreground
@@ -225,6 +229,7 @@ class _MyAppState extends State<MyApp> {
         ));
   }
 }
+
 var de = Int64.parseRadix('21A106057F68D', 16);
 var gw;
 var sequenceNumber;
@@ -238,50 +243,36 @@ var device;
 Future<ExMessage> receiveMessage() async {
   print("receive");
   ExProtoClient stub = ExProtoClient(ClientChannel(fireStoreIp,
-      port: 5054,
+      port: 5044,
       options:
           const ChannelOptions(credentials: ChannelCredentials.insecure())));
-  await for (response in stub.exServerstream(request)) {
-    da = response.dataUnit;
-    de = response.deviceId;
-    gw = response.gwId;
-    sequenceNumber = response.sequenceNumber;
-    if (de == 0x24A16057F685) {
+  try{
+    await for (response in stub.exServerstream(request)) {
+      da = response.dataUnit;
+      de = response.deviceId;
+      gw = response.gwId;
+      sequenceNumber = response.sequenceNumber;
+      print("test $da");
       device = de;
-    } else if (de == 0x500291AEBCD9) {
-      device = de;
-    } else {
-      device = de;
+      displaySensorData(da, device);
     }
-    grpcChannel == 200 ? displaySensorData(da, device) : null;
   }
+  catch(e){
+    print('error');
+  }
+
 
   return response;
 }
 
 void displaySensorData(List<int> receiveData, Int64 device) {
-  (isCheckedMap[0]) ? displayTemData(da, device) : null;
-  (isCheckedMap[1]) ? displayHumData(da, device) : null;
-  (isCheckedMap[2]) ? displayCo2Data(da, device) : null;
-  (isCheckedMap[3]) ? displayLuxData(da, device) : null;
-  (isCheckedMap[4]) ? displayUvData(da, device) : null;
-  (isCheckedMap[5]) ? displayNh3Data(da, device) : null;
-  (isCheckedMap[6]) ? displayNh3LData(da, device) : null;
-  (isCheckedMap[7]) ? displayNh3MData(da, device) : null;
-  (isCheckedMap[8]) ? displayNh3HData(da, device) : null;
-  (isCheckedMap[9]) ? displayNo2Data(da, device) : null;
-  (isCheckedMap[10]) ? displayNo2LData(da, device) : null;
-  (isCheckedMap[11]) ? displayNo2MData(da, device) : null;
-  (isCheckedMap[12]) ? displayNo2HData(da, device) : null;
-  (isCheckedMap[13]) ? displayCoData(da, device) : null;
-  (isCheckedMap[14]) ? displayCoLData(da, device) : null;
-  (isCheckedMap[15]) ? displayCoMData(da, device) : null;
-  (isCheckedMap[16]) ? displayCoHData(da, device) : null;
+  displayEData(da, device);
+  print("receive Data : $receiveData");
 }
 
 
-void displayTemData(List<int> receiveData, Int64 device) {
-  var sensor = "tem";
+void displayEData(List<int> receiveData, Int64 device) {
+  var sensor = "E";
   var bData = ByteData(4);
   List<int> intList = [0, 0, 0, 0];
   List<String> stringList = ["0", "0", "0", "0"];
@@ -297,537 +288,20 @@ void displayTemData(List<int> receiveData, Int64 device) {
     }
   }
   String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
+      "${stringList[21]}${stringList[22]}${stringList[23]}${stringList[24]}";
   int a = int.parse(total);
   bData.setInt32(0, a);
   discernDevice(device, sensor, bData);
 }
 
-void displayHumData(List<int> receiveData, Int64 device) {
-  var sensor = "hum";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
 
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[humList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
 
-void displayCo2Data(List<int> receiveData, Int64 device) {
-  var sensor = "co2";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[co2List[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayLuxData(List<int> receiveData, Int64 device) {
-  var sensor = "lux";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[luxList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayUvData(List<int> receiveData, Int64 device) {
-  var sensor = "uv";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[uvList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayNh3Data(List<int> receiveData, Int64 device) {
-  var sensor = "nh3";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[nh3List[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayNh3LData(List<int> receiveData, Int64 device) {
-  var sensor = "nh3L";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[nh3LList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayNh3MData(List<int> receiveData, Int64 device) {
-  var sensor = "nh3M";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[nh3MList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayNh3HData(List<int> receiveData, Int64 device) {
-  var sensor = "nh3H";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[nh3HList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayNo2Data(List<int> receiveData, Int64 device) {
-  var sensor = "no2";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[no2List[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayNo2LData(List<int> receiveData, Int64 device) {
-  var sensor = "no2L";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[no2LList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayNo2MData(List<int> receiveData, Int64 device) {
-  var sensor = "no2M";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[no2MList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayNo2HData(List<int> receiveData, Int64 device) {
-  var sensor = "no2H";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[no2HList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayCoData(List<int> receiveData, Int64 device) {
-  var sensor = "co";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[coList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayCoLData(List<int> receiveData, Int64 device) {
-  var sensor = "coL";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[coLList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayCoMData(List<int> receiveData, Int64 device) {
-  var sensor = "coM";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[coMList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-void displayCoHData(List<int> receiveData, Int64 device) {
-  var sensor = "coH";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[coHList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
 
 void discernDevice(var device, var sensor, var bData) {
   switch (sensor) {
-    case "tem":
-      if (device == 0x24A16057F685) {
-        sensor1Device = !sensor1Device;
-        sensor1redTemData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2Device = !sensor2Device;
-        sensor2redTemData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3Device = !sensor3Device;
-        sensor3redTemData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "hum":
-      if (device == 0x24A16057F685) {
-        sensor1redHumData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redHumData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redHumData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "co2":
-      if (device == 0x24A16057F685) {
-        sensor1redCo2Data = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redCo2Data = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redCo2Data = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "nh3":
-      if (device == 0x24A16057F685) {
-        sensor1redNh3Data = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redNh3Data = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redNh3Data = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "nh3L":
-      if (device == 0x24A16057F685) {
-        sensor1redNh3LData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redNh3LData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redNh3LData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "nh3M":
-      if (device == 0x24A16057F685) {
-        sensor1redNh3MData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redNh3MData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redNh3MData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "nh3H":
-      if (device == 0x24A16057F685) {
-        sensor1redNh3HData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redNh3HData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redNh3HData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "uv":
-      if (device == 0x24A16057F685) {
-        sensor1redUvData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redUvData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redUvData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "lux":
-      if (device == 0x24A16057F685) {
-        sensor1redLuxData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redLuxData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redLuxData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "no2":
-      if (device == 0x24A16057F685) {
-        sensor1redNo2Data = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redNo2Data = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redNo2Data = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "no2L":
-      if (device == 0x24A16057F685) {
-        sensor1redNo2LData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redNo2LData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redNo2LData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "no2M":
-      if (device == 0x24A16057F685) {
-        sensor1redNo2MData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redNo2MData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redNo2MData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "no2H":
-      if (device == 0x24A16057F685) {
-        sensor1redNo2HData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redNo2HData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redNo2HData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "co":
-      if (device == 0x24A16057F685) {
-        sensor1redCoData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redCoData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redCoData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "coL":
-      if (device == 0x24A16057F685) {
-        sensor1redCoLData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redCoLData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redCoLData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "coM":
-      if (device == 0x24A16057F685) {
-        sensor1redCoMData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redCoMData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redCoMData = bData.getFloat32(0).toStringAsFixed(2);
-      }
-      break;
-    case "coH":
-      if (device == 0x24A16057F685) {
-        sensor1redCoHData = bData.getFloat32(0).toStringAsFixed(2);
-      } else if (device == 0x500291AEBCD9) {
-        sensor2redCoHData = bData.getFloat32(0).toStringAsFixed(2);
-      } else {
-        sensor3redCoHData = bData.getFloat32(0).toStringAsFixed(2);
-      }
+    case "E":
+      sensor1redEData = bData.getFloat32(0).toStringAsFixed(2);
+      print("전압 : $sensor1redEData");
       break;
   }
   sensor1Device = false;

@@ -458,7 +458,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Container(
-                        height: screenHeight * 0.3,
+                        height: screenHeight * 0.7,
                         child: TabBarView(children: [
                           menuWidget(screenHeight, screenWidth),
                           menuWidget(screenHeight, screenWidth),

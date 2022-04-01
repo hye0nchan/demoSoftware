@@ -4,6 +4,7 @@ import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../config/styles.dart';
 import '../data/data.dart';
+import '../data/grpc.dart';
 
 //구동기 주소
 //4C7525C1CF9D
@@ -20,6 +21,8 @@ class _ControlScreenState extends State<ControlScreen> {
   void initState() {
     super.initState();
   }
+
+  var grpc = Grpc();
 
   String _selectedTime;
 
@@ -128,7 +131,7 @@ class _ControlScreenState extends State<ControlScreen> {
                         ),
                       ),
                       Container(
-                        height: screenHeight * 0.55,
+                        height: screenHeight * 0.7,
                         child: TabBarView(children: [
                           dialogPowerWidget(screenHeight, screenWidth, "센서"),
                           dialogPowerWidget(screenHeight, screenWidth, "펌프"),
@@ -208,7 +211,7 @@ class _ControlScreenState extends State<ControlScreen> {
                         ),
                       ),
                       Container(
-                        height: screenHeight * 0.55,
+                        height: screenHeight * 0.7,
                         child: TabBarView(children: [
                           dialogPowerWidget(screenHeight, screenWidth, "모터"),
                           dialogPowerWidget(screenHeight, screenWidth, "외부 팬"),
@@ -276,6 +279,57 @@ class _ControlScreenState extends State<ControlScreen> {
           ),
           SizedBox(
             height: screenHeight * 0.03,
+          ),
+          if (device == "모터")
+            Container(
+              width: screenWidth * 0.6,
+              height: screenHeight * 0.1,
+              child: Material(
+                elevation: 14.0,
+                borderRadius: BorderRadius.circular(24.0),
+                shadowColor: Palette.shadowColor,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    grpc.motorLeft();
+                                  },
+                                  child: Text("좌회전",style: Styles.dialogTileStyle,)),
+                              SizedBox(
+                                width: screenWidth*0.03,
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    grpc.motorRight();
+                                  },
+                                  child: Text("우회전",style: Styles.dialogTileStyle)),
+                              SizedBox(
+                                width: screenWidth*0.03,
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    grpc.sensingE();
+                                  },
+                                  child: Text("전압",style: Styles.dialogTileStyle)),
+                            ],
+                          )
+                        ],
+                      ),
+                    ]),
+              ),
+            ),
+          SizedBox(
+            height: screenHeight*0.03,
           ),
           if (device != "센서")
             Container(
@@ -363,38 +417,7 @@ class _ControlScreenState extends State<ControlScreen> {
               ),
             ),
           SizedBox(
-            height: screenHeight * 0.03,
-          ),
-          Container(
-            width: screenWidth * 0.6,
-            height: screenHeight * 0.1,
-            child: Material(
-              elevation: 14.0,
-              borderRadius: BorderRadius.circular(24.0),
-              shadowColor: Palette.shadowColor,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('$device 상태', style: Styles.headLineStyle),
-                            SizedBox(
-                              width: screenWidth * 0.05,
-                            ),
-                            Text('정상', style: Styles.dialogTileStyle),
-                          ],
-                        )
-                      ],
-                    ),
-                  ]),
-            ),
+            height: screenHeight*0.03,
           ),
         ],
       );
@@ -472,6 +495,8 @@ class _ControlScreenState extends State<ControlScreen> {
     });
   }
 
+  //
+
   Material powerMaterial(String device) {
     return Material(
       color: Colors.blueAccent,
@@ -490,6 +515,7 @@ class _ControlScreenState extends State<ControlScreen> {
             case "펌프":
               setState(() {
                 pumpBool = !pumpBool;
+
               });
               break;
 
@@ -508,6 +534,7 @@ class _ControlScreenState extends State<ControlScreen> {
             case "모터":
               setState(() {
                 motorBool = !motorBool;
+                grpc.motorStop();
               });
               break;
 
@@ -534,14 +561,7 @@ class _ControlScreenState extends State<ControlScreen> {
     return Scaffold(
         appBar: AppBar(
           actions: [
-            // IconButton(
-            //   icon: const Icon(Icons.menu),
-            //   iconSize: 28.0,
-            //   color: Colors.white,
-            //   onPressed: () {
-            //
-            //   },
-            // ),
+
           ],
           title: Column(
             children: [

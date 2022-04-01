@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:fcm_notifications/widgets/stats_grid.dart';
 
 import 'package:fixnum/fixnum.dart';
@@ -57,7 +58,7 @@ var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////
 // influxDB
 
-var influxIp = "http://172.20.2.144:8086";
+var influxIp = "http://172.20.2.96:8086";
 var inputText = "test";
 var client = InfluxDBClient(
     url: influxIp,
@@ -68,7 +69,7 @@ var client = InfluxDBClient(
     debug: true);
 var writeApi = WriteService(client);
 var queryService = client.getQueryService();
-
+var sensor1redEData = "0";
 var sensor1redTemData = "0";
 var sensor1redHumData = "0";
 var sensor1redCo2Data = "0";
@@ -464,6 +465,21 @@ var stringMotorDevice = "0x" + "4C7525C1CF89";
 var intMotorDevice = int.parse(stringMotorDevice).toString();
 var motorDevice = Int64.parseInt(intMotorDevice);
 
+var stringMotorDevice2 = "0x" + "4C7525C1CF8D";
+var intMotorDevice2 = int.parse(stringMotorDevice2).toString();
+var motorDevice2 = Int64.parseInt(intMotorDevice2);
+
+var motorDevice3 = Int64.parseInt(int.parse(("0x" + "4C7525C1CF89")).toString());
+
+int opId = 0x00;
+Uint8List uInt8OpId = Uint8List(opId);
+Uint8List byteOpId = Uint8List(opId>>8);
+int gatewayAddress = 0;
+int deviceAddress = 0x4C7525C1CF89;
+int deviceAddress2 = 0x4C7525C1CF81;
+
+bool eTrue = false;
+
 num sendGateway = 0;
 num sendDevice = 0x24A16057F685;
 
@@ -532,7 +548,7 @@ String dateSelectedItem = "Tem";
 //firestore
 
 List<String> fireStoreTokenList = [];
-String fireStoreIp = "172.31.224.1";
+String fireStoreIp = "172.20.2.72";
 ////////////////////////////////////////////////////////////////////////////////
 //Map
 Map<int, bool> isCheckedMap = {

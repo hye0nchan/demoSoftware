@@ -57,16 +57,9 @@ class Grpc {
   List<int> pumpResister = [0x00, 0x00, 0x00, 0x00];
   List<int> lampResister = [0x00, 0x00, 0x00, 0x00];
 
-
   List<int> fanResister = [0x00, 0x00, 0x00, 0x00];
 
-
   //motor 제어
-  List<int> motorStop = [0x01,0x10,0xF7,0x04];
-  List<int> motorStart = [];
-  List<int> motorReset = [];
-  List<int> motorLeft = [];
-  List<int> motorRight = [];
 
   //fireStore 선언
   final fireStore = FirebaseFirestore.instance;
@@ -179,10 +172,26 @@ class Grpc {
     return (box);
   }
 
-  Future<RtuMessage> controlMotor() async {
+  Future<RtuMessage> sensingE() async {
     var protocol = 200;
     stub = ExProtoClient(ClientChannel(fireStoreIp,
-        port: 5054,
+        port: 5044,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure())));
+    await stub.exClientstream(box
+      ..channel = protocol
+      ..sequenceNumber = 0
+      ..gwId = 0
+      ..dataUnit = [0x01, 0x03, 0x00, 203, 0x00, 13, 0xAD, 0xDE]
+      ..deviceId = motorDevice2);
+    opId++;
+    return (box);
+  }
+
+  Future<RtuMessage> motorStop() async {
+    var protocol = 200;
+    stub = ExProtoClient(ClientChannel(fireStoreIp,
+        port: 5044,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure())));
     await stub.exClientstream(box
@@ -190,16 +199,94 @@ class Grpc {
       ..sequenceNumber = 0
       ..gwId = 0
       ..dataUnit = [
-        motorStart[0],
-        motorStart[1],
+        0x01,
+        0x10,
+        0x01,
+        0xF7,
         0x00,
-        motorStart[2],
+        0x04,
+        0x08,
         0x00,
-        motorStart[3],
+        0x00,
+        opId >> 8,
+        opId,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
         0xAD,
         0xDE
       ]
-      ..deviceId = motorDevice);
+      ..deviceId = motorDevice2);
+    opId++;
+    return (box);
+  }
+
+  Future<RtuMessage> motorLeft() async {
+    var protocol = 200;
+    stub = ExProtoClient(ClientChannel(fireStoreIp,
+        port: 5044,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure())));
+    await stub.exClientstream(box
+      ..channel = protocol
+      ..sequenceNumber = 0
+      ..gwId = 0
+      ..dataUnit = [
+        0x01,
+        0x10,
+        0x01,
+        0xF7,
+        0x00,
+        0x04,
+        0x08,
+        0x01,
+        0x2d,
+        opId >> 8,
+        opId,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0xAD,
+        0xDE
+      ]
+      ..deviceId = motorDevice2);
+    opId++;
+    return (box);
+  }
+
+  Future<RtuMessage> motorRight() async {
+    var protocol = 200;
+    stub = ExProtoClient(ClientChannel(fireStoreIp,
+        port: 5044,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure())));
+    await stub.exClientstream(box
+      ..channel = protocol
+      ..sequenceNumber = 0
+      ..gwId = 0
+      ..dataUnit = [
+        0x01,
+        0x10,
+        0x01,
+        0xF7,
+        0x00,
+        0x04,
+        0x08,
+        0x01,
+        0x2e,
+        opId >> 8,
+        opId,
+        0x00,
+        0x00,
+        0x00,
+        0x00,
+        0xAD,
+        0xDE
+      ]
+      ..deviceId = motorDevice2);
+    opId++;
     return (box);
   }
 
@@ -288,19 +375,15 @@ class Grpc {
   Future<ExMessage> receiveMessage() async {
     print("receive");
     ExProtoClient stub = ExProtoClient(ClientChannel(fireStoreIp,
-        port: 5054,
+        port: 5044,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure())));
     await for (response in stub.exServerstream(request)) {
       da = response.dataUnit;
       de = response.deviceId;
-      if (de == 0x24A16057F685) {
-        device = de;
-      } else if (de == 0x500291AEBCD9) {
-        device = de;
-      } else {
-        device = de;
-      }
+      gw = response.gwId;
+      device = de;
+
       displaySensorData(da, device);
     }
     return response;

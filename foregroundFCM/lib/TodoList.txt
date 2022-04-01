@@ -1,0 +1,13 @@
+1. 장치 전원 확인
+- 전류가 흐르고 있으면 ON
+- 0이면 OFF
+
+2. 센서 device 4C75258912F5로 변경 (C#)
+
+3. influxDB IP랑 grpc IP 통일
+
+4. 제어 화면 UI 수정
+
+5. motor Timer 기능 추가
+
+6. 전압 전류 표시

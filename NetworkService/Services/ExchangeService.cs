@@ -23,6 +23,7 @@ using NetExchange;
 using System;
 using Google.Cloud.Firestore;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NetService
 {
@@ -110,7 +111,7 @@ namespace NetService
             {
                 RtuMessage box = new RtuMessage();
                 //responseStream.WriteAsync(new ExMessage {Route = response.Route, DataUnit = response.DataUnit, GwId = response.GwId, DeviceId = response.DeviceId });
-                box.GwId = response.GwId; box.DataUnit = response.DataUnit; box.DeviceId = response.DeviceId; box.SequenceNumber = response.SequenceNumber;
+                box.GwId = response.GwId; box.DataUnit = response.DataUnit; box.DeviceId = response.DeviceId; box.SequenceNumber = response.SequenceNumber; box.Channel = response.Channel;
 
                 responseStream.WriteAsync(box);
 
@@ -126,6 +127,7 @@ namespace NetService
             {
                 RtuMessage request = requestStream.Current; // From Client
                 await Program.rtuLink.RequestStream.WriteAsync(request); // Client to Server
+                Debug.WriteLine("send Complete");
             }
 
             ExchangeService.responseStreamRtu = null;

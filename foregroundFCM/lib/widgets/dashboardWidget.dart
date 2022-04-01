@@ -6,6 +6,8 @@ import 'package:fcm_notifications/data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:sparkline/sparkline.dart';
 
+import '../data/grpc.dart';
+import '../main.dart';
 
 class DashboardWidget extends StatefulWidget {
   @override
@@ -16,33 +18,28 @@ class DashboardWidget extends StatefulWidget {
 }
 
 class DashboardWidgetState extends State<DashboardWidget> {
-
-
   @override
   Widget build(BuildContext context) {
     return Container();
   }
 }
 
+var home = MyApp();
+var grpc = Grpc();
 
 Widget _buildTile(Widget child, {Function() onTap}) {
   return Material(
       elevation: 14.0,
       borderRadius: BorderRadius.circular(12.0),
       shadowColor: Palette.shadowColor,
-      child: InkWell(
-          onTap: onTap != null
-              ? () => onTap()
-              : () {
-          },
-          child: child));
+      child:
+          InkWell(onTap: onTap != null ? () => onTap() : () {}, child: child));
 }
-
 
 StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
   return StatefulBuilder(builder: (context, setState) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
@@ -94,6 +91,41 @@ StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
                                       fontWeight: FontWeight.w300)),
                             ),
                           )
+                        ],
+                      )
+                    ],
+                  ),
+                ]),
+          ),
+        ),
+        SizedBox(
+          height: screenHeight*0.03,
+        ),
+        Container(
+          width: screenWidth * 0.6,
+          height: screenHeight * 0.1,
+          child: Material(
+            elevation: 14.0,
+            borderRadius: BorderRadius.circular(24.0),
+            shadowColor: Palette.shadowColor,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              grpc.receiveMessage();
+                            },
+                              child: Text('gRPC 서버 연결',
+                                  style: Styles.dialogTileStyle)),
                         ],
                       )
                     ],
@@ -192,8 +224,7 @@ Widget homeDataTile2(String sensor) {
                 if (sparkLine.isNotEmpty)
                   Text('$sensor',
                       style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.green)),
+                          fontWeight: FontWeight.w600, color: Colors.green)),
                 if (sparkLine.isNotEmpty)
                   Text(data, style: Styles.homeDataStyle)
               ],
