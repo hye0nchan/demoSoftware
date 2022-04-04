@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
-using System.Net.Sockets;
+using System.Net.Sockets; 
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,7 +35,7 @@ namespace NetService
 {
     public class Program
     {
-        private static GrpcChannel channel = GrpcChannel.ForAddress("http://localhost:5042");
+        private static GrpcChannel channel = GrpcChannel.ForAddress("http://localhost:5052");
         private static ExProto.ExProtoClient exchange = new ExProto.ExProtoClient(channel);
         internal static AsyncDuplexStreamingCall<RtuMessage, RtuMessage> rtuLink = exchange.MessageRtu();
         internal static AsyncDuplexStreamingCall<ExtMessage, ExtMessage> extLink = exchange.MessageExt();
@@ -55,13 +55,13 @@ namespace NetService
                 {
                     RtuMessage response = rtuLink.ResponseStream.Current; // From Server
                     IServerStreamWriter<RtuMessage> responseStream = ExchangeService.responseStreamRtu;
-
+                    IServerStreamWriter<RtuMessage> responseStream_flutter = ExchangeService.responseStreamFlutter;
                     //InfluxDB
                     IServerStreamWriter<RtuMessage> responseStream_influxDB = ExchangeService.responseStreamInflux;
 
                     var protocol = (byte)response.Channel;
                     Debug.WriteLine(protocol);
-                    if (responseStream != null)
+                    if (responseStream != null || responseStream_flutter != null)
                     {
                         switch (protocol)
                         {
@@ -72,13 +72,15 @@ namespace NetService
                                 break;
                             case 200:
                                 // mobile Client
+                                Debug.WriteLine("enter program");
                                 ExchangeService.RxLink(ref response);
                                 break;
 
                         }
-                        await responseStream.WriteAsync(response);
+                        //await responseStream.WriteAsync(response);
+                       
                     }
-
+                   
                 }
 
             });

@@ -34,7 +34,7 @@ namespace NetService
         internal static IServerStreamWriter<ExtMessage> responseStreamExt = null;
         internal static IServerStreamWriter<CmdMessage> responseStreamCmd = null;
 
-        internal static IServerStreamWriter<RtuMessage> responseStream = null;
+        internal static IServerStreamWriter<RtuMessage> responseStreamFlutter = null;
         internal static IServerStreamWriter<RtuMessage> responseStreamInflux = null;
         internal static IServerStreamWriter<ExMessage> responseExMessage = null;
 
@@ -64,7 +64,7 @@ namespace NetService
 
             while (true)
             {
-                ExchangeService.responseStream = responseStream;
+                ExchangeService.responseStreamFlutter = responseStream;
                 if (count == 0)
                 {
                     FirestoreDb db;
@@ -105,14 +105,15 @@ namespace NetService
 
         internal static void RxLink(ref RtuMessage response)
         {
-            IServerStreamWriter<RtuMessage> responseStream = ExchangeService.responseStream;
+            IServerStreamWriter<RtuMessage> responseStream = ExchangeService.responseStreamFlutter;
 
             if (responseStream != null)
             {
+                Debug.WriteLine("enter");
                 RtuMessage box = new RtuMessage();
                 //responseStream.WriteAsync(new ExMessage {Route = response.Route, DataUnit = response.DataUnit, GwId = response.GwId, DeviceId = response.DeviceId });
                 box.GwId = response.GwId; box.DataUnit = response.DataUnit; box.DeviceId = response.DeviceId; box.SequenceNumber = response.SequenceNumber; box.Channel = response.Channel;
-
+                
                 responseStream.WriteAsync(box);
 
             }

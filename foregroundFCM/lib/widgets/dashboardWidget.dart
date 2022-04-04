@@ -133,6 +133,41 @@ StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
                 ]),
           ),
         ),
+        SizedBox(
+          height: screenHeight*0.03,
+        ),
+        Container(
+          width: screenWidth * 0.6,
+          height: screenHeight * 0.1,
+          child: Material(
+            elevation: 14.0,
+            borderRadius: BorderRadius.circular(24.0),
+            shadowColor: Palette.shadowColor,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                              onTap: (){
+                                grpc.sensingE();
+                              },
+                              child: Text('재배기 센서 테스트',
+                                  style: Styles.dialogTileStyle)),
+                        ],
+                      )
+                    ],
+                  ),
+                ]),
+          ),
+        ),
       ],
     );
   });

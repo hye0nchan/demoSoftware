@@ -17,6 +17,7 @@ class ControlScreen extends StatefulWidget {
 }
 
 class _ControlScreenState extends State<ControlScreen> {
+  final formKey = new GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -313,14 +314,6 @@ class _ControlScreenState extends State<ControlScreen> {
                                     grpc.motorRight();
                                   },
                                   child: Text("우회전",style: Styles.dialogTileStyle)),
-                              SizedBox(
-                                width: screenWidth*0.03,
-                              ),
-                              InkWell(
-                                  onTap: () {
-                                    grpc.sensingE();
-                                  },
-                                  child: Text("전압",style: Styles.dialogTileStyle)),
                             ],
                           )
                         ],
@@ -328,6 +321,46 @@ class _ControlScreenState extends State<ControlScreen> {
                     ]),
               ),
             ),
+          SizedBox(
+            height: screenHeight*0.03,
+          ),
+          Container(
+            width: screenWidth * 0.6,
+            height: screenHeight * 0.1,
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  grpc.sensingE();
+                  //grpc 명령어
+                });
+              },
+              child: Material(
+                elevation: 14.0,
+                borderRadius: BorderRadius.circular(24.0),
+                shadowColor: Palette.shadowColor,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text("전압",style: Styles.StaggeredGridStyle,),
+                              if(sensor1redEData!=null)
+                              Text("$sensor1redEData",style: TextStyle(fontSize: 18,color: Colors.blueAccent),),
+                            ],
+                          )
+                        ],
+                      ),
+                    ]),
+              ),
+            ),
+          ),
           SizedBox(
             height: screenHeight*0.03,
           ),

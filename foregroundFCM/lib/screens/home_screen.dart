@@ -322,79 +322,87 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    grpc.sendSensor1();
-    getToken();
+
+    if(!Platform.isWindows){
+      getToken();
+    }
     actualDropdown = beforeActually;
     actualDropdown2 = beforeActually2;
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
 
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            0,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                icon: android?.smallIcon,
-              ),
-            ));
-      }
-    });
+
+    if(!Platform.isWindows){
+      var initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+      var initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+
+      flutterLocalNotificationsPlugin.initialize(initializationSettings);
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        RemoteNotification notification = message.notification;
+        AndroidNotification android = message.notification?.android;
+        if (notification != null && android != null) {
+          flutterLocalNotificationsPlugin.show(
+              0,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  icon: android?.smallIcon,
+                ),
+              ));
+        }
+      });
+    }
   }
 
   void getToken() async {
-    if (tokenCount) {
-      String token = await FirebaseMessaging.instance.getToken(); //디바이스 토큰 가져오기
+      if (tokenCount) {
+        String token = await FirebaseMessaging.instance
+            .getToken(); //디바이스 토큰 가져오기
 
-      print("현재 토큰 : $token");
+        print("현재 토큰 : $token");
 
-      final f = FirebaseFirestore.instance; // 인스턴스 할당
-      String firesStoreToken;
+        final f = FirebaseFirestore.instance; // 인스턴스 할당
+        String firesStoreToken;
 
-      await f //fireStore에 저장된 토큰 전부 가져오기
-          .collection("Token")
-          .get()
-          .then((QuerySnapshot ds) async {
-        if (ds.docs.length == 0) {
-          //등록된 디바이스가 없으면
-          await f //fireStore에 저장
-              .collection('Token')
-              .doc('device1')
-              .set({'value': token});
-        }
-      });
-
-      await f //fireStore에 저장된 토큰 전부 가져오기
-          .collection("Token")
-          .get()
-          .then((QuerySnapshot ds) async {
-        ds.docs.forEach((doc) async {
-          if (ds.docs.length != 0) {
-            firesStoreToken = doc["value"];
-            fireStoreTokenList.add(firesStoreToken); //가져온 토큰 리스트에 저장
+        await f //fireStore에 저장된 토큰 전부 가져오기
+            .collection("Token")
+            .get()
+            .then((QuerySnapshot ds) async {
+          if (ds.docs.length == 0) {
+            //등록된 디바이스가 없으면
+            await f //fireStore에 저장
+                .collection('Token')
+                .doc('device1')
+                .set({'value': token});
           }
         });
-      });
 
-      print("토큰 리스트 : $fireStoreTokenList");
+        await f //fireStore에 저장된 토큰 전부 가져오기
+            .collection("Token")
+            .get()
+            .then((QuerySnapshot ds) async {
+          ds.docs.forEach((doc) async {
+            if (ds.docs.length != 0) {
+              firesStoreToken = doc["value"];
+              fireStoreTokenList.add(firesStoreToken); //가져온 토큰 리스트에 저장
+            }
+          });
+        });
 
-      if (fireStoreTokenList.contains(token) == false) {
-        await f //fireStore에 저장
-            .collection('Token')
-            .doc('device${fireStoreTokenList.length + 1}')
-            .set({'value': token});
+        print("토큰 리스트 : $fireStoreTokenList");
+
+        if (fireStoreTokenList.contains(token) == false) {
+          await f //fireStore에 저장
+              .collection('Token')
+              .doc('device${fireStoreTokenList.length + 1}')
+              .set({'value': token});
+        }
       }
-    }
-    tokenCount = false;
+      tokenCount = false;
+
   }
 
   void changeFunction(int changeNumber) {

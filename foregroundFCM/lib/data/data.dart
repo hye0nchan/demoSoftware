@@ -58,7 +58,7 @@ var tokenCount = true;
 ////////////////////////////////////////////////////////////////////////////////
 // influxDB
 
-var influxIp = "http://172.20.2.96:8086";
+var influxIp = "http://172.20.2.72:8086";
 var inputText = "test";
 var client = InfluxDBClient(
     url: influxIp,
@@ -431,6 +431,8 @@ String nullCoL = "";
 String nullCoM = "";
 String nullCoH = "";
 
+List<int> eList = [23, 24, 21, 22];
+
 List<int> temList = [23, 24, 21, 22];
 List<int> humList = [5, 6, 3, 4];
 List<int> co2List = [29, 30, 27, 28];
@@ -465,11 +467,13 @@ var stringMotorDevice = "0x" + "4C7525C1CF89";
 var intMotorDevice = int.parse(stringMotorDevice).toString();
 var motorDevice = Int64.parseInt(intMotorDevice);
 
+var boolE = false;
+
 var stringMotorDevice2 = "0x" + "4C7525C1CF8D";
 var intMotorDevice2 = int.parse(stringMotorDevice2).toString();
 var motorDevice2 = Int64.parseInt(intMotorDevice2);
 
-var motorDevice3 = Int64.parseInt(int.parse(("0x" + "4C7525C1CF89")).toString());
+var sensorDevice3 = Int64.parseInt(int.parse(("0x" + "4C75258912F5")).toString());
 
 int opId = 0x00;
 Uint8List uInt8OpId = Uint8List(opId);

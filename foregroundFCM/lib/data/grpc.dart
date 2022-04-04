@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_statements
 
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -62,10 +63,14 @@ class Grpc {
   //motor 제어
 
   //fireStore 선언
-  final fireStore = FirebaseFirestore.instance;
+
+
 
   //IP 가져오기
   void getIp() {
+    if(Platform.isWindows){
+      final fireStore = FirebaseFirestore.instance;
+
     fireStore.collection("IP").get().then((QuerySnapshot ds) {
       ds.docs.forEach((doc) {
         fireStoreIp = doc["IP"];
@@ -74,6 +79,7 @@ class Grpc {
     });
     print("out loop$fireStoreIp");
     fireStoreIp = inputText;
+  }
   }
 
   //DeviceId, Gateway 변수 선언
@@ -173,6 +179,7 @@ class Grpc {
   }
 
   Future<RtuMessage> sensingE() async {
+    boolE = true;
     var protocol = 200;
     stub = ExProtoClient(ClientChannel(fireStoreIp,
         port: 5044,
@@ -183,7 +190,7 @@ class Grpc {
       ..sequenceNumber = 0
       ..gwId = 0
       ..dataUnit = [0x01, 0x03, 0x00, 203, 0x00, 13, 0xAD, 0xDE]
-      ..deviceId = motorDevice2);
+      ..deviceId = motorDevice);
     opId++;
     return (box);
   }
@@ -217,7 +224,7 @@ class Grpc {
         0xAD,
         0xDE
       ]
-      ..deviceId = motorDevice2);
+      ..deviceId = motorDevice);
     opId++;
     return (box);
   }
@@ -293,7 +300,7 @@ class Grpc {
   Future<RtuMessage> sendSensor1() async {
     var protocol = 200;
     stub = ExProtoClient(ClientChannel(fireStoreIp,
-        port: 5054,
+        port: 5044,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure())));
     await stub.exClientstream(box
@@ -310,7 +317,7 @@ class Grpc {
         0xAD,
         0xDE
       ]
-      ..deviceId = de1);
+      ..deviceId = sensorDevice3);
     return (box);
   }
 
@@ -372,7 +379,7 @@ class Grpc {
   var response;
   var device;
 
-  Future<ExMessage> receiveMessage() async {
+  Future<RtuMessage> receiveMessage() async {
     print("receive");
     ExProtoClient stub = ExProtoClient(ClientChannel(fireStoreIp,
         port: 5044,
@@ -382,32 +389,41 @@ class Grpc {
       da = response.dataUnit;
       de = response.deviceId;
       gw = response.gwId;
-      device = de;
 
+      device = de;
+      print("receive Complete");
       displaySensorData(da, device);
     }
     return response;
   }
 
   void displaySensorData(List<int> receiveData, Int64 device) {
-    print(device);
-    (isCheckedMap[0]) ? displayTemData(da, device) : null;
-    (isCheckedMap[1]) ? displayHumData(da, device) : null;
-    (isCheckedMap[2]) ? displayCo2Data(da, device) : null;
-    (isCheckedMap[3]) ? displayLuxData(da, device) : null;
-    (isCheckedMap[4]) ? displayUvData(da, device) : null;
-    (isCheckedMap[5]) ? displayNh3Data(da, device) : null;
-    (isCheckedMap[6]) ? displayNh3LData(da, device) : null;
-    (isCheckedMap[7]) ? displayNh3MData(da, device) : null;
-    (isCheckedMap[8]) ? displayNh3HData(da, device) : null;
-    (isCheckedMap[9]) ? displayNo2Data(da, device) : null;
-    (isCheckedMap[10]) ? displayNo2LData(da, device) : null;
-    (isCheckedMap[11]) ? displayNo2MData(da, device) : null;
-    (isCheckedMap[12]) ? displayNo2HData(da, device) : null;
-    (isCheckedMap[13]) ? displayCoData(da, device) : null;
-    (isCheckedMap[14]) ? displayCoLData(da, device) : null;
-    (isCheckedMap[15]) ? displayCoMData(da, device) : null;
-    (isCheckedMap[16]) ? displayCoHData(da, device) : null;
+    if(boolE){
+      displayEData(da, device);
+    }
+  }
+
+  void displayEData(List<int> receiveData, Int64 device) {
+    var sensor = "E";
+    var bData = ByteData(4);
+    List<int> intList = [0, 0, 0, 0];
+    List<String> stringList = ["0", "0", "0", "0"];
+
+    for (int i = 0; i < intList.length; i++) {
+      intList[i] = receiveData[eList[i]];
+      stringList[i] = intList[i].toRadixString(16);
+      if (stringList[i].length == 1) {
+        stringList[i] = "0${stringList[i]}";
+      }
+      if (i == 0) {
+        stringList[i] = "0x${intList[i].toRadixString(16)}";
+      }
+    }
+    String total =
+        "${stringList[0]}${stringList[1]}${stringList[2]}${stringList[3]}";
+    int a = int.parse(total);
+    bData.setInt32(0, a);
+    discernDevice(device, sensor, bData);
   }
 
   void displayTemData(List<int> receiveData, Int64 device) {
@@ -804,183 +820,12 @@ class Grpc {
 
   void discernDevice(var device, var sensor, var bData) {
     switch (sensor) {
-      case "tem":
-        if (device == 0x24A16057F685) {
-          sensor1Device = !sensor1Device;
-          sensor1redTemData = bData.getFloat32(0).toStringAsFixed(2);
-          print("sensor1 enter");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2Device = !sensor2Device;
-          sensor2redTemData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3Device = !sensor3Device;
-          sensor3redTemData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "hum":
-        if (device == 0x24A16057F685) {
-          sensor1redHumData = bData.getFloat32(0).toStringAsFixed(2);
-          print("hum : $sensor1redHumData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redHumData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redHumData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "co2":
-        if (device == 0x24A16057F685) {
-          sensor1redCo2Data = bData.getFloat32(0).toStringAsFixed(2);
-          print("co2 : $sensor1redCo2Data");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redCo2Data = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redCo2Data = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "nh3":
-        if (device == 0x24A16057F685) {
-          sensor1redNh3Data = bData.getFloat32(0).toStringAsFixed(2);
-          print("nh3 : $sensor1redNh3Data");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redNh3Data = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redNh3Data = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "nh3L":
-        if (device == 0x24A16057F685) {
-          sensor1redNh3LData = bData.getFloat32(0).toStringAsFixed(2);
-          print("nh3L : $sensor1redNh3LData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redNh3LData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redNh3LData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "nh3M":
-        if (device == 0x24A16057F685) {
-          sensor1redNh3MData = bData.getFloat32(0).toStringAsFixed(2);
-          print("nh3M : $sensor1redNh3MData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redNh3MData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redNh3MData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "nh3H":
-        if (device == 0x24A16057F685) {
-          sensor1redNh3HData = bData.getFloat32(0).toStringAsFixed(2);
-          print("nh3H : $sensor1redNh3HData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redNh3HData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redNh3HData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "uv":
-        if (device == 0x24A16057F685) {
-          sensor1redUvData = bData.getFloat32(0).toStringAsFixed(2);
-          print("uv : $sensor1redUvData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redUvData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redUvData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "lux":
-        if (device == 0x24A16057F685) {
-          sensor1redLuxData = bData.getFloat32(0).toStringAsFixed(2);
-          print("lux : $sensor1redLuxData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redLuxData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redLuxData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "no2":
-        if (device == 0x24A16057F685) {
-          sensor1redNo2Data = bData.getFloat32(0).toStringAsFixed(2);
-          print("no2 : $sensor1redNo2Data");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redNo2Data = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redNo2Data = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "no2L":
-        if (device == 0x24A16057F685) {
-          sensor1redNo2LData = bData.getFloat32(0).toStringAsFixed(2);
-          print("no2L : $sensor1redNo2LData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redNo2LData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redNo2LData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "no2M":
-        if (device == 0x24A16057F685) {
-          sensor1redNo2MData = bData.getFloat32(0).toStringAsFixed(2);
-          print("no2M : $sensor1redNo2MData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redNo2MData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redNo2MData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "no2H":
-        if (device == 0x24A16057F685) {
-          sensor1redNo2HData = bData.getFloat32(0).toStringAsFixed(2);
-          print("no2H : $sensor1redNo2HData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redNo2HData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redNo2HData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "co":
-        if (device == 0x24A16057F685) {
-          sensor1redCoData = bData.getFloat32(0).toStringAsFixed(2);
-          print("co : $sensor1redCoData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redCoData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redCoData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "coL":
-        if (device == 0x24A16057F685) {
-          sensor1redCoLData = bData.getFloat32(0).toStringAsFixed(2);
-          print("coL : $sensor1redCoLData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redCoLData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redCoLData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "coM":
-        if (device == 0x24A16057F685) {
-          sensor1redCoMData = bData.getFloat32(0).toStringAsFixed(2);
-          print("coM : $sensor1redCoMData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redCoMData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redCoMData = bData.getFloat32(0).toStringAsFixed(2);
-        }
-        break;
-      case "coH":
-        if (device == 0x24A16057F685) {
-          sensor1redCoHData = bData.getFloat32(0).toStringAsFixed(2);
-          print("coH : $sensor1redCoHData");
-        } else if (device == 0x500291AEBCD9) {
-          sensor2redCoHData = bData.getFloat32(0).toStringAsFixed(2);
-        } else {
-          sensor3redCoHData = bData.getFloat32(0).toStringAsFixed(2);
-        }
+      case "E":
+        sensor1redEData = bData.getFloat32(0).toStringAsFixed(2);
+          print("E : $sensor1redEData");
+          boolE = false;
         break;
     }
-    sensor1Device = false;
-    sensor2Device = false;
-    sensor3Device = false;
   }
 
   Future<RtuMessage> sendTemperature() async {

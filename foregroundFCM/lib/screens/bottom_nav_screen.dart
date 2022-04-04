@@ -1,6 +1,9 @@
+import 'package:fcm_notifications/windowScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/data/data.dart';
 import 'package:fcm_notifications/screens/screens.dart';
+
+import '../login_page.dart';
 
 class BottomNavScreen extends StatefulWidget {
   @override
@@ -8,8 +11,10 @@ class BottomNavScreen extends StatefulWidget {
 }
 
 class _BottomNavScreenState extends State<BottomNavScreen> {
+
   final List _screens = [
-    HomeScreen(),
+    WindowScreen(),
+    //HomeScreen(),
     ControlScreen(),
     StatsScreen(),
     Info(),

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'package:fcm_notifications/widgets/dashboardWidget.dart';
 import 'package:fcm_notifications/widgets/stats_grid.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -113,6 +114,7 @@ void readInfluxDB() async {
 }
 
 //foreground
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   flutterLocalNotificationsPlugin.show(
@@ -147,24 +149,22 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  //background
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-  HttpOverrides.global = new MyHttpOverrides();
+  if(!Platform.isWindows){
+    await Firebase.initializeApp();
+    //background
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+    HttpOverrides.global = new MyHttpOverrides();
+  }
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
-
-  void test(){
-
-  }
 }
 
 class _MyAppState extends State<MyApp> {
@@ -173,33 +173,36 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    //receiveMessage();
+
     readInfluxDB();
 
-    //foreground
-    var initialzationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings =
-        InitializationSettings(android: initialzationSettingsAndroid);
+    if(!Platform.isWindows){
+      //foreground
+      var initialzationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+      var initializationSettings =
+      InitializationSettings(android: initialzationSettingsAndroid);
 
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                icon: android?.smallIcon,
-              ),
-            ));
-      }
-    });
+      flutterLocalNotificationsPlugin.initialize(initializationSettings);
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        RemoteNotification notification = message.notification;
+        AndroidNotification android = message.notification?.android;
+        if (notification != null && android != null) {
+          flutterLocalNotificationsPlugin.show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  icon: android?.smallIcon,
+                ),
+              ));
+        }
+      });
+    }
+
   }
 
   @override
@@ -237,33 +240,10 @@ var grpcChannel;
 List<int> da;
 var request = RtuMessage();
 var response;
-final fireStore = FirebaseFirestore.instance;
+
 var device;
 
-Future<ExMessage> receiveMessage() async {
-  print("receive");
-  ExProtoClient stub = ExProtoClient(ClientChannel(fireStoreIp,
-      port: 5044,
-      options:
-          const ChannelOptions(credentials: ChannelCredentials.insecure())));
-  try{
-    await for (response in stub.exServerstream(request)) {
-      da = response.dataUnit;
-      de = response.deviceId;
-      gw = response.gwId;
-      sequenceNumber = response.sequenceNumber;
-      print("test $da");
-      device = de;
-      displaySensorData(da, device);
-    }
-  }
-  catch(e){
-    print('error');
-  }
 
-
-  return response;
-}
 
 void displaySensorData(List<int> receiveData, Int64 device) {
   displayEData(da, device);
