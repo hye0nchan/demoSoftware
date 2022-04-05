@@ -1,20 +1,17 @@
 // ignore_for_file: deprecated_member_use, unnecessary_statements
 
-import 'dart:async';
 import 'dart:io';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcm_notifications/widgets/dashboardWidget.dart';
-import 'package:fcm_notifications/widgets/dialogWidget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:influxdb_client/api.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:fcm_notifications/config/styles.dart';
 import 'package:fcm_notifications/data/data.dart';
 import 'package:fcm_notifications/data/function.dart';
-import 'package:fcm_notifications/data/grpc.dart';
+import 'package:fcm_notifications/grpc/grpc.dart';
 import 'package:fcm_notifications/data/influxDB.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../main.dart';
@@ -34,7 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
   var functionBox = FunctionBox();
   var home = MyApp();
   var influxDB = AddInfluxDB();
-  var dialog = DialogWidget();
   var dashboardWidget = DashboardWidget();
 
   TextEditingController ipInputController = TextEditingController();
@@ -196,129 +192,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void refreshAll() {
-    refreshSensor3();
-    sleep(const Duration(seconds: 1));
-    refreshSensor2();
-    sleep(const Duration(seconds: 1));
-    refreshSensor1();
-  }
-
-  Future<void> refreshSensor1() async {
-    grpc.sendSensor1();
-
-    var tem1Value = double.parse(sensor1redTemData);
-    var hum1Value = double.parse(sensor1redHumData);
-    var co21Value = double.parse(sensor1redCo2Data);
-    var lux1Value = double.parse(sensor1redLuxData);
-
-    if (this.mounted) {
-      setState(() {
-        temValue = tem1Value;
-        humValue = hum1Value;
-        co2Value = co21Value;
-        luxValue = lux1Value;
-      });
-    }
-  }
-
-  Future<void> refreshSensor2() async {
-    grpc.sendSensor2();
-
-    var tem2Value = double.parse(sensor2redTemData);
-    var hum2Value = double.parse(sensor2redTemData);
-    var co22Value = double.parse(sensor2redTemData);
-    var lux2Value = double.parse(sensor2redTemData);
-
-    if (this.mounted) {
-      setState(() {
-        tem2Value = tem2Value;
-        hum2Value = hum2Value;
-        co22Value = co22Value;
-        lux2Value = lux2Value;
-      });
-    }
-  }
-
-  Future<void> refreshSensor3() async {
-    timerSensor3 =
-        Timer.periodic(Duration(seconds: intRecyclePeriod), (timer) async {
-      grpc.sendSensor3();
-
-      (isCheckedMap[0]) ? influxDB.tem3AddInfluxDB() : null;
-      (isCheckedMap[1]) ? influxDB.hum3AddInfluxDB() : null;
-      (isCheckedMap[2]) ? influxDB.co23AddInfluxDB() : null;
-      (isCheckedMap[3]) ? influxDB.lux3AddInfluxDB() : null;
-      (isCheckedMap[4]) ? influxDB.uv3AddInfluxDB() : null;
-      (isCheckedMap[5]) ? influxDB.nh33AddInfluxDB() : null;
-      (isCheckedMap[6]) ? influxDB.nh3L3AddInfluxDB() : null;
-      (isCheckedMap[7]) ? influxDB.nh3M3AddInfluxDB() : null;
-      (isCheckedMap[8]) ? influxDB.nh3H3AddInfluxDB() : null;
-      (isCheckedMap[9]) ? influxDB.no23AddInfluxDB() : null;
-      (isCheckedMap[10]) ? influxDB.no2L3AddInfluxDB() : null;
-      (isCheckedMap[11]) ? influxDB.no2M3AddInfluxDB() : null;
-      (isCheckedMap[12]) ? influxDB.no2H3AddInfluxDB() : null;
-      (isCheckedMap[13]) ? influxDB.co3AddInfluxDB() : null;
-      (isCheckedMap[14]) ? influxDB.coL3AddInfluxDB() : null;
-      (isCheckedMap[15]) ? influxDB.coM3AddInfluxDB() : null;
-      (isCheckedMap[16]) ? influxDB.coH3AddInfluxDB() : null;
-    });
-  }
-
-  // Future<void> refreshTem() async {
-  //   setState(() {
-  //     // nullTem = sensor1redTemData();
-  //     // temValue = double.parse(sensor1redTemData);
-  //   });
-  //   redTemDataList.add(sensor1redTemData.toString());
-  //   redTemDateList.add(hourMin);
-  //   temStack += 1;
-  //
-  //   lastTemData = double.parse(sensor1redTemData);
-  // }
-
-  void co2AddInfluxDB() async {
-    var temInfluxValue = double.parse(sensor1redTemData);
-    var temperatureInflux = Point('tem1')
-        .addTag('location', 'a')
-        .addField('value', temInfluxValue)
-        .time(DateTime.now().toUtc());
-
-    await writeApi.write(temperatureInflux);
-  }
-
-  void luxAddInfluxDB() async {
-    var temInfluxValue = double.parse(sensor1redTemData);
-    var temperatureInflux = Point('tem1')
-        .addTag('location', 'a')
-        .addField('value', temInfluxValue)
-        .time(DateTime.now().toUtc());
-
-    await writeApi.write(temperatureInflux);
-  }
-
-  void uvAddInfluxDB() async {
-    var temInfluxValue = double.parse(sensor1redTemData);
-    var temperatureInflux = Point('tem1')
-        .addTag('location', 'a')
-        .addField('value', temInfluxValue)
-        .time(DateTime.now().toUtc());
-
-    await writeApi.write(temperatureInflux);
-  }
-
-  void delInfluxDB() async {
-    await client
-        .getDeleteService()
-        .delete(
-            predicate: '_measurement="nh3"',
-            start: DateTime.utc(1989, 11, 9),
-            stop: DateTime.now().toUtc(),
-            bucket: 'farmcare',
-            org: 'saltanb')
-        .catchError((e) => print(e));
-  }
-
   @override
   void initState() {
     super.initState();
@@ -459,9 +332,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           labelColor: Colors.black,
                           unselectedLabelColor: Colors.white,
                           tabs: <Widget>[
-                            Text("장치 등록", style: TextStyle(fontSize: 16)),
-                            Text("장치 변경", style: TextStyle(fontSize: 16)),
-                            Text("장치 제거", style: TextStyle(fontSize: 16)),
+                            Text("장치 등록", style: TextStyle(fontSize: 13)),
+                            Text("장치 변경", style: TextStyle(fontSize: 13)),
+                            Text("장치 제거", style: TextStyle(fontSize: 13)),
                           ],
                         ),
                       ),
@@ -469,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: screenHeight * 0.7,
                         child: TabBarView(children: [
                           menuWidget(screenHeight, screenWidth),
-                          menuWidget(screenHeight, screenWidth),
+                          deviceEditWidget(screenHeight, screenWidth),
                           menuWidget(screenHeight, screenWidth),
                         ]),
                       )
@@ -621,7 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(12.0),
               shadowColor: Palette.shadowColor,
               child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -673,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       style: TextStyle(
                                           color: Colors.blue,
                                           fontWeight: FontWeight.w500,
-                                          fontSize: 17.0)),
+                                          fontSize: 16.0)),
                                 );
                               }).toList())
                         ],
@@ -736,78 +609,81 @@ class _HomeScreenState extends State<HomeScreen> {
               elevation: 14.0,
               borderRadius: BorderRadius.circular(12.0),
               shadowColor: Palette.shadowColor,
-              child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text('평균 값',
-                                  style: TextStyle(
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.w600)),
-                              Stack(
-                                children: [
-                                  graphText2('$tem2TotalValue°C', 0),
-                                  graphText2('$hum2TotalValue%', 1),
-                                  graphText2('${co22TotalValue}ppm', 2),
-                                  graphText2('${lux2TotalValue}lm', 3),
-                                ],
-                              ),
-                            ],
-                          ),
-                          DropdownButton(
-                              isDense: true,
-                              value: actualDropdown2,
-                              onChanged: (String value) => setState(() {
-                                    beforeActually2 = value;
-                                    actualDropdown2 = value;
-                                    switch (value) {
-                                      case "온도":
-                                        functionBox.changeOutAverageLists(0);
-                                        break;
-                                      case "습도":
-                                        functionBox.changeOutAverageLists(1);
-                                        break;
-                                      case "이산화탄소":
-                                        functionBox.changeOutAverageLists(2);
-                                        break;
-                                      case "조도":
-                                        functionBox.changeOutAverageLists(3);
-                                        break;
-                                    }
-                                  }),
-                              items: chartDropdownItems.map((String title) {
-                                return DropdownMenuItem(
-                                  value: title,
-                                  child: Text(title,
-                                      style: TextStyle(
-                                          color: Colors.green,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15.0)),
-                                );
-                              }).toList())
-                        ],
-                      ),
-                      Padding(padding: EdgeInsets.only(bottom: 4.0)),
-                      Stack(
-                        children: [
-                          graphSpark2(tem2SparkLine, 0),
-                          graphSpark2(hum2SparkLine, 1),
-                          graphSpark2(co22SparkLine, 2),
-                          graphSpark2(lux2SparkLine, 3),
-                        ],
-                      )
-                    ],
-                  )),
+              child: InkWell(
+                  onTap: (){},
+                child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text('평균 값',
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.w600)),
+                                Stack(
+                                  children: [
+                                    graphText2('$tem2TotalValue°C', 0),
+                                    graphText2('$hum2TotalValue%', 1),
+                                    graphText2('${co22TotalValue}ppm', 2),
+                                    graphText2('${lux2TotalValue}lm', 3),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            DropdownButton(
+                                isDense: true,
+                                value: actualDropdown2,
+                                onChanged: (String value) => setState(() {
+                                      beforeActually2 = value;
+                                      actualDropdown2 = value;
+                                      switch (value) {
+                                        case "온도":
+                                          functionBox.changeOutAverageLists(0);
+                                          break;
+                                        case "습도":
+                                          functionBox.changeOutAverageLists(1);
+                                          break;
+                                        case "이산화탄소":
+                                          functionBox.changeOutAverageLists(2);
+                                          break;
+                                        case "조도":
+                                          functionBox.changeOutAverageLists(3);
+                                          break;
+                                      }
+                                    }),
+                                items: chartDropdownItems.map((String title) {
+                                  return DropdownMenuItem(
+                                    value: title,
+                                    child: Text(title,
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15.0)),
+                                  );
+                                }).toList())
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(bottom: 4.0)),
+                        Stack(
+                          children: [
+                            graphSpark2(tem2SparkLine, 0),
+                            graphSpark2(hum2SparkLine, 1),
+                            graphSpark2(co22SparkLine, 2),
+                            graphSpark2(lux2SparkLine, 3),
+                          ],
+                        )
+                      ],
+                    )),
+              ),
             ),
           )
         ],

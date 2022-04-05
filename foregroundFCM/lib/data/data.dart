@@ -13,6 +13,8 @@ bool fanBool = false;
 bool motorBool = true;
 bool outFanBool = false;
 
+bool boolA = false;
+
 Color sensorPowerColor = Colors.blueAccent;
 Color pumpPowerColor = Colors.blueAccent;
 Color lampPowerColor = Colors.blueAccent;
@@ -69,7 +71,10 @@ var client = InfluxDBClient(
     debug: true);
 var writeApi = WriteService(client);
 var queryService = client.getQueryService();
-var sensor1redEData = "0";
+
+var sensor1redVData = "0";
+var sensor1redAData = "0";
+
 var sensor1redTemData = "0";
 var sensor1redHumData = "0";
 var sensor1redCo2Data = "0";
@@ -431,7 +436,8 @@ String nullCoL = "";
 String nullCoM = "";
 String nullCoH = "";
 
-List<int> eList = [23, 24, 21, 22];
+List<int> vList = [23, 24, 21, 22];
+List<int> aList = [15, 16, 13, 14];
 
 List<int> temList = [23, 24, 21, 22];
 List<int> humList = [5, 6, 3, 4];
@@ -451,29 +457,16 @@ List<int> coLList = [31, 132, 129, 130];
 List<int> coMList = [137, 138, 135, 136];
 List<int> coHList = [49, 150, 147, 148];
 
-var stringDevice1 = "0x" + "24A16057F685";
-var intDevice1 = int.parse(stringDevice1).toString();
-var de1 = Int64.parseInt(intDevice1);
+List screens = [];
 
-var stringDevice2 = "0x" + "500291AEBCD9";
-var intDevice2 = int.parse(stringDevice2).toString();
-var de2 = Int64.parseInt(intDevice2);
 
-var stringDevice3 = "0x" + "500291AEBE4D";
-var intDevice3 = int.parse(stringDevice3).toString();
-var de3 = Int64.parseInt(intDevice3);
+var motorDevice1 = Int64.parseInt(int.parse(("0x" + "4C7525C1CF89")).toString());
+var motorDevice2 = Int64.parseInt(int.parse(("0x" + "4C7525C1CF8D")).toString());
+var motorDevice3 = Int64.parseInt(int.parse(("0x" + "4C75258912F5")).toString());
 
-var stringMotorDevice = "0x" + "4C7525C1CF89";
-var intMotorDevice = int.parse(stringMotorDevice).toString();
-var motorDevice = Int64.parseInt(intMotorDevice);
+var motorDevice = Int64.parseInt(int.parse(("0x" + "4C7525C1CF89")).toString());
 
-var boolE = false;
-
-var stringMotorDevice2 = "0x" + "4C7525C1CF8D";
-var intMotorDevice2 = int.parse(stringMotorDevice2).toString();
-var motorDevice2 = Int64.parseInt(intMotorDevice2);
-
-var sensorDevice3 = Int64.parseInt(int.parse(("0x" + "4C75258912F5")).toString());
+List<String> deviceList = ["4C7525C1CF89","4C7525C1CF8D","4C75258912F5"];
 
 int opId = 0x00;
 Uint8List uInt8OpId = Uint8List(opId);

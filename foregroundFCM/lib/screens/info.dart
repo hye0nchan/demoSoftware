@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
-import 'package:fcm_notifications/data/grpc.dart';
+import 'package:fcm_notifications/grpc/grpc.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';

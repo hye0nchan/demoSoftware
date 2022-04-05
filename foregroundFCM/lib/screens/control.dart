@@ -1,10 +1,11 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
+import 'package:fcm_notifications/grpc/motor.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../config/styles.dart';
 import '../data/data.dart';
-import '../data/grpc.dart';
+import '../grpc/grpc.dart';
 
 //구동기 주소
 //4C7525C1CF9D
@@ -24,6 +25,7 @@ class _ControlScreenState extends State<ControlScreen> {
   }
 
   var grpc = Grpc();
+  var motor = MotorControl();
 
   String _selectedTime;
 
@@ -303,7 +305,12 @@ class _ControlScreenState extends State<ControlScreen> {
                             children: [
                               InkWell(
                                   onTap: () {
-                                    grpc.motorLeft();
+                                    setState(() {
+                                      motor.motorLeft();
+                                      grpc.sensingV();
+                                      //grpc 명령어
+                                    });
+
                                   },
                                   child: Text("좌회전",style: Styles.dialogTileStyle,)),
                               SizedBox(
@@ -311,7 +318,12 @@ class _ControlScreenState extends State<ControlScreen> {
                               ),
                               InkWell(
                                   onTap: () {
-                                    grpc.motorRight();
+                                    setState(() {
+                                      motor.motorRight();
+                                      grpc.sensingV();
+                                      //grpc 명령어
+                                    });
+
                                   },
                                   child: Text("우회전",style: Styles.dialogTileStyle)),
                             ],
@@ -330,7 +342,7 @@ class _ControlScreenState extends State<ControlScreen> {
             child: InkWell(
               onTap: () {
                 setState(() {
-                  grpc.sensingE();
+                  grpc.sensingV();
                   //grpc 명령어
                 });
               },
@@ -346,13 +358,29 @@ class _ControlScreenState extends State<ControlScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text("전압",style: Styles.StaggeredGridStyle,),
-                              if(sensor1redEData!=null)
-                              Text("$sensor1redEData",style: TextStyle(fontSize: 18,color: Colors.blueAccent),),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("전압",style: Styles.StaggeredGridStyle,),
+                                  if(sensor1redVData!=null)
+                                  Text("$sensor1redVData",style: TextStyle(fontSize: 18,color: Colors.blueAccent),),
+                                ],
+                              ),
+                              SizedBox(width: screenWidth*0.1,),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("전류",style: Styles.StaggeredGridStyle,),
+                                  if(sensor1redVData!=null)
+                                    Text("$sensor1redAData",style: TextStyle(fontSize: 18,color: Colors.blueAccent),),
+                                ],
+                              ),
                             ],
                           )
                         ],
@@ -567,7 +595,8 @@ class _ControlScreenState extends State<ControlScreen> {
             case "모터":
               setState(() {
                 motorBool = !motorBool;
-                grpc.motorStop();
+                motor.motorStop();
+                grpc.sensingV();
               });
               break;
 

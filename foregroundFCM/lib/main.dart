@@ -2,20 +2,21 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:fcm_notifications/widgets/dashboardWidget.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:fcm_notifications/login_page.dart';
+import 'package:fcm_notifications/screens/control.dart';
+import 'package:fcm_notifications/screens/home_screen.dart';
+import 'package:fcm_notifications/screens/info.dart';
+import 'package:fcm_notifications/screens/stats_screen.dart';
 import 'package:fcm_notifications/widgets/stats_grid.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'dart:typed_data';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
-import 'package:grpc/grpc.dart';
 import 'package:fcm_notifications/screens/bottom_nav_screen.dart';
 import 'data/data.dart';
-import 'network.pbgrpc.dart';
+import 'grpc/grpc.dart';
 
 //influxDB
 void readInfluxDB() async {
@@ -149,17 +150,46 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if(!Platform.isWindows){
+  if (!Platform.isWindows) {
+    screens = [
+      HomeScreen(),
+      ControlScreen(),
+      StatsScreen(),
+      Info()
+    ];
+
     await Firebase.initializeApp();
     //background
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
     HttpOverrides.global = new MyHttpOverrides();
   }
+  else{
+    print("window");
+    screens = [
+      HomeScreen(),
+      ControlScreen(),
+      StatsScreen(),
+      LoginPage()
+    ];
+  }
+
   runApp(MyApp());
+  windowReSize();
+
+}
+
+void windowReSize(){
+  final win = appWindow;
+  final initialSize = Size(460, 750);
+  win.minSize = initialSize;
+  win.size = initialSize;
+  win.alignment = Alignment.center;
+  win.title = "FarmCare Dashboard";
+  win.show();
 }
 
 class MyApp extends StatefulWidget {
@@ -169,19 +199,19 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String token;
-
+  var grpc = Grpc();
   @override
   void initState() {
     super.initState();
-
     readInfluxDB();
 
-    if(!Platform.isWindows){
+    if (!Platform.isWindows) {
+
       //foreground
       var initialzationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+          AndroidInitializationSettings('@mipmap/ic_launcher');
       var initializationSettings =
-      InitializationSettings(android: initialzationSettingsAndroid);
+          InitializationSettings(android: initialzationSettingsAndroid);
 
       flutterLocalNotificationsPlugin.initialize(initializationSettings);
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -202,7 +232,6 @@ class _MyAppState extends State<MyApp> {
         }
       });
     }
-
   }
 
   @override
@@ -221,7 +250,7 @@ class _MyAppState extends State<MyApp> {
               Image.asset('imgs/logo.gif'),
               Text(
                 "SALTANB\nSMART FARM",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
               )
             ],
           ),
@@ -231,60 +260,4 @@ class _MyAppState extends State<MyApp> {
           duration: 3000,
         ));
   }
-}
-
-var de = Int64.parseRadix('21A106057F68D', 16);
-var gw;
-var sequenceNumber;
-var grpcChannel;
-List<int> da;
-var request = RtuMessage();
-var response;
-
-var device;
-
-
-
-void displaySensorData(List<int> receiveData, Int64 device) {
-  displayEData(da, device);
-  print("receive Data : $receiveData");
-}
-
-
-void displayEData(List<int> receiveData, Int64 device) {
-  var sensor = "E";
-  var bData = ByteData(4);
-  List<int> intList = [0, 0, 0, 0];
-  List<String> stringList = ["0", "0", "0", "0"];
-
-  for (int i = 0; i < intList.length; i++) {
-    intList[i] = receiveData[temList[i]];
-    stringList[i] = intList[i].toRadixString(16);
-    if (stringList[i].length == 1) {
-      stringList[i] = "0${stringList[i]}";
-    }
-    if (i == 0) {
-      stringList[i] = "0x${intList[i].toRadixString(16)}";
-    }
-  }
-  String total =
-      "${stringList[21]}${stringList[22]}${stringList[23]}${stringList[24]}";
-  int a = int.parse(total);
-  bData.setInt32(0, a);
-  discernDevice(device, sensor, bData);
-}
-
-
-
-
-void discernDevice(var device, var sensor, var bData) {
-  switch (sensor) {
-    case "E":
-      sensor1redEData = bData.getFloat32(0).toStringAsFixed(2);
-      print("전압 : $sensor1redEData");
-      break;
-  }
-  sensor1Device = false;
-  sensor2Device = false;
-  sensor3Device = false;
 }

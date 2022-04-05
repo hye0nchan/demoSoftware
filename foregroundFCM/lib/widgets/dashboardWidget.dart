@@ -3,10 +3,11 @@ import 'dart:core';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:fcm_notifications/config/styles.dart';
 import 'package:fcm_notifications/data/data.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:sparkline/sparkline.dart';
 
-import '../data/grpc.dart';
+import '../grpc/grpc.dart';
 import '../main.dart';
 
 class DashboardWidget extends StatefulWidget {
@@ -42,6 +43,149 @@ StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        SizedBox(
+          height: screenHeight * 0.03,
+        ),
+        Container(
+          width: screenWidth * 0.6,
+          height: screenHeight * 0.2,
+          child: Material(
+            elevation: 14.0,
+            borderRadius: BorderRadius.circular(24.0),
+            shadowColor: Palette.shadowColor,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('장치 주소', style: Styles.dialogTileStyle),
+                          SizedBox(
+                            height: screenHeight * 0.02,
+                          ),
+                          Container(
+                            width: screenWidth * 0.4,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide: BorderSide(
+                                        width: 1, color: Colors.blueAccent),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide: BorderSide(
+                                        width: 1, color: Colors.blueAccent),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                  ),
+                                  hintText: '주소 입력',
+                                  labelStyle: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w300)),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ]),
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.03,
+        ),
+        Container(
+          width: screenWidth * 0.6,
+          height: screenHeight * 0.1,
+          child: Material(
+            elevation: 14.0,
+            borderRadius: BorderRadius.circular(24.0),
+            shadowColor: Palette.shadowColor,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                grpc.receiveMessage();
+                              },
+                              child: Text('gRPC 서버 연결',
+                                  style: Styles.dialogTileStyle)),
+                        ],
+                      )
+                    ],
+                  ),
+                ]),
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.03,
+        ),
+        Container(
+          width: screenWidth * 0.6,
+          height: screenHeight * 0.1,
+          child: Material(
+            elevation: 14.0,
+            borderRadius: BorderRadius.circular(24.0),
+            shadowColor: Palette.shadowColor,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                grpc.sensingV();
+                              },
+                              child: Text('재배기 센서 테스트',
+                                  style: Styles.dialogTileStyle)),
+                        ],
+                      )
+                    ],
+                  ),
+                ]),
+          ),
+        ),
+      ],
+    );
+  });
+}
+
+StatefulBuilder deviceEditWidget(double screenHeight, double screenWidth) {
+  return StatefulBuilder(builder: (context, setState) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: screenHeight * 0.03,
+        ),
         Container(
           width: screenWidth * 0.6,
           height: screenHeight * 0.2,
@@ -103,7 +247,7 @@ StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
         ),
         Container(
           width: screenWidth * 0.6,
-          height: screenHeight * 0.1,
+          height: screenHeight * 0.2,
           child: Material(
             elevation: 14.0,
             borderRadius: BorderRadius.circular(24.0),
@@ -120,12 +264,31 @@ StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          InkWell(
-                            onTap: (){
-                              grpc.receiveMessage();
-                            },
-                              child: Text('gRPC 서버 연결',
-                                  style: Styles.dialogTileStyle)),
+                          Text('장치 선택', style: Styles.dialogTileStyle),
+                          SizedBox(
+                            height: screenHeight * 0.02,
+                          ),
+                          Container(
+                            width: screenWidth * 0.4,
+                            child: DropdownButton(
+                                isDense: true,
+                                value: deviceList[0],
+                                onChanged: (String value) {
+                                  setState(() {
+                                    motorDevice = Int64.parseInt(int.parse("0x"+value).toString());
+                                  });
+                                },
+                                items: deviceList.map((String title) {
+                                  return DropdownMenuItem(
+                                    value: title,
+                                    child: Text(title,
+                                        style: TextStyle(
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 22.0)),
+                                  );
+                                }).toList()),
+                          )
                         ],
                       )
                     ],
@@ -134,39 +297,7 @@ StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
           ),
         ),
         SizedBox(
-          height: screenHeight*0.03,
-        ),
-        Container(
-          width: screenWidth * 0.6,
-          height: screenHeight * 0.1,
-          child: Material(
-            elevation: 14.0,
-            borderRadius: BorderRadius.circular(24.0),
-            shadowColor: Palette.shadowColor,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          InkWell(
-                              onTap: (){
-                                grpc.sensingE();
-                              },
-                              child: Text('재배기 센서 테스트',
-                                  style: Styles.dialogTileStyle)),
-                        ],
-                      )
-                    ],
-                  ),
-                ]),
-          ),
+          height: screenHeight * 0.03,
         ),
       ],
     );

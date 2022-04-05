@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:fcm_notifications/data/data.dart';
 import 'package:fcm_notifications/data/function.dart';
-import 'package:fcm_notifications/data/grpc.dart';
+import 'package:fcm_notifications/grpc/grpc.dart';
 import 'package:fcm_notifications/widgets/stats_grid.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -128,82 +128,79 @@ class _StatsScreenState extends State<StatsScreen> {
               elevation: 14.0,
               borderRadius: BorderRadius.circular(30),
               shadowColor: Palette.shadowColor,
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          if (temSparkLine.isNotEmpty)
-                            Text('센서 선택',
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        if (temSparkLine.isNotEmpty)
+                          Text('센서 선택',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18.0))
+                      ],
+                    ),
+                    DropdownButton(
+                        isDense: true,
+                        value: currentSensor,
+                        onChanged: (String value) {
+                          setState(() {
+                            currentSensor = value;
+
+                            switch (value) {
+                              case "온도":
+                                functionBox
+                                    .changeVisibilityStatScreenLists(0);
+                                break;
+                              case "습도":
+                                functionBox
+                                    .changeVisibilityStatScreenLists(1);
+                                break;
+                              case "이산화탄소":
+                                functionBox
+                                    .changeVisibilityStatScreenLists(2);
+                                break;
+                              case "조도":
+                                functionBox
+                                    .changeVisibilityStatScreenLists(3);
+                                break;
+                              case "자외선":
+                                functionBox
+                                    .changeVisibilityStatScreenLists(4);
+                                break;
+                              case "암모니아":
+                                functionBox
+                                    .changeVisibilityStatScreenLists(5);
+                                break;
+                              case "이산화질소":
+                                functionBox
+                                    .changeVisibilityStatScreenLists(6);
+                                break;
+                              case "일산화탄소":
+                                functionBox
+                                    .changeVisibilityStatScreenLists(7);
+                                break;
+                            }
+
+                            //grpc 명령어
+                          });
+                        },
+                        items: graphSensorList.map((String title) {
+                          return DropdownMenuItem(
+                            value: title,
+                            child: Text(title,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 22.0))
-                        ],
-                      ),
-                      DropdownButton(
-                          isDense: true,
-                          value: currentSensor,
-                          onChanged: (String value) {
-                            setState(() {
-                              currentSensor = value;
-
-                              switch (value) {
-                                case "온도":
-                                  functionBox
-                                      .changeVisibilityStatScreenLists(0);
-                                  break;
-                                case "습도":
-                                  functionBox
-                                      .changeVisibilityStatScreenLists(1);
-                                  break;
-                                case "이산화탄소":
-                                  functionBox
-                                      .changeVisibilityStatScreenLists(2);
-                                  break;
-                                case "조도":
-                                  functionBox
-                                      .changeVisibilityStatScreenLists(3);
-                                  break;
-                                case "자외선":
-                                  functionBox
-                                      .changeVisibilityStatScreenLists(4);
-                                  break;
-                                case "암모니아":
-                                  functionBox
-                                      .changeVisibilityStatScreenLists(5);
-                                  break;
-                                case "이산화질소":
-                                  functionBox
-                                      .changeVisibilityStatScreenLists(6);
-                                  break;
-                                case "일산화탄소":
-                                  functionBox
-                                      .changeVisibilityStatScreenLists(7);
-                                  break;
-                              }
-
-                              //grpc 명령어
-                            });
-                          },
-                          items: graphSensorList.map((String title) {
-                            return DropdownMenuItem(
-                              value: title,
-                              child: Text(title,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18.0)),
-                            );
-                          }).toList()),
-                    ]),
-              ),
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18.0)),
+                          );
+                        }).toList()),
+                  ]),
             ),
           ),
         ],

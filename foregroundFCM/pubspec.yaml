@@ -33,6 +33,7 @@ dependencies:
   firebase_core: ^1.14.0
   cloud_firestore: ^1.0.5
 
+  bitsdojo_window: ^0.1.1+1
   webview_flutter: ^2.3.1
   fixnum: ^1.0.0
   async: ^2.2.0
