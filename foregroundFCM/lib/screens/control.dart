@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:fcm_notifications/grpc/motor.dart';
+import 'package:fcm_notifications/grpc/switch.dart';
 import 'package:flutter/material.dart';
 import 'package:fcm_notifications/config/palette.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -19,14 +22,15 @@ class ControlScreen extends StatefulWidget {
 
 class _ControlScreenState extends State<ControlScreen> {
   final formKey = new GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
   }
 
   var grpc = Grpc();
-  var motor = MotorControl();
-
+  var motorControl = MotorControl();
+  var switchControl = SwitchControl();
   String _selectedTime;
 
   int inDialogInitialize = 0;
@@ -126,10 +130,10 @@ class _ControlScreenState extends State<ControlScreen> {
                           labelColor: Colors.black,
                           unselectedLabelColor: Colors.white,
                           tabs: <Widget>[
-                            Text("센서", style: TextStyle(fontSize: 18)),
-                            Text("펌프", style: TextStyle(fontSize: 18)),
-                            Text("전등", style: TextStyle(fontSize: 18)),
-                            Text("팬", style: TextStyle(fontSize: 18)),
+                            Text("센서", style: TextStyle(fontSize: 16)),
+                            Text("펌프", style: TextStyle(fontSize: 16)),
+                            Text("전등", style: TextStyle(fontSize: 16)),
+                            Text("팬", style: TextStyle(fontSize: 16)),
                           ],
                         ),
                       ),
@@ -249,39 +253,90 @@ class _ControlScreenState extends State<ControlScreen> {
           SizedBox(
             height: screenHeight * 0.03,
           ),
-          Container(
-            width: screenWidth * 0.6,
-            height: screenHeight * 0.1,
-            child: Material(
-              elevation: 14.0,
-              borderRadius: BorderRadius.circular(24.0),
-              shadowColor: Palette.shadowColor,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('$device 전원', style: Styles.headLineStyle),
-                            SizedBox(
-                              width: screenWidth * 0.05,
-                            ),
-                            powerMaterial(device)
-                          ],
-                        )
-                      ],
-                    ),
-                  ]),
+          if (device != "펌프" && device !="외부 팬")
+            Container(
+              width: screenWidth * 0.6,
+              height: screenHeight * 0.1,
+              child: Material(
+                elevation: 14.0,
+                borderRadius: BorderRadius.circular(24.0),
+                shadowColor: Palette.shadowColor,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('$device 전원', style: Styles.headLineStyle),
+                              SizedBox(
+                                width: screenWidth * 0.05,
+                              ),
+                              powerMaterial(device)
+                            ],
+                          )
+                        ],
+                      ),
+                    ]),
+              ),
             ),
-          ),
+          if (device == "펌프" || device == "외부 팬")
+            Container(
+              width: screenWidth * 0.6,
+              height: screenHeight * 0.1,
+              child: Material(
+                elevation: 14.0,
+                borderRadius: BorderRadius.circular(24.0),
+                shadowColor: Palette.shadowColor,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    pumpBool = !pumpBool;
+                                    pumpBool
+                                        ? switchControl.switchFirstOff(device)
+                                        : switchControl.switchFirstOn(device);
+                                  },
+                                  child: Text('${device}1',
+                                      style: Styles.StaggeredGridStyle)),
+                              SizedBox(
+                                width: screenWidth * 0.05,
+                              ),
+                              SizedBox(
+                                width: screenWidth * 0.05,
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    pump2Bool = !pump2Bool;
+                                    pump2Bool
+                                        ? switchControl.switchSecondOff(device)
+                                        : switchControl.switchSecondOn(device);
+                                  },
+                                  child: Text('${device}2', style: Styles.StaggeredGridStyle)),
+                            ],
+                          )
+                        ],
+                      ),
+                    ]),
+              ),
+            ),
           SizedBox(
-            height: screenHeight * 0.03,
+            height: screenHeight*0.03,
           ),
           if (device == "모터")
             Container(
@@ -306,26 +361,28 @@ class _ControlScreenState extends State<ControlScreen> {
                               InkWell(
                                   onTap: () {
                                     setState(() {
-                                      motor.motorLeft();
+                                      motorControl.motorLeft();
                                       grpc.sensingV();
                                       //grpc 명령어
                                     });
-
                                   },
-                                  child: Text("좌회전",style: Styles.dialogTileStyle,)),
+                                  child: Text(
+                                    "좌회전",
+                                    style: Styles.dialogTileStyle,
+                                  )),
                               SizedBox(
-                                width: screenWidth*0.03,
+                                width: screenWidth * 0.03,
                               ),
                               InkWell(
                                   onTap: () {
                                     setState(() {
-                                      motor.motorRight();
+                                      motorControl.motorRight();
                                       grpc.sensingV();
                                       //grpc 명령어
                                     });
-
                                   },
-                                  child: Text("우회전",style: Styles.dialogTileStyle)),
+                                  child: Text("우회전",
+                                      style: Styles.dialogTileStyle)),
                             ],
                           )
                         ],
@@ -334,65 +391,85 @@ class _ControlScreenState extends State<ControlScreen> {
               ),
             ),
           SizedBox(
-            height: screenHeight*0.03,
+            height: screenHeight * 0.03,
           ),
-          Container(
-            width: screenWidth * 0.6,
-            height: screenHeight * 0.1,
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  grpc.sensingV();
-                  //grpc 명령어
-                });
-              },
-              child: Material(
-                elevation: 14.0,
-                borderRadius: BorderRadius.circular(24.0),
-                shadowColor: Palette.shadowColor,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("전압",style: Styles.StaggeredGridStyle,),
-                                  if(sensor1redVData!=null)
-                                  Text("$sensor1redVData",style: TextStyle(fontSize: 18,color: Colors.blueAccent),),
-                                ],
-                              ),
-                              SizedBox(width: screenWidth*0.1,),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("전류",style: Styles.StaggeredGridStyle,),
-                                  if(sensor1redVData!=null)
-                                    Text("$sensor1redAData",style: TextStyle(fontSize: 18,color: Colors.blueAccent),),
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ]),
+          if (device == "모터")
+            Container(
+              width: screenWidth * 0.6,
+              height: screenHeight * 0.1,
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    grpc.sensingV();
+                    //grpc 명령어
+                  });
+                },
+                child: Material(
+                  elevation: 14.0,
+                  borderRadius: BorderRadius.circular(24.0),
+                  shadowColor: Palette.shadowColor,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "전압",
+                                      style: Styles.StaggeredGridStyle,
+                                    ),
+                                    if (sensor1redVData != null)
+                                      Text(
+                                        "$sensor1redVData",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.blueAccent),
+                                      ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: screenWidth * 0.1,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "전류",
+                                      style: Styles.StaggeredGridStyle,
+                                    ),
+                                    if (sensor1redVData != null)
+                                      Text(
+                                        "$sensor1redAData",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.blueAccent),
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ]),
+                ),
               ),
             ),
-          ),
           SizedBox(
-            height: screenHeight*0.03,
+            height: screenHeight * 0.03,
           ),
-          if (device != "센서")
+          //미완성
+          if (device == "test")
             Container(
               width: screenWidth * 0.6,
               height: screenHeight * 0.15,
@@ -478,7 +555,7 @@ class _ControlScreenState extends State<ControlScreen> {
               ),
             ),
           SizedBox(
-            height: screenHeight*0.03,
+            height: screenHeight * 0.03,
           ),
         ],
       );
@@ -572,22 +649,40 @@ class _ControlScreenState extends State<ControlScreen> {
                 //grpc 명령어
               });
               break;
-
             case "펌프":
               setState(() {
-                pumpBool = !pumpBool;
+                if (pumpBool) {
+                  switchControl.switchSecondOff("펌프");
+                  switchControl.switchFirstOff("펌프");
+                } else {
+                  switchControl.switchFirstOn("펌프");
+                  switchControl.switchSecondOn("펌프");
+                }
 
+                pumpBool = !pumpBool;
               });
               break;
 
             case "전등":
               setState(() {
+                if (lampBool) {
+                  switchControl.switchFirstOff("램프");
+                } else {
+                  switchControl.switchFirstOn("램프");
+                }
+
                 lampBool = !lampBool;
               });
               break;
 
             case "팬":
               setState(() {
+                if (fanBool) {
+                  switchControl.switchSecondOff("팬");
+                } else {
+                  switchControl.switchSecondOn("팬");
+                }
+
                 fanBool = !fanBool;
               });
               break;
@@ -595,7 +690,7 @@ class _ControlScreenState extends State<ControlScreen> {
             case "모터":
               setState(() {
                 motorBool = !motorBool;
-                motor.motorStop();
+                motorControl.motorStop();
                 grpc.sensingV();
               });
               break;
@@ -603,6 +698,9 @@ class _ControlScreenState extends State<ControlScreen> {
             case "외부 팬":
               setState(() {
                 outFanBool = !outFanBool;
+                outFanBool
+                ? switchControl.switchSecondOff("외부 팬")
+                    : switchControl.switchSecondOn("외부 팬");
               });
               break;
           }
@@ -622,9 +720,7 @@ class _ControlScreenState extends State<ControlScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
-          actions: [
-
-          ],
+          actions: [],
           title: Column(
             children: [
               Row(

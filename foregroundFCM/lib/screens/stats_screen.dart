@@ -247,56 +247,47 @@ class _StatsScreenState extends State<StatsScreen> {
     String chartName = "온도";
     List<ChartData> chartData = [];
     List<ChartData> chartData2 = [];
-    List<ChartData> chartData3 = [];
 
     switch (index) {
       case 0:
         chartName = "온도";
         chartData = tem1ChartData;
         chartData2 = tem2ChartData;
-        chartData3 = tem3ChartData;
         break;
       case 1:
         chartName = "습도";
         chartData = hum1ChartData;
         chartData2 = hum2ChartData;
-        chartData3 = hum3ChartData;
         break;
       case 2:
         chartName = "이산화탄소";
         chartData = co21ChartData;
         chartData2 = co22ChartData;
-        chartData3 = co23ChartData;
         break;
       case 3:
         chartName = "조도";
         chartData = lux1ChartData;
         chartData2 = lux2ChartData;
-        chartData3 = lux3ChartData;
         break;
       case 4:
         chartName = "자외선";
         chartData = uv1ChartData;
         chartData2 = uv2ChartData;
-        chartData3 = uv3ChartData;
         break;
       case 5:
         chartName = "암모니아";
         chartData = nh31ChartData;
         chartData2 = nh32ChartData;
-        chartData3 = nh33ChartData;
         break;
       case 6:
         chartName = "이산화질소";
         chartData = no21ChartData;
         chartData2 = no22ChartData;
-        chartData3 = no23ChartData;
         break;
       case 7:
         chartName = "일산화탄소";
         chartData = co1ChartData;
         chartData2 = co2ChartData;
-        chartData3 = co3ChartData;
         break;
     }
     return Visibility(
@@ -331,14 +322,6 @@ class _StatsScreenState extends State<StatsScreen> {
                 width: 4,
                 color: Colors.redAccent,
                 dataSource: chartData2,
-                xValueMapper: (ChartData sales, _) => sales.time,
-                yValueMapper: (ChartData sales, _) => sales.value,
-              ),
-              LineSeries<ChartData, DateTime>(
-                opacity: 0.7,
-                width: 4,
-                color: Colors.greenAccent,
-                dataSource: chartData3,
                 xValueMapper: (ChartData sales, _) => sales.time,
                 yValueMapper: (ChartData sales, _) => sales.value,
               ),

@@ -19,22 +19,25 @@ import 'data/data.dart';
 import 'grpc/grpc.dart';
 
 //influxDB
+
+
 void readInfluxDB() async {
   for (int i = 0; i < allSensorList.length; i++) {
     var sensorStream = await queryService.query('''
   from(bucket: "farmcare")
   |> range(start: -24h)
   |> filter(fn: (r) => r["_measurement"] == "${allSensorList[i]}")
-  |> yield(name: "mean")
+  |> yield(name: "last")
   ''');
     await sensorStream.forEach((record) {
       DateTime date = DateTime.parse(record['_time']);
       var value = record['_value'];
 
-      if (i != 4 && value != 0) {
+      //조도일 때
+      if (i != 8 && i != 9 && value != 0) {
         sensorChartData[i].add(ChartData(date, value));
-        if (i < 3 && i > 0) {
-          if (0 < i && i < 2) {
+        if (i < 2 && i >= 0) {
+          if (i==0) {
             temSparkLine.add(value);
             temTotalSparkLine += value;
             totalTemCount += 1;
@@ -44,8 +47,8 @@ void readInfluxDB() async {
             totalTem2Count += 1;
           }
         }
-        if (i < 6 && i > 2) {
-          if (2 < i && i < 5) {
+        if (i < 4 && i >= 2) {
+          if (i==2) {
             humSparkLine.add(value);
             humTotalSparkLine += value;
             totalHumCount += 1;
@@ -55,8 +58,8 @@ void readInfluxDB() async {
             totalHum2Count += 1;
           }
         }
-        if (i < 9 && i > 5) {
-          if (5 < i && i < 8) {
+        if (i < 6 && i >= 4) {
+          if (i==4) {
             co2SparkLine.add(value);
             co2TotalSparkLine += value;
             totalCo2Count += 1;
@@ -66,8 +69,8 @@ void readInfluxDB() async {
             totalCo22Count += 1;
           }
         }
-        if (i < 12 && i > 8) {
-          if (8 < i && i < 11) {
+        if (i < 8 && i >= 6) {
+          if (i==6) {
             luxSparkLine.add(value);
             luxTotalSparkLine += value;
             totalLuxCount += 1;

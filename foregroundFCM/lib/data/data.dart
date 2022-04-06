@@ -6,11 +6,12 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:influxdb_client/api.dart';
 
-bool sensorBool = true;
-bool pumpBool = true;
-bool lampBool = true;
+bool sensorBool = false;
+bool pumpBool = false;
+bool pump2Bool = false;
+bool lampBool = false;
 bool fanBool = false;
-bool motorBool = true;
+bool motorBool = false;
 bool outFanBool = false;
 
 bool boolA = false;
@@ -140,55 +141,38 @@ DateTime firstDate = currentDate.subtract(Duration(hours: 24));
 List<String> allSensorList = [
   "tem_1",
   "tem_2",
-  "tem_3",
   "hum_1",
   "hum_2",
-  "hum_3",
   "co2_1",
   "co2_2",
-  "co2_3",
   "lux_1",
   "lux_2",
-  "lux_3",
   "uv_1",
   "uv_2",
-  "uv_3",
   "nh3_1",
   "nh3_2",
-  "nh3_3",
   "nh3L_1",
   "nh3L_2",
-  "nh3L_3",
   "nh3M_1",
   "nh3M_2",
-  "nh3M_3",
   "nh3H_1",
   "nh3H_2",
-  "nh3H_3",
   "no2_1",
   "no2_2",
-  "no2_3",
   "no2L_1",
   "no2L_2",
-  "no2L_3",
   "no2M_1",
   "no2M_2",
-  "no2M_3",
   "no2H_1",
   "no2H_2",
-  "no2H_3",
   "co_1",
   "co_2",
-  "co_3",
   "coL_1",
   "coL_2",
-  "coL_3",
   "coM_1",
   "coM_2",
-  "coM_3",
   "coH_1",
   "coH_2",
-  "coH_3",
 ];
 
 List<ChartData> tem1ChartData = [];
@@ -246,55 +230,39 @@ List<ChartData> coH3ChartData = [];
 List<List<ChartData>> sensorChartData = [
   tem1ChartData,
   tem2ChartData,
-  tem3ChartData,
   hum1ChartData,
   hum2ChartData,
-  hum3ChartData,
   co21ChartData,
   co22ChartData,
-  co23ChartData,
   lux1ChartData,
   lux2ChartData,
-  lux3ChartData,
   uv1ChartData,
   uv2ChartData,
-  uv3ChartData,
   nh31ChartData,
   nh32ChartData,
-  nh33ChartData,
   nh3L1ChartData,
   nh3L2ChartData,
-  nh3L3ChartData,
   nh3M1ChartData,
   nh3M2ChartData,
-  nh3M3ChartData,
   nh3H1ChartData,
   nh3H2ChartData,
-  nh3H3ChartData,
   no21ChartData,
   no22ChartData,
-  no23ChartData,
   no2L1ChartData,
   no2L2ChartData,
-  no2L3ChartData,
   no2M1ChartData,
   no2M2ChartData,
-  no2M3ChartData,
   no2H1ChartData,
   no2H2ChartData,
-  no2H3ChartData,
   co1ChartData,
   co2ChartData,
-  co3ChartData,
   coL1ChartData,
   coL2ChartData,
   coL3ChartData,
   coM1ChartData,
   coM2ChartData,
-  coM3ChartData,
   coH1ChartData,
   coH2ChartData,
-  coH3ChartData
 ];
 
 double temTotalSparkLine = 0;
@@ -460,7 +428,7 @@ List<int> coHList = [49, 150, 147, 148];
 List screens = [];
 
 
-var motorDevice1 = Int64.parseInt(int.parse(("0x" + "4C7525C1CF89")).toString());
+var motorDevice1 = Int64.parseInt(int.parse(("0x" + "500291AEBEF1")).toString());
 var motorDevice2 = Int64.parseInt(int.parse(("0x" + "4C7525C1CF8D")).toString());
 var motorDevice3 = Int64.parseInt(int.parse(("0x" + "4C75258912F5")).toString());
 

@@ -12,7 +12,7 @@ class Styles {
       color: Colors.black, fontWeight: FontWeight.w700, fontSize: 25.0);
 
   static const homeDataStyle = TextStyle(
-      color: Colors.black, fontWeight: FontWeight.w700, fontSize: 32.0);
+      color: Colors.black, fontWeight: FontWeight.w700, fontSize: 28.0);
 
   static const graphAverageStyle = TextStyle(
       color: Colors.blueAccent,

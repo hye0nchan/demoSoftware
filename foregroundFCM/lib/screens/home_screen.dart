@@ -71,15 +71,15 @@ class _HomeScreenState extends State<HomeScreen> {
   from(bucket: "farmcare")
   |> range(start: -24h)
   |> filter(fn: (r) => r["_measurement"] == "${allSensorList[i]}")
-  |> yield(name: "mean")
+  |> yield(name: "last")
   ''');
       if (sensorStream != null) {
         await sensorStream.forEach((record) {
           var value = record['_value'];
 
-          if (i != 4 && value != 0) {
-            if (i < 3 && i > 0) {
-              if (i == 0) {
+          if (i != 8 && i != 9 && value != 0) {
+            if (i < 2 && i >= 0) {
+              if (i==0) {
                 if (!temSparkLine.contains(value)) {
                   setState(() {
                     temSparkLine.add(value);
@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   });
                 }
               }
-              if (i == 1) {
+              else {
                 if (!tem2SparkLine.contains(value)) {
                   setState(() {
                     tem2SparkLine.add(value);
@@ -98,8 +98,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               }
             }
-            if (i < 6 && i > 2) {
-              if (i == 3) {
+            if (i < 4 && i >= 2) {
+              if (i==2) {
                 if (!humSparkLine.contains(value)) {
                   setState(() {
                     humSparkLine.add(value);
@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   });
                 }
               }
-              if (i == 4) {
+              else {
                 if (!hum2SparkLine.contains(value)) {
                   setState(() {
                     hum2SparkLine.add(value);
@@ -118,8 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               }
             }
-            if (i < 9 && i > 5) {
-              if (i == 6) {
+            if (i < 6 && i >= 4) {
+              if (i==4) {
                 if (!co2SparkLine.contains(value)) {
                   setState(() {
                     co2SparkLine.add(value);
@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   });
                 }
               }
-              if (i == 7) {
+              else {
                 if (!co22SparkLine.contains(value)) {
                   setState(() {
                     co22SparkLine.add(value);
@@ -138,8 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               }
             }
-            if (8 < i && i < 11) {
-              if (i == 9) {
+            if (i < 8 && i >= 6) {
+              if (i==6) {
                 if (!luxSparkLine.contains(value)) {
                   setState(() {
                     luxSparkLine.add(value);
@@ -148,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   });
                 }
               }
-              if (i == 10) {
+              else {
                 if (!lux2SparkLine.contains(value)) {
                   setState(() {
                     lux2SparkLine.add(value);

@@ -161,7 +161,7 @@ StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
                         children: [
                           InkWell(
                               onTap: () {
-                                grpc.sensingV();
+
                               },
                               child: Text('재배기 센서 테스트',
                                   style: Styles.dialogTileStyle)),
@@ -373,7 +373,7 @@ Widget homeDataTile2(String sensor) {
 
     case "이산화탄소":
       sparkLine = co22SparkLine;
-      data = '${double.parse(co22SparkLine.last.toStringAsFixed(2))}ppm';
+      data = '${double.parse(co22SparkLine.last.toStringAsFixed(0))}ppm';
       break;
   }
   return _buildTile(
@@ -392,7 +392,8 @@ Widget homeDataTile2(String sensor) {
                       style: TextStyle(
                           fontWeight: FontWeight.w600, color: Colors.green)),
                 if (sparkLine.isNotEmpty)
-                  Text(data, style: Styles.homeDataStyle)
+                  Text(data, style:
+                  Styles.homeDataStyle)
               ],
             ),
           ]),

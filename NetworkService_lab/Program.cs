@@ -50,7 +50,7 @@ namespace NetService
             _ = Task.Run(async () =>
             {
                 addIP();
-
+                
                 while (await rtuLink.ResponseStream.MoveNext(cancellationToken: CancellationToken.None))
                 {
                     RtuMessage response = rtuLink.ResponseStream.Current; // From Server
