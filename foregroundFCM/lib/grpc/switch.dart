@@ -178,7 +178,7 @@ class SwitchControl {
       case "램프":
         device = Int64.parseInt(int.parse(("0x" + "4C7525C1Cf81")).toString());
         break;
-      case "외부 팬":
+      case "환풍기":
         device = Int64.parseInt(int.parse(("0x" + "24A16057C915")).toString());
         break;
     }

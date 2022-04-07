@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
+    grpc.sensingV();
     if(!Platform.isWindows){
       getToken();
     }
@@ -612,7 +612,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: InkWell(
                   onTap: (){},
                 child: Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.all(20.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

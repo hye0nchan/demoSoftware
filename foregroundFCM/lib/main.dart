@@ -187,11 +187,11 @@ void main() async {
 
 void windowReSize(){
   final win = appWindow;
-  final initialSize = Size(460, 750);
+  final initialSize = Size(430, 900);
   win.minSize = initialSize;
   win.size = initialSize;
   win.alignment = Alignment.center;
-  win.title = "FarmCare Dashboard";
+  win.title = "FarmCare";
   win.show();
 }
 

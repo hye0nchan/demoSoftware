@@ -87,27 +87,7 @@ class _ControlScreenState extends State<ControlScreen> {
       SizedBox(
         height: screenHeight * 0.03,
       ),
-      Material(
-        elevation: 14.0,
-        borderRadius: BorderRadius.circular(50),
-        shadowColor: Palette.shadowColor,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    if (temSparkLine.isNotEmpty)
-                      Text('재배기 내부 제어', style: Styles.headLineStyle)
-                  ],
-                ),
-              ]),
-        ),
-      ),
+          headMaterial("재배기 내부 제어"),
       SizedBox(
         height: screenHeight * 0.01,
       ),
@@ -154,27 +134,7 @@ class _ControlScreenState extends State<ControlScreen> {
       SizedBox(
         height: screenHeight * 0.03,
       ),
-      Material(
-        elevation: 14.0,
-        borderRadius: BorderRadius.circular(50),
-        shadowColor: Palette.shadowColor,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    if (temSparkLine.isNotEmpty)
-                      Text('재배기 외부 제어', style: Styles.headLineStyle)
-                  ],
-                ),
-              ]),
-        ),
-      ),
+      headMaterial("재배기 외부 제어"),
       SizedBox(
         height: screenHeight * 0.01,
       ),
@@ -198,8 +158,8 @@ class _ControlScreenState extends State<ControlScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     onMaterial("모터", motorBool),
-                    onMaterial("외부 팬1", outFanBool),
-                    onMaterial("외부 팬2", outFanBool2),
+                    onMaterial("환풍기1", outFanBool),
+                    onMaterial("환풍기2", outFanBool2),
                   ],
                 ),
               ),
@@ -217,7 +177,95 @@ class _ControlScreenState extends State<ControlScreen> {
               settingMaterial2(screenHeight, screenWidth, "외부"),
             ],
           ),
+        SizedBox(
+          height: screenHeight * 0.03,
+        ),
+        Material(
+          elevation: 14.0,
+          borderRadius: BorderRadius.circular(50),
+          shadowColor: Palette.shadowColor,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      if (temSparkLine.isNotEmpty)
+                        Text("전류 전압", style: Styles.headLineStyle)
+                    ],
+                  ),
+                ]),
+          ),
+        ),
+          SizedBox(
+            height: screenHeight * 0.015,
+          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: screenWidth * 0.47,
+              height: screenHeight*0.07,
+              child: Material(
+                elevation: 14.0,
+                borderRadius: BorderRadius.circular(50),
+                shadowColor: Palette.shadowColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Center(child: Text('전압 : $sensor1redVData', style: Styles.StaggeredGridStyle)),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: screenWidth*0.02,
+            ),
+            Container(
+              width: screenWidth * 0.47,
+              height: screenHeight*0.07,
+              child: Material(
+                elevation: 14.0,
+                borderRadius: BorderRadius.circular(50),
+                shadowColor: Palette.shadowColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Center(child: Text('전류 : $sensor1redAData', style: Styles.StaggeredGridStyle)),
+                ),
+              ),
+            )
+          ],
+        ),
+          SizedBox(
+            height: screenHeight * 0.03,
+          ),
     ]));
+  }
+
+  Material headMaterial(String text) {
+    return Material(
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(50),
+      shadowColor: Palette.shadowColor,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  if (temSparkLine.isNotEmpty)
+                    Text(text, style: Styles.headLineStyle)
+                ],
+              ),
+            ]),
+      ),
+    );
   }
 
   Column onMaterial(String text, bool onOff) {
@@ -271,22 +319,22 @@ class _ControlScreenState extends State<ControlScreen> {
                       motorControl.motorStop();
                     });
                     break;
-                  case "외부 팬1":
+                  case "환풍기1":
                     setState(() {
-                      outFanBool? switchControl.switchFirstOff("외부 팬"):
-                      switchControl.switchFirstOn("외부 팬");
+                      outFanBool? switchControl.switchFirstOff("환풍기"):
+                      switchControl.switchFirstOn("환풍기");
                       outFanBool = !outFanBool;
                     });
                     break;
-                  case "외부 팬2":
+                  case "환풍기2":
                     setState(() {
-                      outFanBool2? switchControl.switchSecondOff("외부 팬"):
-                      switchControl.switchSecondOn("외부 팬");
+                      outFanBool2? switchControl.switchSecondOff("환풍기"):
+                      switchControl.switchSecondOn("환풍기");
                       outFanBool2 = !outFanBool2;
                     });
                     break;
-                }
-              }),
+                  }
+                }),
       ],
     );
   }
@@ -309,7 +357,7 @@ class _ControlScreenState extends State<ControlScreen> {
 
   Container settingMaterial2(double screenHeight, double screenWidth, String inOut) {
     List<String> deviceLists = [];
-    (inOut=="내부")?deviceLists = ["펌프","전등","팬"]:deviceLists = ["모터","외부 팬"];
+    (inOut=="내부")?deviceLists = ["펌프","전등","팬"]:deviceLists = ["모터","환풍기"];
     return Container(
       width: screenWidth * 0.5,
       height: screenHeight*0.1,
