@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Styles {
+
   static const appbarStyle = TextStyle(
     fontSize: 27,
     fontWeight: FontWeight.w700,
@@ -32,7 +33,7 @@ class Styles {
   );
 
   static const tabSettingTextStyle = TextStyle(
-    fontSize: 16.0,
+    fontSize: 18.0,
     fontWeight: FontWeight.w600,
   );
 }

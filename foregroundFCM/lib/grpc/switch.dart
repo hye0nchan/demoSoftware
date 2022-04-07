@@ -1,6 +1,5 @@
 import 'package:fcm_notifications/network.pbgrpc.dart';
 import 'package:fixnum/fixnum.dart';
-import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
 
 import '../data/data.dart';
