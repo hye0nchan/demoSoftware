@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:fcm_notifications/grpc/motor.dart';
 import 'package:fcm_notifications/grpc/switch.dart';
@@ -10,78 +8,25 @@ import '../config/styles.dart';
 import '../data/data.dart';
 import '../grpc/grpc.dart';
 
-//구동기 주소
-//4C7525C1CF9D
-//4C7525C1CF89
-//4C7525C1CF81
-
 class ControlScreen extends StatefulWidget {
   @override
   _ControlScreenState createState() => _ControlScreenState();
 }
 
 class _ControlScreenState extends State<ControlScreen> {
-  final formKey = new GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
   }
 
+  //class
   var grpc = Grpc();
   var motorControl = MotorControl();
   var switchControl = SwitchControl();
-  String _selectedTime;
 
   int inDialogInitialize = 0;
   int outDialogInitialize = 0;
-
-  void testDialog() {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  '동작 시간 선택',
-                  style: Styles.headLineStyle,
-                ),
-              ],
-            ),
-            content: SizedBox(
-              height: screenHeight * 0.7,
-              width: screenWidth * 0.6,
-              child: SingleChildScrollView(
-                child: DefaultTabController(
-                  initialIndex: inDialogInitialize,
-                  length: 4,
-                  child: Column(
-                    children: [],
-                  ),
-                ),
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text("닫기"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-      },
-    );
-  }
 
   void inDialog() {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -475,7 +420,7 @@ class _ControlScreenState extends State<ControlScreen> {
               height: screenHeight * 0.15,
               child: InkWell(
                 onTap: () {
-                  sowTImePicker(context, setState);
+
                 },
                 child: Material(
                   elevation: 14.0,
@@ -559,20 +504,6 @@ class _ControlScreenState extends State<ControlScreen> {
           ),
         ],
       );
-    });
-  }
-
-  void sowTImePicker(BuildContext context, StateSetter setState) {
-    Future<TimeOfDay> selectedTime = showTimePicker(
-      //initialEntryMode: TimePickerEntryMode.input,
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    selectedTime.then((timeOfDay) {
-      setState(() {
-        _selectedTime = '${timeOfDay.hour}:${timeOfDay.minute}';
-        print(_selectedTime);
-      });
     });
   }
 
