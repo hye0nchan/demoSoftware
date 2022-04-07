@@ -6,22 +6,19 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:influxdb_client/api.dart';
 
+
 bool sensorBool = false;
 bool pumpBool = false;
-bool pump2Bool = false;
+bool pumpBool2 = false;
 bool lampBool = false;
 bool fanBool = false;
 bool motorBool = false;
 bool outFanBool = false;
-
+bool outFanBool2 = false;
 bool boolA = false;
 
-Color sensorPowerColor = Colors.blueAccent;
-Color pumpPowerColor = Colors.blueAccent;
-Color lampPowerColor = Colors.blueAccent;
-Color fanPowerColor = Colors.blueAccent;
-Color motorPowerColor = Colors.blueAccent;
-Color outFanPowerColor = Colors.blueAccent;
+int inDialogInitialize = 0;
+int outDialogInitialize = 0;
 
 int currentIndex = 0;
 

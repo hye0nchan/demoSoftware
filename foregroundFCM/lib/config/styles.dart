@@ -9,7 +9,7 @@ class Styles {
   static const buildHeadStyle = TextStyle(fontSize: 20, color: Colors.white);
 
   static const headLineStyle = TextStyle(
-      color: Colors.black, fontWeight: FontWeight.w700, fontSize: 25.0);
+      color: Colors.black, fontWeight: FontWeight.w600, fontSize: 24.0);
 
   static const homeDataStyle = TextStyle(
       color: Colors.black, fontWeight: FontWeight.w700, fontSize: 28.0);
@@ -28,6 +28,11 @@ class Styles {
 
   static const tabTextStyle = TextStyle(
     fontSize: 14.0,
+    fontWeight: FontWeight.w600,
+  );
+
+  static const tabSettingTextStyle = TextStyle(
+    fontSize: 16.0,
     fontWeight: FontWeight.w600,
   );
 }

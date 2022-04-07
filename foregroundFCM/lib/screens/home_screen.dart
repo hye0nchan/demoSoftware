@@ -455,10 +455,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       Material(
         elevation: 14.0,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
+        borderRadius: BorderRadius.circular(50),
         shadowColor: Palette.shadowColor,
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(10.0),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -571,10 +571,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       Material(
         elevation: 14.0,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(50)),
+        borderRadius: BorderRadius.circular(50),
         shadowColor: Palette.shadowColor,
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(10.0),
           child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
