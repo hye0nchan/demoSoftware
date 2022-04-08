@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fcm_notifications/grpc/motor.dart';
 import 'package:fcm_notifications/grpc/switch.dart';
 import 'package:fcm_notifications/widgets/inDialog.dart';
@@ -24,6 +26,14 @@ class _ControlScreenState extends State<ControlScreen> {
   var grpc = Grpc();
   var motorControl = MotorControl();
   var switchControl = SwitchControl();
+
+  Timer sensingTimer;
+
+  @override
+  void dispose() {
+    sensingTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -313,11 +323,25 @@ class _ControlScreenState extends State<ControlScreen> {
                     });
                     break;
                   case "모터":
-                    setState(() {
                       motorBool = !motorBool;
-                      motorBool? motorControl.motorLeft():
-                      motorControl.motorStop();
-                    });
+                      if(motorBool){
+                        setState(() {
+                          motorControl.motorLeft();
+                          sensingTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+                            setState(() {
+                              grpc.sensingV();
+                            });
+
+                          });
+                        });
+                      }
+                      else{
+                        setState(() {
+                            motorControl.motorStop();
+                            sensingTimer.cancel();
+                        });
+
+                      }
                     break;
                   case "환풍기1":
                     setState(() {
@@ -444,4 +468,5 @@ class _ControlScreenState extends State<ControlScreen> {
       ),
     );
   }
+
 }

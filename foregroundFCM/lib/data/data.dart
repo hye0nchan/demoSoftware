@@ -17,6 +17,8 @@ bool outFanBool = false;
 bool outFanBool2 = false;
 bool boolA = false;
 
+
+
 int inDialogInitialize = 0;
 int outDialogInitialize = 0;
 
@@ -304,6 +306,8 @@ List<double> tem2SparkLine = [0];
 List<double> hum2SparkLine = [0];
 List<double> co22SparkLine = [0];
 List<double> lux2SparkLine = [0];
+
+bool homeDispose = false;
 
 List<String> sensorList = [
   "tem_1",

@@ -1200,11 +1200,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\Csharp-influx-fcm\\UnitaryTester\\UnitaryTester.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\demoroom\\UnitaryTester\\UnitaryTester.csproj",
       "projectName": "WFormsUserApp",
-      "projectPath": "C:\\Users\\Administrator\\Desktop\\Csharp-influx-fcm\\UnitaryTester\\UnitaryTester.csproj",
+      "projectPath": "C:\\Users\\Administrator\\Desktop\\demoroom\\UnitaryTester\\UnitaryTester.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Administrator\\Desktop\\Csharp-influx-fcm\\UnitaryTester\\obj\\",
+      "outputPath": "C:\\Users\\Administrator\\Desktop\\demoroom\\UnitaryTester\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

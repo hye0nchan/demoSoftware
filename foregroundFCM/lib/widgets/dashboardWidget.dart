@@ -161,7 +161,7 @@ StatefulBuilder menuWidget(double screenHeight, double screenWidth) {
                         children: [
                           InkWell(
                               onTap: () {
-
+                                grpc.sensingV();
                               },
                               child: Text('재배기 센서 테스트',
                                   style: Styles.dialogTileStyle)),

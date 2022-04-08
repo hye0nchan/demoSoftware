@@ -195,15 +195,13 @@ namespace WFormsUserApp
         {
             listView1.View = View.Details;
             listView2.View = View.Details;
-            listView3.View = View.Details;
+           
 
             listView1.Columns.Add("measurement", 100);
             listView1.Columns.Add("value", 150);
             listView2.Columns.Add("measurement", 100);
             listView2.Columns.Add("value", 150);
-            listView3.Columns.Add("measurement", 100);
-            listView3.Columns.Add("value", 150);
-
+           
 
             timer1.Enabled = true;
             timer1.Interval = timer1Interval;
@@ -211,8 +209,6 @@ namespace WFormsUserApp
             timer2.Enabled = true;
             timer2.Interval = timer2Interval;
             Thread.Sleep(5000);
-            timer3.Enabled = true;
-            timer3.Interval = timer3Interval;
 
         }
 
@@ -276,7 +272,6 @@ namespace WFormsUserApp
                 richTextBox2.AppendText(Environment.NewLine + $"RequestStream.Tdu.Length={payload.Length}");
                 richTextBox2.AppendText(Environment.NewLine + $"RequestStream.Tdu={BitConverter.ToString(payload).Replace("-", string.Empty)}");
                 richTextBox2.AppendText(Environment.NewLine);
-                richTextBox3.Text = "Replied...";
             });
 
             extLink.RequestStream.WriteAsync(new ExtMessage
@@ -294,14 +289,7 @@ namespace WFormsUserApp
 
             this.Invoke((MethodInvoker)delegate ()
             {
-                richTextBox3.Text = "RxExt(" + GetProtocolChannelName(channel) + ")";
-                richTextBox3.AppendText(Environment.NewLine + $"RequestStream.Context=" + context.ToString("X16"));
-                richTextBox3.AppendText(Environment.NewLine + $"response.GatewayId=" + gatewayId.ToString("X6"));
-                richTextBox3.AppendText(Environment.NewLine + $"response.DeviceId=" + deviceId.ToString("X12"));
-                richTextBox3.AppendText(Environment.NewLine + $"response.Tdu.Length={payload.Length}");
-                richTextBox3.AppendText(Environment.NewLine + BitConverter.ToString(payload));
-                richTextBox3.AppendText(Environment.NewLine);
-                richTextBox3.Text += "Awaiting processing...";
+               
             });
 
             switch (channel)
@@ -325,7 +313,6 @@ namespace WFormsUserApp
                 richTextBox2.AppendText(Environment.NewLine + $"RequestStream.Tdu.Length={payload.Length}");
                 richTextBox2.AppendText(Environment.NewLine + $"RequestStream.Tdu={BitConverter.ToString(payload).Replace("-", string.Empty)}");
                 richTextBox2.AppendText(Environment.NewLine);
-                richTextBox3.Text = "Replied...";
             });
 
             cmdLink.RequestStream.WriteAsync(new CmdMessage
@@ -343,15 +330,7 @@ namespace WFormsUserApp
         {
             this.Invoke((MethodInvoker)delegate ()
             {
-                richTextBox3.Text = "RxCmd()";
-                richTextBox3.AppendText(Environment.NewLine + $"RequestStream.OpCode=" + opCode.ToString("X4"));
-                richTextBox3.AppendText(Environment.NewLine + $"RequestStream.Route=" + route.ToString("X8"));
-                richTextBox3.AppendText(Environment.NewLine + $"RequestStream.Argument=" + argument.ToString("X8"));
-                richTextBox3.AppendText(Environment.NewLine + $"response.GatewayId=" + gatewayId.ToString("X6"));
-                richTextBox3.AppendText(Environment.NewLine + $"response.DeviceId=" + deviceId.ToString("X12"));
-                richTextBox3.AppendText(Environment.NewLine + $"response.Tdu.Length={payload.Length}");
-                richTextBox3.AppendText(Environment.NewLine + BitConverter.ToString(payload));
-                richTextBox3.AppendText(Environment.NewLine);
+               
             });
 
             switch (opCode)
@@ -790,7 +769,7 @@ namespace WFormsUserApp
                         {
                             ListViewItem lvi = new ListViewItem(sensorList[i] + numberList[2]);
                             lvi.SubItems.Add(valueList3[i].ToString());
-                            listView3.Items.Add(lvi);
+                           
                         });
 
                         using (var writeApi = influxDBClient.GetWriteApi())
@@ -857,7 +836,7 @@ namespace WFormsUserApp
         {
             this.Invoke((MethodInvoker)delegate ()
             {
-                listView3.Items.Clear();
+              
             });
             rtuMessageTrue();
             byte protocol = 100;
@@ -919,27 +898,7 @@ namespace WFormsUserApp
             });
         }
 
-        private void timer3_Tick(object sender, EventArgs e)
-        {
-            this.Invoke((MethodInvoker)delegate ()
-            {
-                listView3.Items.Clear();
-            });
-            rtuMessageTrue();
-            byte protocol = 100;
-            UInt16 clientID = --TxClient;
-            uint sequenceNumber = 0;
-            byte[] data = new byte[] { 0x01, 0x03, 0x00, 0xCB, 0x00, 0x52, 0xAD, 0xDE };
-
-            rtuLink.RequestStream.WriteAsync(new RtuMessage
-            {
-                Channel = ((UInt32)clientID << 8) | protocol,
-                SequenceNumber = sequenceNumber,
-                GwId = 0,
-                DeviceId = 0x500291AEBE4D,
-                DataUnit = ByteString.CopyFrom(data[0..data.Length])
-            });
-        }
+     
 
         private void richTextBox3_TextChanged(object sender, EventArgs e)
         {
@@ -958,7 +917,6 @@ namespace WFormsUserApp
 
         private void button3_Click(object sender, EventArgs e)
         {
-            timer3.Interval = (Convert.ToInt32(textBox3.Text)) * 1000;
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -1008,6 +966,11 @@ namespace WFormsUserApp
                 DataUnit = ByteString.CopyFrom(data[0..data.Length])
             });
 
+
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
         }
     }

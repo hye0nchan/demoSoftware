@@ -310,6 +310,7 @@ class _StatsScreenState extends State<StatsScreen> {
             ),
             series: <ChartSeries<ChartData, DateTime>>[
               LineSeries<ChartData, DateTime>(
+                name: "재배기 외부",
                 opacity: 0.7,
                 width: 4,
                 color: Colors.blueAccent,
@@ -318,6 +319,7 @@ class _StatsScreenState extends State<StatsScreen> {
                 yValueMapper: (ChartData sales, _) => sales.value,
               ),
               LineSeries<ChartData, DateTime>(
+                name: "재배기 내부",
                 opacity: 0.7,
                 width: 4,
                 color: Colors.redAccent,
@@ -326,6 +328,7 @@ class _StatsScreenState extends State<StatsScreen> {
                 yValueMapper: (ChartData sales, _) => sales.value,
               ),
             ],
+            legend: Legend(isVisible:true),
           ),
         ),
       ),

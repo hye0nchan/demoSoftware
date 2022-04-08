@@ -1,8 +1,6 @@
 // ignore_for_file: unnecessary_statements
-
-
 import 'dart:typed_data';
-
+import 'package:fcm_notifications/screens/control.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:grpc/grpc.dart';
 import 'package:fcm_notifications/network.pbgrpc.dart';
@@ -53,12 +51,10 @@ class Grpc {
   List<int> coMResiter = [0x01, 0x03, 0x0E, 0x04];
   List<int> coHResiter = [0x01, 0x03, 0x11, 0x04];
 
+  var controlScreen = ControlScreen();
 
   ExProtoClient stub;
-
   final box = new RtuMessage();
-
-
   Future<RtuMessage> sensingV() async {
     boolA = true;
     var protocol = 200;
@@ -73,7 +69,7 @@ class Grpc {
         ..sequenceNumber = 0
         ..gwId = 0
         ..dataUnit = [0x01, 0x03, 0x00, 203, 0x00, 13, 0xAD, 0xDE]
-        ..deviceId = motorDevice3);
+        ..deviceId = motorDevice1);
       opId++;
       return (box);
     }
@@ -246,12 +242,10 @@ class Grpc {
     switch (sensor) {
       case "V":
         sensor1redVData = bData.getFloat32(0).toStringAsFixed(2);
-          print("V : $sensor1redVData");
         break;
 
       case "A":
         sensor1redAData = bData.getFloat32(0).toStringAsFixed(2);
-        print("A : $sensor1redAData");
         break;
     }
   }
