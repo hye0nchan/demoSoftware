@@ -187,7 +187,7 @@ void main() async {
 
 void windowReSize(){
   final win = appWindow;
-  final initialSize = Size(430, 900);
+  final initialSize = Size(430, 750);
   win.minSize = initialSize;
   win.size = initialSize;
   win.alignment = Alignment.center;

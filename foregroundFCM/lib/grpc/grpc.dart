@@ -63,7 +63,6 @@ class Grpc {
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure())));
 
-    try {
       await stub.exClientstream(box
         ..channel = protocol
         ..sequenceNumber = 0
@@ -72,11 +71,7 @@ class Grpc {
         ..deviceId = motorDevice1);
       opId++;
       return (box);
-    }
-    catch(e){
-      print("error");
-    }
-    return box;
+
   }
 
   Future<RtuMessage> sendSensor1() async {

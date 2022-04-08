@@ -13,14 +13,14 @@ class Styles {
       color: Colors.black, fontWeight: FontWeight.w600, fontSize: 24.0);
 
   static const homeDataStyle = TextStyle(
-      color: Colors.black, fontWeight: FontWeight.w700, fontSize: 28.0);
+      color: Colors.black, fontWeight: FontWeight.w700, fontSize: 26.0);
 
   static const graphAverageStyle = TextStyle(
       color: Colors.blueAccent,
       fontWeight: FontWeight.w600);
 
   static const StaggeredGridStyle =
-      TextStyle(fontWeight: FontWeight.w600, fontSize: 20);
+      TextStyle(fontWeight: FontWeight.w600, fontSize: 16);
 
   static const dialogTileStyle =
   TextStyle(color: Colors.black,

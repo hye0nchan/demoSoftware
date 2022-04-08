@@ -13,6 +13,7 @@ bool pumpBool2 = false;
 bool lampBool = false;
 bool fanBool = false;
 bool motorBool = false;
+bool motorBool2 = false;
 bool outFanBool = false;
 bool outFanBool2 = false;
 bool boolA = false;
@@ -445,6 +446,8 @@ int deviceAddress = 0x4C7525C1CF89;
 int deviceAddress2 = 0x4C7525C1CF81;
 
 bool eTrue = false;
+
+bool eValue = false;
 
 num sendGateway = 0;
 num sendDevice = 0x24A16057F685;

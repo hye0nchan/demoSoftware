@@ -304,7 +304,7 @@ StatefulBuilder deviceEditWidget(double screenHeight, double screenWidth) {
   });
 }
 
-Widget homeDataTile(String sensor) {
+Widget inHomeDataTile(String sensor) {
   List<double> sparkLine = [];
   String data = "0";
 
@@ -351,7 +351,7 @@ Widget homeDataTile(String sensor) {
   );
 }
 
-Widget homeDataTile2(String sensor) {
+Widget outHomeDataTile(String sensor) {
   List<double> sparkLine = [];
   String data = "0";
 
@@ -401,7 +401,7 @@ Widget homeDataTile2(String sensor) {
   );
 }
 
-Visibility graphSpark1(List<double> list, int index) {
+Visibility inGraphSpark(List<double> list, int index) {
   return Visibility(
     visible: averageInMap[index],
     child: Sparkline(
@@ -412,14 +412,14 @@ Visibility graphSpark1(List<double> list, int index) {
   );
 }
 
-Visibility graphText1(String text, int index) {
+Visibility inGraphText(String text, int index) {
   return Visibility(
     visible: averageInMap[index],
     child: Text('$text', style: Styles.homeDataStyle),
   );
 }
 
-Visibility graphSpark2(List<double> list, int index) {
+Visibility outGraphSpark(List<double> list, int index) {
   return Visibility(
     visible: averageOutMap[index],
     child: Sparkline(
@@ -430,7 +430,7 @@ Visibility graphSpark2(List<double> list, int index) {
   );
 }
 
-Visibility graphText2(String text, int index) {
+Visibility outGraphText(String text, int index) {
   return Visibility(
     visible: averageOutMap[index],
     child: Text('$text', style: Styles.homeDataStyle),

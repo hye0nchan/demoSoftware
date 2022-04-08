@@ -481,10 +481,10 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisSpacing: 12.0,
         mainAxisSpacing: 12.0,
         children: <Widget>[
-          homeDataTile("온도"),
-          homeDataTile("습도"),
-          homeDataTile("조도"),
-          homeDataTile("이산화탄소"),
+          inHomeDataTile("온도"),
+          inHomeDataTile("습도"),
+          inHomeDataTile("조도"),
+          inHomeDataTile("이산화탄소"),
           StaggeredGridTile.count(
             crossAxisCellCount: 2,
             mainAxisCellCount: 1,
@@ -509,10 +509,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               Text('평균 값', style: Styles.graphAverageStyle),
                               Stack(
                                 children: [
-                                  graphText1('$temTotalValue°C', 0),
-                                  graphText1('$humTotalValue%', 1),
-                                  graphText1('${co2TotalValue}ppm', 2),
-                                  graphText1('${luxTotalValue}lm', 3),
+                                  inGraphText('$temTotalValue°C', 0),
+                                  inGraphText('$humTotalValue%', 1),
+                                  inGraphText('${co2TotalValue}ppm', 2),
+                                  inGraphText('${luxTotalValue}lm', 3),
                                 ],
                               ),
                             ],
@@ -553,10 +553,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(padding: EdgeInsets.only(bottom: 4.0)),
                       Stack(
                         children: [
-                          graphSpark1(temSparkLine, 0),
-                          graphSpark1(humSparkLine, 1),
-                          graphSpark1(co2SparkLine, 2),
-                          graphSpark1(luxSparkLine, 3),
+                          inGraphSpark(temSparkLine, 0),
+                          inGraphSpark(humSparkLine, 1),
+                          inGraphSpark(co2SparkLine, 2),
+                          inGraphSpark(luxSparkLine, 3),
                         ],
                       )
                     ],
@@ -597,10 +597,10 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisSpacing: 12.0,
         mainAxisSpacing: 12.0,
         children: <Widget>[
-          homeDataTile2("온도"),
-          homeDataTile2("습도"),
-          homeDataTile2("조도"),
-          homeDataTile2("이산화탄소"),
+          outHomeDataTile("온도"),
+          outHomeDataTile("습도"),
+          outHomeDataTile("조도"),
+          outHomeDataTile("이산화탄소"),
           StaggeredGridTile.count(
             crossAxisCellCount: 2,
             mainAxisCellCount: 1,
@@ -630,10 +630,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.w600)),
                                 Stack(
                                   children: [
-                                    graphText2('$tem2TotalValue°C', 0),
-                                    graphText2('$hum2TotalValue%', 1),
-                                    graphText2('${co22TotalValue}ppm', 2),
-                                    graphText2('${lux2TotalValue}lm', 3),
+                                    outGraphText('$tem2TotalValue°C', 0),
+                                    outGraphText('$hum2TotalValue%', 1),
+                                    outGraphText('${co22TotalValue}ppm', 2),
+                                    outGraphText('${lux2TotalValue}lm', 3),
                                   ],
                                 ),
                               ],
@@ -674,10 +674,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         Padding(padding: EdgeInsets.only(bottom: 4.0)),
                         Stack(
                           children: [
-                            graphSpark2(tem2SparkLine, 0),
-                            graphSpark2(hum2SparkLine, 1),
-                            graphSpark2(co22SparkLine, 2),
-                            graphSpark2(lux2SparkLine, 3),
+                            outGraphSpark(tem2SparkLine, 0),
+                            outGraphSpark(hum2SparkLine, 1),
+                            outGraphSpark(co22SparkLine, 2),
+                            outGraphSpark(lux2SparkLine, 3),
                           ],
                         )
                       ],
