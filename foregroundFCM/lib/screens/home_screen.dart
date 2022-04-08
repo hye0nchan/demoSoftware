@@ -482,10 +482,10 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisSpacing: 12.0,
         mainAxisSpacing: 12.0,
         children: <Widget>[
-          homeDataTile1("온도"),
-          homeDataTile1("습도"),
-          homeDataTile1("조도"),
-          homeDataTile1("이산화탄소"),
+          homeDataTile("온도"),
+          homeDataTile("습도"),
+          homeDataTile("조도"),
+          homeDataTile("이산화탄소"),
           StaggeredGridTile.count(
             crossAxisCellCount: 2,
             mainAxisCellCount: 1,

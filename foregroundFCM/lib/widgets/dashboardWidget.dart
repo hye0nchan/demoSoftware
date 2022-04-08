@@ -304,29 +304,29 @@ StatefulBuilder deviceEditWidget(double screenHeight, double screenWidth) {
   });
 }
 
-Widget homeDataTile1(String sensor) {
+Widget homeDataTile(String sensor) {
   List<double> sparkLine = [];
   String data = "0";
 
   switch (sensor) {
     case "온도":
-      sparkLine = temSparkLine;
-      data = '${double.parse(temSparkLine.last.toStringAsFixed(2))}°C';
+      sparkLine = tem2SparkLine;
+      data = '${double.parse(tem2SparkLine.last.toStringAsFixed(2))}°C';
       break;
 
     case "습도":
-      sparkLine = humSparkLine;
-      data = '${double.parse(humSparkLine.last.toStringAsFixed(2))}%';
+      sparkLine = hum2SparkLine;
+      data = '${double.parse(hum2SparkLine.last.toStringAsFixed(2))}%';
       break;
 
     case "조도":
-      sparkLine = luxSparkLine;
-      data = '${double.parse(luxSparkLine.last.toStringAsFixed(2))}lm';
+      sparkLine = lux2SparkLine;
+      data = '${double.parse(lux2SparkLine.last.toStringAsFixed(2))}lm';
       break;
 
     case "이산화탄소":
-      sparkLine = co2SparkLine;
-      data = '${double.parse(co2SparkLine.last.toStringAsFixed(2))}ppm';
+      sparkLine = co22SparkLine;
+      data = '${double.parse(co22SparkLine.last.toStringAsFixed(2))}ppm';
       break;
   }
   return _buildTile(
@@ -357,23 +357,23 @@ Widget homeDataTile2(String sensor) {
 
   switch (sensor) {
     case "온도":
-      sparkLine = tem2SparkLine;
-      data = '${double.parse(tem2SparkLine.last.toStringAsFixed(2))}°C';
+      sparkLine = temSparkLine;
+      data = '${double.parse(temSparkLine.last.toStringAsFixed(2))}°C';
       break;
 
     case "습도":
-      sparkLine = hum2SparkLine;
-      data = '${double.parse(hum2SparkLine.last.toStringAsFixed(2))}%';
+      sparkLine = humSparkLine;
+      data = '${double.parse(humSparkLine.last.toStringAsFixed(2))}%';
       break;
 
     case "조도":
-      sparkLine = lux2SparkLine;
-      data = '${double.parse(lux2SparkLine.last.toStringAsFixed(2))}lm';
+      sparkLine = luxSparkLine;
+      data = '${double.parse(luxSparkLine.last.toStringAsFixed(2))}lm';
       break;
 
     case "이산화탄소":
-      sparkLine = co22SparkLine;
-      data = '${double.parse(co22SparkLine.last.toStringAsFixed(0))}ppm';
+      sparkLine = co2SparkLine;
+      data = '${double.parse(co2SparkLine.last.toStringAsFixed(0))}ppm';
       break;
   }
   return _buildTile(

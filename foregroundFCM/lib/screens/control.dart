@@ -127,8 +127,8 @@ class _ControlScreenState extends State<ControlScreen> {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          settingMaterial(screenHeight, screenWidth,"내부"),
-          settingMaterial2(screenHeight, screenWidth, "내부"),
+          settingMaterialLeft(screenHeight, screenWidth,"내부"),
+          settingMaterialRight(screenHeight, screenWidth, "내부"),
         ],
       ),
       SizedBox(
@@ -173,8 +173,8 @@ class _ControlScreenState extends State<ControlScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              settingMaterial(screenHeight, screenWidth,"외부"),
-              settingMaterial2(screenHeight, screenWidth, "외부"),
+              settingMaterialLeft(screenHeight, screenWidth,"외부"),
+              settingMaterialRight(screenHeight, screenWidth, "외부"),
             ],
           ),
         SizedBox(
@@ -339,7 +339,7 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  Container settingMaterial(double screenHeight, double screenWidth, String inOut) {
+  Container settingMaterialLeft(double screenHeight, double screenWidth, String inOut) {
     return Container(
       width: screenWidth * 0.47,
       height: screenHeight*0.1,
@@ -355,7 +355,7 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  Container settingMaterial2(double screenHeight, double screenWidth, String inOut) {
+  Container settingMaterialRight(double screenHeight, double screenWidth, String inOut) {
     List<String> deviceLists = [];
     (inOut=="내부")?deviceLists = ["펌프","전등","팬"]:deviceLists = ["모터","환풍기"];
     return Container(
