@@ -179,7 +179,7 @@ class SwitchControl {
         device = Int64.parseInt(int.parse(("0x" + "4C7525C1Cf81")).toString());
         break;
       case "환풍기":
-        device = Int64.parseInt(int.parse(("0x" + "24A16057C915")).toString());
+        device = Int64.parseInt(int.parse(("0x" + "4C7525C1CF71")).toString());
         break;
     }
   }
