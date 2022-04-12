@@ -53,3 +53,6 @@ C:\Users\Administrator\Desktop\demoroom\NetworkService_lab\obj\Debug\net6.0\refi
 C:\Users\Administrator\Desktop\demoroom\NetworkService_lab\obj\Debug\net6.0\NetworkServiceLab.pdb
 C:\Users\Administrator\Desktop\demoroom\NetworkService_lab\obj\Debug\net6.0\NetworkServiceLab.genruntimeconfig.cache
 C:\Users\Administrator\Desktop\demoroom\NetworkService_lab\obj\Debug\net6.0\ref\NetworkServiceLab.dll
+C:\Users\Administrator\Desktop\demoroom\NetworkService_lab\bin\Debug\net6.0\Microsoft.AspNetCore.Grpc.HttpApi.dll
+C:\Users\Administrator\Desktop\demoroom\NetworkService_lab\bin\Debug\net6.0\runtimes\linux-arm64\native\libgrpc_csharp_ext.arm64.so
+C:\Users\Administrator\Desktop\demoroom\NetworkService_lab\bin\Debug\net6.0\runtimes\osx-arm64\native\libSystem.IO.Ports.Native.dylib
