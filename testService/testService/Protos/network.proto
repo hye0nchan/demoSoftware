@@ -15,11 +15,15 @@
 syntax = "proto3";
 
 //import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
 package net_exchange;
 
 // The service definition.
 service ExProto {
-  rpc MessageRtu (stream RtuMessage) returns (stream RtuMessage);
+  rpc MessageRtu (stream RtuMessage) returns (stream RtuMessage){
+
+  }
   rpc MessageExt (stream ExtMessage) returns (stream ExtMessage);
   rpc MessageCmd (stream CmdMessage) returns (stream CmdMessage);
 

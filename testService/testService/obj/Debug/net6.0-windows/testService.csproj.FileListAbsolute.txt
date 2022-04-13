@@ -57,3 +57,7 @@ C:\Users\Administrator\source\repos\testService\testService\obj\Debug\net6.0-win
 C:\Users\Administrator\source\repos\testService\testService\obj\Debug\net6.0-windows\testService.pdb
 C:\Users\Administrator\source\repos\testService\testService\obj\Debug\net6.0-windows\testService.genruntimeconfig.cache
 C:\Users\Administrator\source\repos\testService\testService\obj\Debug\net6.0-windows\ref\testService.dll
+C:\Users\Administrator\Desktop\demoroom\testService\testService\obj\Debug\net6.0-windows\testService.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\demoroom\testService\testService\obj\Debug\net6.0-windows\testService.Form1.resources
+C:\Users\Administrator\Desktop\demoroom\testService\testService\obj\Debug\net6.0-windows\testService.csproj.GenerateResource.cache
+C:\Users\Administrator\Desktop\demoroom\testService\testService\obj\Debug\net6.0-windows\testService.GeneratedMSBuildEditorConfig.editorconfig

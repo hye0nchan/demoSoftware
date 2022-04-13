@@ -28,4 +28,8 @@
     <Protobuf Include="Protos\network.proto" GrpcServices="Both" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Protos\google\api\" />
+  </ItemGroup>
+
 </Project>

@@ -1,12 +1,8 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf;
+using Grpc.Core;
 using Grpc.Net.Client;
 using NetExchange;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace testService
 {
@@ -20,6 +16,173 @@ namespace testService
 
         internal static AsyncDuplexStreamingCall<ExMessage, ExMessage> exLink = exchange.ExLink(); //Mobile grpc 전용
         internal static AsyncDuplexStreamingCall<RtuMessage, RtuMessage> influxLink = exchange.influxDB(); //InfluxdDB Client 전옹
+
+        ushort opid = 0;
+        byte protocol = 100;
+        ulong DeviceId = 0x4C7525C1Cf81;
+
+        private void switchDevice(string switchName)
+        {
+            switch (switchName)
+            {
+                case "pump":
+                    DeviceId = 0x500291A40A61;
+                    break;
+                case "fan":
+                    DeviceId = 0x4C7525C1Cf81;
+                    break;
+                case "lamp":
+                    DeviceId = 0x4C7525C1Cf81;
+                    break;
+                case "outFan":
+                    DeviceId = 0x4C7525C1CF71;
+                    break;
+
+            }
+        }
+
+        public async Task switchFirstOnAsync(string switchName)
+        {
+            switchDevice(switchName);
+            byte[] data = new byte[] {
+                0x01,
+                0x10,
+                0x01,
+                0xF7,
+                0x00,
+                0x04,
+                0x08,
+                0x00,
+                0xC9,
+                (byte)(opid>>8),
+                (byte)opid,
+                0x00,
+                0x00,
+                0x00,
+                0x00,
+                0xAD,
+                0xDE
+            };
+            opid++;
+            RtuMessage request = new RtuMessage();
+            request.GwId = 0;
+            request.DataUnit = ByteString.CopyFrom(data[0..data.Length]);
+            request.DeviceId = DeviceId;
+            request.SequenceNumber = 0;
+            request.Channel = ((UInt32)0 << 8) | protocol;
+            await Program.rtuLink.RequestStream.WriteAsync(request);
+        }
+
+        public async Task switchFirstOffAsync(string switchName)
+        {
+            switchDevice(switchName);
+            byte[] data = new byte[] {
+                0x01,
+                0x10,
+                0x01,
+                0xF7,
+                0x00,
+                0x04,
+                0x08,
+                0x00,
+                0x00,
+                (byte)(opid>>8),
+                (byte)opid,
+                0x00,
+                0x00,
+                0x00,
+                0x00,
+                0xAD,
+                0xDE
+            };
+            opid++;
+            RtuMessage request = new RtuMessage();
+            request.GwId = 0;
+            request.DataUnit = ByteString.CopyFrom(data[0..data.Length]);
+            request.DeviceId = DeviceId;
+            request.SequenceNumber = 0;
+            request.Channel = ((UInt32)0 << 8) | protocol;
+            await Program.rtuLink.RequestStream.WriteAsync(request);
+        }
+
+        public async Task switchSecondOnAsync(string switchName)
+        {
+            switchDevice(switchName);
+            byte[] data = new byte[] {
+                0x01,
+                0x10,
+                0x01,
+                0xFB,
+                0x00,
+                0x04,
+                0x08,
+                0x00,
+                0xC9,
+                (byte)(opid>>8),
+                (byte)opid,
+                0x00,
+                0x00,
+                0x00,
+                0x00,
+                0xAD,
+                0xDE
+            };
+            opid++;
+            RtuMessage request = new RtuMessage();
+            request.GwId = 0;
+            request.DataUnit = ByteString.CopyFrom(data[0..data.Length]);
+            request.DeviceId = DeviceId;
+            request.SequenceNumber = 0;
+            request.Channel = ((UInt32)0 << 8) | protocol;
+            await Program.rtuLink.RequestStream.WriteAsync(request);
+        }
+
+        public async Task switchSecondOffAsync(string switchName)
+        {
+            switchDevice(switchName);
+            byte[] data = new byte[] {
+                0x01,
+                0x10,
+                0x01,
+                0xFB,
+                0x00,
+                0x04,
+                0x08,
+                0x00,
+                0x00,
+                (byte)(opid>>8),
+                (byte)opid,
+                0x00,
+                0x00,
+                0x00,
+                0x00,
+                0xAD,
+                0xDE
+            };
+            opid++;
+            RtuMessage request = new RtuMessage();
+            request.GwId = 0;
+            request.DataUnit = ByteString.CopyFrom(data[0..data.Length]);
+            request.DeviceId = DeviceId;
+            request.SequenceNumber = 0;
+            request.Channel = ((UInt32)0 << 8) | protocol;
+            await Program.rtuLink.RequestStream.WriteAsync(request);
+        }
+
+        public async Task sensor1Async()
+        {
+            Debug.WriteLine("enter sensor");
+            byte protocol = 100;
+            byte[] data = new byte[] { 0x01, 0x03, 0x00, 0xCB, 0x00, 0x52, 0xAD, 0xDE };
+
+            RtuMessage request = new RtuMessage();
+            request.GwId = 0;
+            request.DataUnit = ByteString.CopyFrom(data[0..data.Length]);
+            request.DeviceId = 0x4C75258912F5;
+            request.SequenceNumber = 0;
+            request.Channel = ((UInt32)0 << 8) | protocol;
+            await Program.rtuLink.RequestStream.WriteAsync(request);
+        }
 
         public static void RpcService()
         {
@@ -43,7 +206,6 @@ namespace testService
                             case 100:
                                 //C# dashboard or InfluxDB Client 
                                 await responseStream.WriteAsync(response);
-
                                 break;
                             case 200:
                                 // mobile Client
@@ -52,7 +214,6 @@ namespace testService
                                 break;
 
                         }
-                        //await responseStream.WriteAsync(response);
 
                     }
 

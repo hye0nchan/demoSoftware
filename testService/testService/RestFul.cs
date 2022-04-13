@@ -1,13 +1,13 @@
-﻿using Google.Protobuf;
-using NetExchange;
-using System.Diagnostics;
+﻿using NetExchange;
 using System.Net;
 
 namespace testService
 {
     internal class RestFul
     {
-        HttpListener? httpListener;
+        GRPC grpc = new GRPC();
+        HttpListener httpListener;
+
 
         public void serverInit()
         {
@@ -29,6 +29,7 @@ namespace testService
                     while (httpListener != null)
                     {
                         HttpListenerContext context = this.httpListener.GetContext();
+
                         string rawurl = context.Request.RawUrl;
                         string httpmethod = context.Request.HttpMethod;
                         string httpMethod = "";
@@ -43,21 +44,28 @@ namespace testService
                                  }));
                         else Form1.f1.richTextBox1.Text = httpMethod;
                         context.Response.Close();
-                        if (control == "/test")
-                        {
-                            Debug.WriteLine("enter /test");
-                            byte protocol = 100;
-                            byte[] data = new byte[] { 0x01, 0x03, 0x00, 0xCB, 0x00, 0x52, 0xAD, 0xDE };
 
-                            RtuMessage request = new RtuMessage();
-                            request.GwId = 0;
-                            request.DataUnit = ByteString.CopyFrom(data[0..data.Length]);
-                            request.DeviceId = 0x4C75258912F5;
-                            request.SequenceNumber = 0;
-                            request.Channel = ((UInt32)0 << 8) | protocol;
-                            await Program.rtuLink.RequestStream.WriteAsync(request);
+
+                        switch (control)
+                        {
+                            case "/seonsor1":
+                                await grpc.sensor1Async();
+                                break;
+                            case "/lamp/on":
+                                await grpc.switchFirstOnAsync("lamp");
+                                break;
+                            case "/lamp/off":
+                                await grpc.switchFirstOffAsync("lamp");
+                                break;
+                            case "/fan/on":
+                                await grpc.switchSecondOnAsync("fan");
+                                break;
+                            case "/fan/off":
+                                await grpc.switchSecondOffAsync("fan");
+                                break;
                         }
                     }
+
                 });
             }
         }

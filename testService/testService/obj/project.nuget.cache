@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dxOL7DbkLJ/gx/3gjWrLeyfnd9gknj1NUoelFuxRIwVKwQdWfBkUKI2d+MIRFptojsciivpIAcgKAW9tNwChsg==",
+  "dgSpecHash": "wTiBVCDEeyDlQRLaxywINe5316l9e2wgBPbnD9Dnkoh8MBoUuPD0mpGyp1kBtljy2iAJZJqalYatGDm4SmcPww==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Administrator\\source\\repos\\testService\\testService\\testService.csproj",
+  "projectFilePath": "C:\\Users\\Administrator\\Desktop\\demoroom\\testService\\testService\\testService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\google.api.commonprotos\\2.5.0\\google.api.commonprotos.2.5.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\google.api.gax\\3.6.0\\google.api.gax.3.6.0.nupkg.sha512",

@@ -14,7 +14,6 @@
 
 syntax = "proto3";
 
-import "Protos/google/api/annotations.proto";
 package net_exchange;
 
 // The service definition.
